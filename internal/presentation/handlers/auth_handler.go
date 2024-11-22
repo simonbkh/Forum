@@ -1,29 +1,48 @@
 package handlers
 
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+
+	"forum/internal/logic/services"
+	"forum/internal/logic/utils"
+	"forum/internal/presentation/templates"
+)
 
 // /login, /register routes
+func Register(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	}
+	templates.RegisterTemplate.Execute(w,nil)
+}
 
 func Login(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 	}
+	templates.LoginTemplate.Execute(w,nil)
 }
 
-func Register(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
+func RegisterInfo(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 	}
+	err := services.Register_Service(w, r)
+	if utils.IsErrors(err) {
+		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
+	}
+
+
+	http.Redirect(w,r,"/login",http.StatusMovedPermanently)
 }
 
 func LoginInfo(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 	}
-}
-
-func RegisterInfo(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	err := services.Login_Service(w, r)
+	if utils.IsErrors(err) {
+		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
 	}
 }

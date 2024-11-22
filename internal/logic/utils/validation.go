@@ -1,4 +1,0 @@
-// Input validation
-
-package utils
-
