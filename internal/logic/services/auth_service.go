@@ -17,8 +17,8 @@ func Register_Service(w http.ResponseWriter, r *http.Request) error {
 
 	validators := []func(string) error{
 		validators.Username_Validator,
-		validators.Email_Validator,
-		validators.Password_Validator,
+		// validators.Email_Validator,
+		// validators.Password_Validator,
 	}
 
 	inputs := []string{username, email, password}
@@ -44,8 +44,8 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	password := r.FormValue("password")
 
 	validators := []func(string) error{
-		validators.Email_Validator,
-		validators.Password_Validator,
+		// validators.Email_Validator,
+		// validators.Password_Validator,
 	}
 
 	inputs := []string{email, password}

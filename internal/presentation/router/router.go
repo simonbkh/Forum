@@ -19,8 +19,8 @@ func Router(router *http.ServeMux) error {
 	router.HandleFunc("GET /login", handlers.Login)
 	router.HandleFunc("GET /static/css/{file}", handlers.Static)
 	router.HandleFunc("GET /register", handlers.Register)
-	router.HandleFunc("POST /logininfo", handlers.LoginInfo)
-	router.HandleFunc("POST /registerinfo", handlers.RegisterInfo)
+	router.HandleFunc("POST /loginInfo", handlers.LoginInfo)
+	router.HandleFunc("POST /registerInfo", handlers.RegisterInfo)
 
 	fmt.Println("website is running on: http://localhost:8080")
 

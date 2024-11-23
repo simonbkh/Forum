@@ -2,22 +2,23 @@ package database
 
 import (
 	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
-	"forum/internal/data/queries"
+
 	"forum/internal/logic/utils"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
-var db *sql.DB
+var Db *sql.DB
 
 func Database() (*sql.DB, error) {
 	var err error
-	db, err = sql.Open("sqlite3", "../internal/data/database.db")
+	Db, err = sql.Open("sqlite3", "../internal/data/database.db")
 	if utils.IsErrors(err) {
 		return nil, err
 	}
-	err = queries.CreateTables(db)
+	err = CreateTables(Db)
 	if utils.IsErrors(err) {
 		return nil, err
 	}
-	return db, nil
+	return Db, nil
 }

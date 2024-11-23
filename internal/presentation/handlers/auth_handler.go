@@ -25,9 +25,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func RegisterInfo(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-	}
+	// if r.Method != "POST" {
+	// 	http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	// }
 	err := services.Register_Service(w, r)
 	if utils.IsErrors(err) {
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)

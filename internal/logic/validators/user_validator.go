@@ -12,15 +12,15 @@ func Username_Validator(username string) error{
 	return nil
 }
 
-func Password_Validator(password string) error{
-	if len(password) > 20 {
-		return errors.New("long password")
-	}else if len(password) < 3 {
-		return errors.New("short password")
-	}
+// func Password_Validator(password string) error{
+// 	// if len(password) > 20 {
+// 	// 	return errors.New("long password")
+// 	// }else if len(password) < 3 {
+// 	// 	return errors.New("short password")
+// 	// }
 
-	return nil
-}
+// 	// return nil
+// }
 
 func Email_Validator(email string) error{
 	if len(email) > 20 {
