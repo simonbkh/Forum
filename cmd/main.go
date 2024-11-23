@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	data "forum/internal/data/database"
@@ -11,7 +10,6 @@ import (
 func main() {
 	db, err := data.Database()
 	if err != nil {
-		fmt.Println(err)
 		return
 	}
 
@@ -21,7 +19,6 @@ func main() {
 
 	err = router.Router(serv)
 	if err != nil {
-		fmt.Println(err)
 		return
 	}
 }

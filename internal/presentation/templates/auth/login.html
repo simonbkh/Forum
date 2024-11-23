@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/login.css">
+</head>
+<body>
+    <header>
+        <h1>Login</h1>
+    </header>
+    <div class="container">
+        {{if .}} 
+        <p style="color: red;">Invalid Email or Password!!</p>    
+        {{end}}
+        <form action="/logininfo" method="POST">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" placeholder="Enter your Email" required>
+            
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" placeholder="Enter your Password" required>
+            
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+
+</html>

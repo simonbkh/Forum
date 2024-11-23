@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"forum/internal/presentation/templates"
 	"net/http"
+
+	"forum/internal/presentation/templates"
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
