@@ -1,6 +1,8 @@
 package services
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
 
 	"forum/internal/data/queries"
@@ -24,7 +26,10 @@ func Register_Service(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 	// tier 3 data
-	
+	if !queries.IsUserExist(username, email) {
+		fmt.Println("hh")
+		return errors.New("invalid credentiels")
+	}
 	queries.InserUser(username, email, hashedpass)
 
 	return nil
@@ -37,6 +42,6 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	
+
 	return nil
 }
