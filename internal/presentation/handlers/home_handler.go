@@ -3,10 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"net/http"
-
 	"forum/internal/presentation/templates"
-	"net/http"
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
