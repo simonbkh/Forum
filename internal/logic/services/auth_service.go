@@ -26,7 +26,7 @@ func Register_Service(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 	// tier 3 data
-	if !queries.IsUserExist(username, email) {
+	if queries.IsUserExist(username, email) {
 		fmt.Println("hh")
 		return errors.New("invalid credentiels")
 	}
