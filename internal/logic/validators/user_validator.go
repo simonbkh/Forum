@@ -1,12 +1,25 @@
 package validators
 
-import "errors"
+import (
+	"errors"
+	"regexp"
+)
 
-func Username_Validator(username string) error{
-	if len(username) > 10 {
-		return errors.New("long username")
-	}else if len(username) < 3 {
-		return errors.New("short username")
+func Username_Validator(username string) error {
+	reg, err := regexp.Compile(`\W+`)
+	if err != nil {
+		return err
+	}
+	guud := reg.MatchString(username)
+
+	if !guud {
+		if len(username) > 10 {
+			return errors.New("long username")
+		} else if len(username) < 4 {
+			return errors.New("short username")
+		}
+	} else {
+		return errors.New("invalid username")
 	}
 
 	return nil
@@ -22,7 +35,7 @@ func Username_Validator(username string) error{
 // 	// return nil
 // }
 
-func Email_Validator(email string) error{
+func Email_Validator(email string) error {
 	if len(email) > 20 {
 		return errors.New("long password")
 	}
