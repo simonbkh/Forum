@@ -3,6 +3,7 @@ package services
 import (
 	"net/http"
 
+	"forum/internal/data/queries"
 	"forum/internal/logic/utils"
 	"forum/internal/logic/validators"
 )
@@ -28,11 +29,17 @@ func Register_Service(w http.ResponseWriter, r *http.Request) error {
 		}
 	}
 
+	hashedpass, err := utils.HashPassword(password)
+	if err != nil {
+		return err
+	}
+
+	queries.InserUser(username, email, hashedpass)
+
 	return nil
 }
 
 func Login_Service(w http.ResponseWriter, r *http.Request) error {
-
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
@@ -48,7 +55,6 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 			return err
 		}
 	}
-	
 
 	return nil
 }

@@ -4,14 +4,23 @@ import (
 	"fmt"
 	"net/http"
 
-	"forum/internal/logic/utils"
+	data "forum/internal/data/database"
 	"forum/internal/presentation/router"
 )
 
 func main() {
+	db, err := data.Database()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	defer db.Close()
+
 	serv := http.NewServeMux()
-	err := router.Router(serv)
-	if utils.IsErrors(err) {
+
+	err = router.Router(serv)
+	if err != nil {
 		fmt.Println(err)
 		return
 	}
