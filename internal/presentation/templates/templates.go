@@ -16,6 +16,7 @@ func ParseFiles() error {
 	var err error
 	templates, err := template.ParseFiles(
 		"../internal/presentation/templates/layouts/index.html",
+		 "../internal/presentation/templates/layouts/nav_bar.html",
 		"../internal/presentation/templates/auth/login.html",
 		"../internal/presentation/templates/auth/register.html")
 	if utils.IsErrors(err) {
