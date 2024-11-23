@@ -15,12 +15,12 @@ func Router(router *http.ServeMux) error {
 	if utils.IsErrors(err) {
 		return err
 	}
-	router.HandleFunc("GET /", handlers.HomeHandler)
-	router.HandleFunc("GET /login", handlers.Login)
-	router.HandleFunc("GET /static/css/{file}", handlers.Static)
-	router.HandleFunc("GET /register", handlers.Register)
-	router.HandleFunc("POST /loginInfo", handlers.LoginInfo)
-	router.HandleFunc("POST /registerInfo", handlers.RegisterInfo)
+	router.HandleFunc("/", handlers.HomeHandler)
+	router.HandleFunc("/login", handlers.Login)
+	router.HandleFunc("/static/css/{file}", handlers.Static)
+	router.HandleFunc("/register", handlers.Register)
+	router.HandleFunc("/loginInfo", handlers.LoginInfo)
+	router.HandleFunc("/registerInfo", handlers.RegisterInfo)
 
 	fmt.Println("website is running on: http://localhost:8080")
 
