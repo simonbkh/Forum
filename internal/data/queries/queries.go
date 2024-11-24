@@ -31,8 +31,10 @@ func IsUserExist(username, email string) bool {
 
 func GetHashedPass(email string) (string, error) {
 	var pass string
+
 	query := `SELECT password FROM users WHERE email = ?`
 	err := database.Db.QueryRow(query, email).Scan(&pass)
+	fmt.Println(pass)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			// Specific error when no user is found with the given email
@@ -49,8 +51,12 @@ func Checkemail(email string) bool {
 	query := `SELECT COUNT(*) FROM users WHERE email = ?`
 	err := database.Db.QueryRow(query, email).Scan(&count)
 	if err != nil {
+		fmt.Println("error here")
 		return false
 	}
-	return count > 0
+	if count < 0 {
+		return false
+	}
+	return true
 
 }

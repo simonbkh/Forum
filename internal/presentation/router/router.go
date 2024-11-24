@@ -10,9 +10,11 @@ import (
 )
 
 func Router(router *http.ServeMux) error {
+	
 	var err error
 	err = templates.ParseFiles()
 	if utils.IsErrors(err) {
+		fmt.Println(err)
 		return err
 	}
 	router.HandleFunc("/", handlers.HomeHandler)

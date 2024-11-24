@@ -37,6 +37,11 @@ func RegisterInfo(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 }
 
+type Users struct {
+	Username string
+	Text     string
+}
+
 func LoginInfo(w http.ResponseWriter, r *http.Request) {
 	// if r.Method != "POST" {
 	// 	http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
@@ -46,5 +51,11 @@ func LoginInfo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
 		return
 	}
-	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	var User Users
+	er := templates.HomeTemplate.Execute(w, User)
+	if er != nil {
+		fmt.Println("ooooooooook")
+		return
+	}
+	// http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }

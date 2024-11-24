@@ -9,13 +9,11 @@
 </head>
 
 <body>
-  <!-- {{if .}} -->
-    
-    <!-- {{else}}
-
-    
-    {{end}} -->
-    {{template "nav" .}}
+    {{if eq .Text "tt"}}
+     {{template "nav"}}
+    {{else}}
+         {{template "login"}}
+    {{end}}
     <div class="main-content">
         <!-- Sidebar with Categories -->
         <div class="side-bar">
@@ -34,17 +32,19 @@
         
         
         <!-- Posts Container -->
+        {{range .Posts}}
         <div class="posts-container">
-            {{range .}}
+            
             <div class="post">
                 <h3>Posted by {{.Username}}</h3>
                 <p>{{.Text}}</p>
-                <p class="category">Category: {{.Category}}</p>
-                <p><i>Posted on: {{.CreatedAt}}</i></p>
+                <!-- <p class="category">Category: {{.Category}}</p>
+                <p><i>Posted on: {{.CreatedAt}}</i></p> -->
                 <hr>
             </div>
-            {{end}}
+            
         </div>
+        {{end}}
     </div>
     <footer>
         <p>© 2024 Forum. All rights reserved.</p>
