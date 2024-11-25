@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post</title>
+    <link rel="stylesheet" href="/static/post.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Make a Post</h1>
+        <form action="/postinfo" method="POST">
+            <label>Select Categories:</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="category" value="general"> General</label>
+                <label><input type="checkbox" name="category" value="games"> Games</label>
+                <label><input type="checkbox" name="category" value="sports"> Sports</label>
+                <label><input type="checkbox" name="category" value="fashion"> Fashion</label>
+                <label><input type="checkbox" name="category" value="travel"> Travel</label>
+                <label><input type="checkbox" name="category" value="food"> Food</label>
+                <label><input type="checkbox" name="category" value="health"> Health</label>
+            </div>   
+        <textarea name="post" placeholder="Write something..." required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
