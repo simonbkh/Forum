@@ -10,6 +10,9 @@
     <div class="container">
         <h1>Make a Post</h1>
         <form action="/postinfo" method="POST">
+            <label for="title">Post Title:</label>
+            <input type="text" id="title" name="title" placeholder="Enter your post title" required>
+            
             <label>Select Categories:</label>
             <div class="checkbox-group">
                 <label><input type="checkbox" name="category" value="general"> General</label>
@@ -20,7 +23,8 @@
                 <label><input type="checkbox" name="category" value="food"> Food</label>
                 <label><input type="checkbox" name="category" value="health"> Health</label>
             </div>   
-        <textarea name="post" placeholder="Write something..." required></textarea>
+            
+            <textarea name="post" placeholder="Write something..." required></textarea>
             <button type="submit">Submit</button>
         </form>
     </div>
