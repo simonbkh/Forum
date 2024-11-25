@@ -9,16 +9,20 @@
 </head>
 
 <body>
-  <!-- {{if .}} -->
-    
-    <!-- {{else}}
+    {{if .}}
+        {{template "log_nav" .}}
+    {{else}}
+        {{template "nav" .}}
+        
+    {{end}}
 
-    
-    {{end}} -->
-    {{template "nav" .}}
     <div class="main-content">
         <!-- Sidebar with Categories -->
         <div class="side-bar">
+            {{if .}}
+                {{template "log_side_bar" .}}
+            {{end}}
+
             <h2>Categories</h2>
             <ul>
                 <li><a href="/category/all">All</a></li>
@@ -31,8 +35,8 @@
                 <li><a href="/category/health">Health</a></li>
             </ul>
         </div>
-        
-        
+
+
         <!-- Posts Container -->
         <div class="posts-container">
             {{range .}}
