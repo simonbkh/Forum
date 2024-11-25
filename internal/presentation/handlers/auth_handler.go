@@ -37,7 +37,7 @@ func RegisterInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
 func LoginInfo(w http.ResponseWriter, r *http.Request) {
