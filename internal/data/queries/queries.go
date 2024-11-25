@@ -20,13 +20,13 @@ func InserUser(username, email, password string) error {
 }
 
 func IsUserExist(username, email string) bool {
-	var count int
+	var cont int
 	query := `SELECT COUNT(*) FROM users WHERE username = ? OR email = ?`
-	err := database.Db.QueryRow(query, username, email).Scan(&count)
+	err := database.Db.QueryRow(query, username, email).Scan(&cont)
 	if err != nil {
 		return false
 	}
-	return count > 0
+	return cont == 1
 }
 
 func GetHashedPass(email string) (string, error) {
@@ -51,6 +51,23 @@ func Checkemail(email string) bool {
 	if err != nil {
 		return false
 	}
-	return count > 0
+	return count == 1
+}
 
+func CheckeToken(email string)string{
+	var str string
+	quick := `SELECT token FROM users WHERE email = ?`
+	err := database.Db.QueryRow(quick, email).Scan(&str)
+	if err != nil {
+		return str
+	}
+	return str
+}
+
+func InserToken(tocken, email string) {
+	add := `UPDATE users SET token = ? where email = ?`
+	_, err := database.Db.Exec(add, tocken, email)
+	if err != nil {
+		fmt.Println(err)
+	}
 }

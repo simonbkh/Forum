@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"forum/internal/logic/services"
 	"forum/internal/logic/utils"
@@ -41,10 +42,16 @@ func LoginInfo(w http.ResponseWriter, r *http.Request) {
 	// if r.Method != "POST" {
 	// 	http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 	// }
-	err := services.Login_Service(w, r)
+	tocken, err := services.Login_Service(w, r)
+
 	if utils.IsErrors(err) {
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
 		return
 	}
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   tocken,
+		Expires: time.Now().Add(24 * time.Hour),
+	})
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }

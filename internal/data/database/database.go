@@ -16,9 +16,12 @@ func Database() (*sql.DB, error) {
 	if utils.IsErrors(err) {
 		return nil, err
 	}
+
 	err = CreateTables(Db)
+
 	if utils.IsErrors(err) {
 		return nil, err
 	}
+
 	return Db, nil
 }
