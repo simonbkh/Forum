@@ -9,17 +9,16 @@
 </head>
 
 <body>
-    {{if .}}
+    {{if .IsLogged}}
         {{template "log_nav" .}}
     {{else}}
         {{template "nav" .}}
-        
     {{end}}
 
     <div class="main-content">
         <!-- Sidebar with Categories -->
         <div class="side-bar">
-            {{if .}}
+            {{if .IsLogged}}
                 {{template "log_side_bar" .}}
             {{end}}
 
@@ -36,20 +35,31 @@
             </ul>
         </div>
 
-
         <!-- Posts Container -->
         <div class="posts-container">
-            {{range .}}
+            {{range .Posts}}
             <div class="post">
-                <h3>Posted by {{.Username}}</h3>
-                <p>{{.Text}}</p>
-                <p class="category">Category: {{.Category}}</p>
-                <p><i>Posted on: {{.CreatedAt}}</i></p>
+                <h3>{{.Title}}</h3>
+                <p>{{.Content}}</p>
+                <p class="category">
+                    Categories: 
+                    {{range .Categories}}
+                    <span class="category-item">{{.}}</span>
+                    {{end}}
+                </p>
+                <p><i>Posted by {{.Username}} on {{.CreatedAt}}</i></p>
+
+                <!-- Likes Section -->
+                <div class="likes-section">
+                    <button class="like-button" data-post-id="{{.ID}}">👍 Like</button>
+                    <span class="likes-count">{{.Likes}} Likes</span>
+                </div>
                 <hr>
             </div>
             {{end}}
         </div>
     </div>
+
     <footer>
         <p>© 2024 Forum. All rights reserved.</p>
         <p><a href="/terms">Terms of Service</a> | <a href="/privacy">Privacy Policy</a></p>
