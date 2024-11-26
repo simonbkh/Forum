@@ -10,7 +10,7 @@ import (
 
 type PageData struct {
 	IsLogged bool
-	Posts    []services.Post
+	Posts []services.POST
 }
 
 var isLogged bool

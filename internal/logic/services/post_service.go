@@ -2,16 +2,16 @@ package services
 
 import (
 	"errors"
+	"forum/internal/data/queries"
+	"forum/internal/data/utils"
+	"forum/internal/logic/validators"
 	"net/http"
 	"time"
-	"forum/internal/data/utils"
-	"forum/internal/data/queries"
-	"forum/internal/logic/validators"
 )
 
+type POST = utils.Post
 
-
-var Posts []utils.Post
+var Posts []POST
 
 // Post management logic
 
