@@ -4,19 +4,14 @@ import (
 	"errors"
 	"net/http"
 	"time"
-
+	"forum/internal/data/utils"
+	"forum/internal/data/queries"
 	"forum/internal/logic/validators"
 )
 
-type Post struct {
-	Title      string
-	Content    string
-	Categories []string
-	Username   string
-	Date       time.Time
-}
 
-var Posts []Post
+
+var Posts []utils.Post
 
 // Post management logic
 
@@ -39,11 +34,16 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	NewPost := Post{
+	NewPost := utils.Post{
 		Title:      title,
 		Content:    content,
 		Categories: categories,
+		Date:       time.Now().Format("2006-01-02 15:04:05"),
 	}
 	Posts = append(Posts, NewPost)
+	err = queries.InsertPost(NewPost)
+	if err != nil {
+		return err
+	}
 	return nil
 }

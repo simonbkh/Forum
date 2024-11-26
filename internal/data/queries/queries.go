@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	"forum/internal/data/database"
+	"forum/internal/data/utils"
+	// "forum/internal/logic/services"
 )
 
 func InserUser(username, email, password string) error {
@@ -52,5 +54,24 @@ func Checkemail(email string) bool {
 		return false
 	}
 	return count > 0
-
 }
+
+func InsertPost(post utils.Post) error {
+	// p.(NewPost)
+	//  err := QueryID(post.Username)
+	//  if err != nil {
+	// 	return errors.New("khona makaynch")
+	//  }
+	statement, err := database.Db.Prepare(`INSERT INTO posts (user_id ,title, content, username, created_at) values (?,?,?,?)`)
+	if err != nil {
+		return err
+	}
+	_, err = statement.Exec()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// func QueryID(username string) error {
+// }
