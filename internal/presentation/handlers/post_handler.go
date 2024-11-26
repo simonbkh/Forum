@@ -21,9 +21,10 @@ func PostInfo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	err := services.Post_Service(w, r)
+	err := services.Post_Service(r)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
+		return
 	}
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

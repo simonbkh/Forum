@@ -2,11 +2,15 @@ package services
 
 import (
 	"errors"
-	"net/http"
-
+	"fmt"
 	"forum/internal/data/queries"
+
+	//"forum/internal/data/utils"
 	"forum/internal/logic/utils"
 	"forum/internal/logic/validators"
+	"net/http"
+
+	"github.com/gofrs/uuid"
 )
 
 // Authentication logic
@@ -34,6 +38,7 @@ func Register_Service(w http.ResponseWriter, r *http.Request) error {
 }
 
 func Login_Service(w http.ResponseWriter, r *http.Request) error {
+	session_token := ""
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
@@ -57,6 +62,23 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	if !utils.ComparePassAndHashedPass(HashPassword, password) {
 		return errors.New("wrong password")
 	}
+	err = GenerateSessionToken(&session_token)
+	if err != nil {
+		return errors.New("couldn't generate token")
+	}
+	fmt.Println(email)
+	queries.SetSessionToken(email, session_token)
+	utils.SetTokenCookie(w,session_token)
 
+	return nil
+}
+
+// Generate UUID v4
+func GenerateSessionToken(token *string) error {
+	uuid, err := uuid.NewV4()
+	*token = uuid.String()
+	if err != nil {
+		return err
+	}
 	return nil
 }

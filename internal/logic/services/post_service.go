@@ -15,7 +15,7 @@ var Posts []POST
 
 // Post management logic
 
-func Post_Service(w http.ResponseWriter, r *http.Request) error {
+func Post_Service(r *http.Request) error {
 	title := r.FormValue("title")
 	content := r.FormValue("post")
 	categories := r.Form["category"]
@@ -34,6 +34,12 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
+	err = validators.Allowed(r)
+	if err != nil {
+		//redirect or smtg
+		return err
+	}
+	
 	NewPost := utils.Post{
 		Title:      title,
 		Content:    content,
