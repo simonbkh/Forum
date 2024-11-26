@@ -1,6 +1,5 @@
 package utils
 
-
 type Post struct {
 	Title      string
 	Content    string
