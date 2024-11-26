@@ -35,7 +35,7 @@ import (
 
 func Logged(token string) bool {
 	var count int
-	query := `SELECT COUNT(*) FROM users WHERE token = ?`
+	query := `SELECT COUNT(*) FROM sessions WHERE token = ?`
 	err := database.Db.QueryRow(query, token).Scan(&count)
 	if err != nil {
 		return false
@@ -48,6 +48,7 @@ func InserUser(username, email, password string) error {
 	if err != nil {
 		return err
 	}
+	defer statement.Close()
 	_, err = statement.Exec(username, email, password)
 	if err != nil {
 		return err
@@ -101,6 +102,7 @@ func InsertPost(post utils.Post) error {
 	if err != nil {
 		return err
 	}
+	defer statement.Close()
 	_, err = statement.Exec(id, post.Title, post.Content, post.Username, post.Date)
 	if err != nil {
 		return err
@@ -108,47 +110,82 @@ func InsertPost(post utils.Post) error {
 	return nil
 }
 
-func QueryID(username string, id *int) error {
+func QueryID(email string, id *int) error {
 	var idd string
-	query := `SELECT id FROM users WHERE username = ?`
-	err := database.Db.QueryRow(query, username).Scan(&idd)
+	query := `SELECT id FROM users WHERE email = ?`
+	err := database.Db.QueryRow(query, email).Scan(&idd)
 	if err != nil {
-		fmt.Println(username)
+		//fmt.Println(username)
 		return fmt.Errorf("no user found with username %s", idd)
 
 	}
 	return nil
 }
-
-// SetSessionToken sets a UUID session token for a user
-func SetSessionToken(email, uuid string) error {
-
-	// Update the user's session token in the database
-	query := `UPDATE users SET token = ? WHERE email = ?`
-	result, err := database.Db.Exec(query, uuid, email)
+func InsertSession(email, token string) error {
+	var id int
+	err := QueryID(email, &id)
+	if err != nil {
+		//handel this
+		return err
+	}
+	statement, err := database.Db.Prepare(`INSERT INTO sessions (user_id , session_id) values (?,?)`)
 	if err != nil {
 		return err
 	}
-
-	// Check if the user was found and updated
-	rowsAffected, err := result.RowsAffected()
+	defer statement.Close()
+	_, err = statement.Exec(id,token)
 	if err != nil {
 		return err
 	}
-	if rowsAffected == 0 {
-		return sql.ErrNoRows
-	}
-
 	return nil
 }
 
-// Optional: Function to validate a session token
-func ValidateSessionToken(db *sql.DB, token string) (string, error) {
-	var username string
-	query := `SELECT username FROM users WHERE session_token = ?`
-	err := db.QueryRow(query, token).Scan(&username)
+// // SetSessionToken sets a UUID session token for a user
+// func SetSessionToken(email, uuid string) error {
+
+// 	// Update the user's session token in the database
+// 	query := `UPDATE sessions SET session_id = ? WHERE user_id = ?`
+// 	result, err := database.Db.Exec(query, uuid)
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	// Check if the user was found and updated
+// 	rowsAffected, err := result.RowsAffected()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	if rowsAffected == 0 {
+// 		return sql.ErrNoRows
+// 	}
+
+// 	return nil
+// }
+
+// //  Function to validate a session token
+// func ValidateSessionToken(db *sql.DB, token string) (string, error) {
+// 	var username string
+// 	query := `SELECT username FROM users WHERE session_token = ?`
+// 	err := db.QueryRow(query, token).Scan(&username)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	return username, nil
+// }
+
+func Logout(token string) error {
+	fmt.Println([]byte(token[6:]))
+	// Prepare the SQL statement to delete the token from the users table
+	statement, err := database.Db.Prepare(`DELETE FROM sessions WHERE session_id = ?`)
 	if err != nil {
-		return "", err
+		return fmt.Errorf("failed to prepare statement: %w", err) // Wrap error for better context
 	}
-	return username, nil
+	defer statement.Close() // Ensure the statement is closed after execution
+
+	_, err = statement.Exec(token[6:])
+	if err != nil {
+		return fmt.Errorf("failed to execute statement: %w", err)
+	}
+
+	return nil
 }

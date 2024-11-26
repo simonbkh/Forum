@@ -11,8 +11,7 @@ func CreateTables(db *sql.DB) error {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL UNIQUE,
             email TEXT NOT NULL,
-            password TEXT NOT NULL,
-            token text
+            password TEXT NOT NULL
         )`,
 
         `CREATE TABLE IF NOT EXISTS posts (
@@ -22,6 +21,13 @@ func CreateTables(db *sql.DB) error {
             content TEXT NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id)
+        )`,
+
+        `CREATE TABLE IF NOT EXISTS sessions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        session_id TEXT UNIQUE,
+        FOREIGN KEY (user_id) REFERENCES users(id)
         )`,
     }
 

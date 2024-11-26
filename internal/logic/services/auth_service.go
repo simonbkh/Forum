@@ -67,8 +67,8 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 		return errors.New("couldn't generate token")
 	}
 	fmt.Println(email)
-	queries.SetSessionToken(email, session_token)
-	utils.SetTokenCookie(w,session_token)
+	queries.InsertSession(email, session_token)
+	utils.SetTokenCookie(w, session_token)
 
 	return nil
 }
@@ -78,6 +78,22 @@ func GenerateSessionToken(token *string) error {
 	uuid, err := uuid.NewV4()
 	*token = uuid.String()
 	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func Logout(w http.ResponseWriter, r *http.Request) error {
+	cookie, err := r.Cookie("token")
+	if err != nil || cookie.String() == "" {
+		//deber
+		return err
+	}
+	err = queries.Logout(cookie.String())
+	utils.SetTokenCookie(w, "")
+	if err != nil {
+		//handli zeb
+		fmt.Println(err)
 		return err
 	}
 	return nil
