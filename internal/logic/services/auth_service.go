@@ -38,14 +38,14 @@ func Login_Service(w http.ResponseWriter, r *http.Request) (string, error) {
 	password := r.FormValue("password")
 	// var cookie *http.Cookie
 
-	cookie, err := r.Cookie("token")
-	if cookie.Value != "" {
-		return "", err
-	}
+	// cookie, err := r.Cookie("token")
+	// if cookie.Value != "" {
+	// 	return "", err
+	// }
 
 	// tier 2 logic
 
-	err = validators.Login_Validat(email, password)
+	err := validators.Login_Validat(email, password)
 	if err != nil {
 		return "", err
 	}
