@@ -18,7 +18,8 @@ func ParseFiles() error {
 		"../internal/presentation/templates/layouts/index.html",
 		 "../internal/presentation/templates/layouts/nav_bar.html",
 		"../internal/presentation/templates/auth/login.html",
-		"../internal/presentation/templates/auth/register.html")
+		"../internal/presentation/templates/auth/register.html",
+		"../internal/presentation/templates/layouts/log_nav.html")
 	if utils.IsErrors(err) {
 		return err
 	}

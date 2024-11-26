@@ -66,6 +66,9 @@ func Login_Service(w http.ResponseWriter, r *http.Request) (string, error) {
 	var tocken string
 	// Set token in cookie
 	str := queries.CheckeToken(email)
+	if str!= "" {
+		return "", errors.New("user already logged in")
+	}
 	if str == "" {
 		tocken, err = utils.GenerateToken(16)
 		queries.InserToken(tocken, email)

@@ -9,13 +9,11 @@
 </head>
 
 <body>
-  <!-- {{if .}} -->
-    
-    <!-- {{else}}
-
-    
-    {{end}} -->
+    {{if .IsLogged}}
+    {{template "log_nav" .}}
+    {{else}}
     {{template "nav" .}}
+    {{end}}
     <div class="main-content">
         <!-- Sidebar with Categories -->
         <div class="side-bar">
