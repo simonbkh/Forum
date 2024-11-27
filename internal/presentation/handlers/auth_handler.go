@@ -56,3 +56,13 @@ func LoginInfo(w http.ResponseWriter, r *http.Request) {
 	isLogged = true
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
+
+func Log_out(w http.ResponseWriter , r *http.Request){
+	err := services.Log_out_Service(w, r)
+	if utils.IsErrors(err) {
+		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
+		return
+	}
+	isLogged = false
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+}

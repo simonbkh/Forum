@@ -71,11 +71,28 @@ func Login_Service(w http.ResponseWriter, r *http.Request) (string, error) {
 	}
 	if str == "" {
 		tocken, err = utils.GenerateToken(16)
-		queries.InserToken(tocken, email)
+		if err != nil {
+			return "", err
+		}
+		err := queries.Insert_OR_remove_token(tocken, email)
 		if err != nil {
 			return "", err
 		}
 	}
 
 	return tocken, nil
+}
+
+func Log_out_Service(w http.ResponseWriter, r *http.Request) error{
+	var cookie *http.Cookie
+
+	cookie, _ = r.Cookie("token")
+	if cookie.Value != "" {
+		// return "", err
+	}
+	err := queries.Insert_OR_remove_token(cookie.Value,"")
+	if err != nil {
+		return err
+	}
+ return nil
 }

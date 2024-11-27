@@ -64,10 +64,20 @@ func CheckeToken(email string)string{
 	return str
 }
 
-func InserToken(tocken, email string) {
-	add := `UPDATE users SET token = ? where email = ?`
-	_, err := database.Db.Exec(add, tocken, email)
+func Insert_OR_remove_token(tocken, email string) error {
+	var qry string
+	if email == "" {
+		qry = `UPDATE users SET token = NULL where token = ?`
+		_, err := database.Db.Exec(qry, tocken)
+		if err != nil {
+			return err
+		}
+	}else {
+		qry = `UPDATE users SET token = ? where email = ?`
+	_, err := database.Db.Exec(qry, tocken, email)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
+	}
+	return nil
 }

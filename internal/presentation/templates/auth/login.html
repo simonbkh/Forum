@@ -4,7 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="/static/login.css">
+    <style>
+        /* General styling for the page */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #0066cc;
+            outline: none;
+        }
+
+        button {
+            background-color: #0066cc;
+            color: white;
+            font-size: 1rem;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #004fa3;
+        }
+
+        p {
+            color: red;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -12,7 +90,7 @@
     </header>
     <div class="container">
         {{if .}} 
-        <p style="color: red;">Invalid Email or Password!!</p>    
+        <p>Invalid Email or Password!!</p>    
         {{end}}
         <form action="/loginInfo" method="post">
             <label for="email">Email:</label>
@@ -25,5 +103,4 @@
         </form>
     </div>
 </body>
-
 </html>

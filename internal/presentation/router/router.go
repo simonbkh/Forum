@@ -18,6 +18,7 @@ func Router(router *http.ServeMux) error {
 	
 	router.HandleFunc("/", handlers.HomeHandler)
 	router.HandleFunc("/login", handlers.Login)
+	router.HandleFunc("/logout", handlers.Log_out)
 	router.HandleFunc("/static/css/{file}", handlers.Static)
 	router.HandleFunc("/register", handlers.Register)
 	router.HandleFunc("/loginInfo", handlers.LoginInfo)

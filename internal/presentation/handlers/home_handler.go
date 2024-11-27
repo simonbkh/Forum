@@ -22,4 +22,5 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	templates.HomeTemplate.Execute(w, Presentation)
+	isLogged = false
 }

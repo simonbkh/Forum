@@ -23,7 +23,7 @@ func User_Validator(username, email, password string) error {
 		}
 
 	} else {
-		return errors.New("username or email or password is empty")
+		return errors.New("please fill out all cells")
 	}
 
 	return nil
