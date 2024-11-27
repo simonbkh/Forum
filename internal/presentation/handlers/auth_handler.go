@@ -45,12 +45,6 @@ func LoginInfo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
 		return
 	}
-	Getcoockes(r)
-	// cookie := &http.Cookie{
-	// 	Name:  "email",
-	// 	Value: "12@",
-	// }
-	// http.SetCookie(w, cookie)
 	er := templates.HomeTemplate.Execute(w, nil)
 	if er != nil {
 		return
@@ -58,11 +52,4 @@ func LoginInfo(w http.ResponseWriter, r *http.Request) {
 	// http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 
-func Getcoockes(r *http.Request) {
-	emailCookie, err := r.Cookie("email")
-	if err != nil {
-		fmt.Println("Error reading email cookie:", err)
-		return
-	}
-	fmt.Println(emailCookie)
-}
+

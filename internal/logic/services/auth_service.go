@@ -2,11 +2,10 @@ package services
 
 import (
 	"errors"
-	"net/http"
-
 	"forum/internal/data/queries"
 	"forum/internal/logic/utils"
 	"forum/internal/logic/validators"
+	"net/http"
 )
 
 // Authentication logic
@@ -36,9 +35,23 @@ func Register_Service(w http.ResponseWriter, r *http.Request) error {
 func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
-	
-	// tier 2 logic
+	/// cooxkes
+	sessionToke := r.cookes("SessionToken")
+	if sessionToke == nil {
+		fmt.Println("okkkkkk")
+		return
+	}
+	sessionToken = utils.GenerateSessionToken()
+	if queries.IsUserExist(sessionToken, email) {
+		return errors.New("invalid sission token ")
+	}
+	queries.InserSisionToken(sessionToke)
+	http.SetCookie(w, &http.Cookie{
+		Name:  "SessionToken",
+		Value: sessionToken,
+	})
 
+	// tier 2 logic
 	err := validators.User_Validator("", email, password)
 	if err != nil {
 		return err

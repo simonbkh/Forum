@@ -3,7 +3,6 @@ package queries
 import (
 	"database/sql"
 	"fmt"
-
 	"forum/internal/data/database"
 )
 
@@ -17,6 +16,17 @@ func InserUser(username, email, password string) error {
 		return err
 	}
 	return nil
+}
+
+func InserSisionToken(sessionToke string) {
+	statement, err := database.db.Prepare(`INSERT INTO users (sessionToke) values (?)`)
+	if err != nil {
+		return err
+	}
+	_, err = statement.Exec(sessionToke)
+	if err != nil {
+		return err
+	}
 }
 
 func IsUserExist(username, email string) bool {
@@ -58,5 +68,4 @@ func Checkemail(email string) bool {
 		return false
 	}
 	return true
-
 }
