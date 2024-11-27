@@ -7,17 +7,15 @@ import (
 	"forum/internal/presentation/templates"
 )
 
-type Post struct {
-	Text string
-}
+
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	// if r.Method != "GET" {
 	// 	http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-	var Posts Post
+	// var Posts Post
 	// }
-	Posts.Text = "tt"
-	er := templates.HomeTemplate.Execute(w, Posts)
+	Text := "tt"
+	er := templates.HomeTemplate.Execute(w,Text)
 	if er != nil {
 		fmt.Println(er)
 	}

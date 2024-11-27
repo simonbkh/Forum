@@ -2,11 +2,10 @@ package handlers
 
 import (
 	"fmt"
-	"net/http"
-
 	"forum/internal/logic/services"
 	"forum/internal/logic/utils"
 	"forum/internal/presentation/templates"
+	"net/http"
 )
 
 // /login, /register routes
@@ -37,25 +36,33 @@ func RegisterInfo(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 }
 
-type Users struct {
-	Username string
-	Text     string
-}
-
 func LoginInfo(w http.ResponseWriter, r *http.Request) {
-	// if r.Method != "POST" {
-	// 	http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-	// }
+	if r.Method != "POST" {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	}
 	err := services.Login_Service(w, r)
 	if utils.IsErrors(err) {
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
 		return
 	}
-	var User Users
-	er := templates.HomeTemplate.Execute(w, User)
+	Getcoockes(r)
+	// cookie := &http.Cookie{
+	// 	Name:  "email",
+	// 	Value: "12@",
+	// }
+	// http.SetCookie(w, cookie)
+	er := templates.HomeTemplate.Execute(w, nil)
 	if er != nil {
-		fmt.Println("ooooooooook")
 		return
 	}
 	// http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+}
+
+func Getcoockes(r *http.Request) {
+	emailCookie, err := r.Cookie("email")
+	if err != nil {
+		fmt.Println("Error reading email cookie:", err)
+		return
+	}
+	fmt.Println(emailCookie)
 }

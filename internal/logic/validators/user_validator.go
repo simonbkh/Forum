@@ -1,6 +1,10 @@
 package validators
 
-import "errors"
+import (
+	"errors"
+	// "fmt"
+	"regexp"
+)
 
 func User_Validator(username, email, password string) error {
 	if username != "" {
@@ -21,7 +25,15 @@ func User_Validator(username, email, password string) error {
 }
 
 func UsernameValidator(username string) error {
-	if len(username) > 10 {
+	re, err := regexp.Compile(`^[a-zA-Z][a-zA-Z0-9_]{2,15}$`)
+	if err != nil {
+		return errors.New("username is not corect ---")
+	}
+	match := re.MatchString(username)
+	if !match {
+		return errors.New("username is not corect ---")
+	}
+	if len(username) > 16 {
 		return errors.New("username is too long (max: 10 characters)")
 	} else if len(username) < 3 {
 		return errors.New("username is too short (min: 3 characters)")
@@ -39,6 +51,14 @@ func PasswordValidator(password string) error {
 }
 
 func EmailValidator(email string) error {
+	re, err := regexp.Compile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+	if err != nil {
+		return errors.New("the format  email not corect ")
+	}
+	match := re.MatchString(email)
+	if !match {
+		return errors.New("the email not corect !!")
+	}
 	if len(email) > 25 {
 		return errors.New("email is too long (max: 25 characters)")
 	} else if len(email) < 13 {

@@ -36,7 +36,7 @@ func Register_Service(w http.ResponseWriter, r *http.Request) error {
 func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
-
+	
 	// tier 2 logic
 
 	err := validators.User_Validator("", email, password)
