@@ -8,7 +8,7 @@ import (
 	"forum/internal/presentation/templates"
 )
 
-func PostHandler(w http.ResponseWriter, r *http.Request) {
+func NewPostHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return

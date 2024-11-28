@@ -20,8 +20,11 @@ func CategoriesValidator(categories []string) error {
 
 func TitleValidator(title string) error{
 	
-
-
+	if len(title) > 15 {
+		return errors.New("title is too long")
+	}else if len(title) < 4 {
+		return errors.New("title is too short")
+	}
 
 	return nil
 }
