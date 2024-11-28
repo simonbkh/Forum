@@ -2,11 +2,12 @@ package services
 
 import (
 	"errors"
+	"net/http"
+	"time"
+
 	"forum/internal/data/queries"
 	"forum/internal/data/utils"
 	"forum/internal/logic/validators"
-	"net/http"
-	"time"
 )
 
 type POST = utils.Post
@@ -15,7 +16,7 @@ var Posts []utils.Post
 
 // Post management logic
 
-func Post_Service(r *http.Request) error {
+func Post_Service(w http.ResponseWriter, r *http.Request) error {
 	title := r.FormValue("title")
 	content := r.FormValue("post")
 	categories := r.Form["category"]
@@ -35,10 +36,9 @@ func Post_Service(r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	err, user_id = validators.Allowed(r)
-	//fmt.Println(user_id)
+	user_id, err = validators.Allowed(w, r)
 	if err != nil {
-		//redirect or smtg
+		// redirect or smtg
 		return err
 	}
 
@@ -47,10 +47,10 @@ func Post_Service(r *http.Request) error {
 		Content:    content,
 		Categories: categories,
 		Date:       time.Now().Format("2006-01-02 15:04:05"),
-		//Username:     string(user_id),
+		// Username:     string(user_id),
 	}
 
-	//Posts = append(Posts, NewPost)
+	// Posts = append(Posts, NewPost)
 	err = queries.InsertPost(NewPost, user_id)
 	if err != nil {
 		return err

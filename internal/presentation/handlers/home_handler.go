@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"forum/internal/logic/services"
@@ -16,16 +15,15 @@ type PageData struct {
 var isLogged bool
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	 err := services.GetPosts(&services.Posts)
-	 if err != nil {
+	err := services.GetPosts(&services.Posts)
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
-	 }
+	}
 	data := PageData{
 		IsLogged: isLogged,
 		Posts:    services.Posts,
 	}
-	fmt.Println(services.Posts,isLogged)
 	if r.Method != "GET" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return

@@ -2,8 +2,10 @@ package validators
 
 import (
 	"errors"
-	"forum/internal/data/queries"
+	"fmt"
 	"net/http"
+
+	"forum/internal/data/queries"
 )
 
 func CategoriesValidator(categories []string) error {
@@ -21,18 +23,24 @@ func CategoriesValidator(categories []string) error {
 	}
 	return nil
 }
-func Allowed(r *http.Request) (error, int) {
+
+func Allowed(w http.ResponseWriter, r *http.Request) (int, error) {
 	cookie, err := r.Cookie("token")
-	user_id := queries.Logged(cookie.Value)
-	if err != nil || user_id == 0 {
+	if err != nil {
 		// redirect awla chi laeba
-		return errors.New("you are not logged in! ") , 0
+		return 0, err
+	}
+	fmt.Println(cookie)
+	user_id, err := queries.Logged(cookie.Value)
+	fmt.Println(user_id)
+	if err != nil {
+		// redirect awla chi laeba
+		return 0, err
 	}
 
-	return nil, user_id
+	return user_id, nil
 }
 
 func TitleValidator(title string) error {
-
 	return nil
 }

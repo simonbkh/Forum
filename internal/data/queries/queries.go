@@ -32,16 +32,16 @@ import (
 // 	return token, nil
 // }
 
-func Logged(token string) int {
+func Logged(token string) (int,error) {
 	//fmt.Println(token)
 	var user_id int
-	fmt.Println(user_id)
+	// fmt.Println(user_id)
 	query := `SELECT user_id FROM sessions WHERE session_id = ?`
 	err := database.Db.QueryRow(query, token).Scan(&user_id)
 	if err != nil {
-		return 0
+		return 0,err
 	}
-	return user_id
+	return user_id,nil
 }
 
 func InserUser(username, email, password string) error {
@@ -220,7 +220,7 @@ func GetPosts() ([]utils.Post, error) {
 		}
 		//post.Categories = append(post.Categories, cat)
 		post.Username, err = GetUser(post.Username)
-		fmt.Println(post.Username)
+		// fmt.Println(post.Username)
 		if err != nil {
 			return nil, err
 		}
