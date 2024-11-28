@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"forum/internal/data/queries"
 	"forum/internal/logic/utils"
 	"forum/internal/logic/validators"
@@ -36,16 +37,20 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 	/// cooxkes
-	sessionToke := r.cookes("SessionToken")
-	if sessionToke == nil {
-		fmt.Println("okkkkkk")
-		return
+	sessionid,errr := r.Cookie("SessionToken")
+	if sessionid != nil || errr!=nil{
+		fmt.Println("okkkkkk", sessionid, errr)
+
 	}
-	sessionToken = utils.GenerateSessionToken()
-	if queries.IsUserExist(sessionToken, email) {
-		return errors.New("invalid sission token ")
+	sessionToken, er := utils.GenerateSessionToken()
+	if er != nil {
+		return er
 	}
-	queries.InserSisionToken(sessionToke)
+	fmt.Println(sessionToken)
+	// if queries.IsUserExist(sessionToken, email) {
+	// 	return errors.New("invalid sission token ")
+	// }
+	queries.InserSisionToken(sessionToken)
 	http.SetCookie(w, &http.Cookie{
 		Name:  "SessionToken",
 		Value: sessionToken,

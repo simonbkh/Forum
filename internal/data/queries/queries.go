@@ -18,8 +18,8 @@ func InserUser(username, email, password string) error {
 	return nil
 }
 
-func InserSisionToken(sessionToke string) {
-	statement, err := database.db.Prepare(`INSERT INTO users (sessionToke) values (?)`)
+func InserSisionToken(sessionToke string) error {
+	statement, err := database.Db.Prepare(`INSERT INTO users (sessionToke) values (?)`)
 	if err != nil {
 		return err
 	}
@@ -27,6 +27,7 @@ func InserSisionToken(sessionToke string) {
 	if err != nil {
 		return err
 	}
+	return nil
 }
 
 func IsUserExist(username, email string) bool {
