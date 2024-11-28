@@ -1,11 +1,10 @@
-
 /* General Body Styling */
 body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f7fc;
-    color: #333;
+    background-color: #f5f5f0; /* لون خلفية خفيف ومريح */
+    color: #4b4b4b; /* لون النص الأساسي */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -13,7 +12,7 @@ body {
 
 /* Header */
 header {
-    background-color: #007bff;
+    background-color: #d4a373; /* لون بني فاتح دافئ */
     color: white;
     padding: 20px 20px;
     display: flex;
@@ -45,8 +44,8 @@ header h1 {
 }
 
 .header-buttons a:hover {
-    background-color: white;
-    color: #007bff;
+    background-color: #f5c89b; /* لون كريمي فاتح */
+    color: #4b4b4b; /* لون نص داكن */
 }
 
 /* Layout */
@@ -71,7 +70,7 @@ header h1 {
 
 .side-bar h2 {
     font-size: 1.5em;
-    color: #007bff;
+    color: #b5838d; /* لون وردي ترابي */
     margin-bottom: 15px;
     text-align: center;
 }
@@ -87,7 +86,7 @@ header h1 {
 
 .side-bar a {
     text-decoration: none;
-    color: #007bff;
+    color: #6b705c; /* لون زيتوني داكن */
     font-size: 1em;
     padding: 10px;
     display: block;
@@ -97,8 +96,8 @@ header h1 {
 }
 
 .side-bar a:hover {
-    background-color: #007bff;
-    color: white;
+    background-color: #ffe8d6; /* لون وردي فاتح */
+    color: #4b4b4b; /* لون نص داكن */
 }
 
 /* Posts Container */
@@ -125,7 +124,7 @@ header h1 {
 }
 
 .post h3 {
-    color: #007bff;
+    color: #9d8189; /* لون وردي ترابي */
     font-size: 1.3em;
     margin-bottom: 10px;
     font-weight: bold;
@@ -145,25 +144,22 @@ header h1 {
 
 .post .category {
     font-style: italic;
-    color: #007bff;
+    color: #6b705c; /* لون زيتوني داكن */
 }
 
 /* Footer Styling */
 footer {
-    background-color: #f8f9fa;
-    color: #777;
+    background-color: #eaeaea;
+    color: #555;
     text-align: center;
     padding: 10px 0;
 }
 
 footer a {
-    color: #007bff;
+    color: #9d8189; /* لون وردي ترابي */
     text-decoration: none;
 }
 
 footer a:hover {
     text-decoration: underline;
 }
-
-
-

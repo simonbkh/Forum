@@ -64,5 +64,10 @@ func Log_out(w http.ResponseWriter , r *http.Request){
 		return
 	}
 	isLogged = false
+	http.SetCookie(w, &http.Cookie{
+		Name:    "token",
+		Value:   "",
+		MaxAge:  -1,
+	})
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
