@@ -33,12 +33,13 @@
         
         <!-- Posts Container -->
         <div class="posts-container">
-            {{range .}}
+            {{range .Posts}}
             <div class="post">
                 <h3>Posted by {{.Username}}</h3>
-                <p>{{.Text}}</p>
-                <p class="category">Category: {{.Category}}</p>
+                <p>{{.Title}}</p>
                 <p><i>Posted on: {{.CreatedAt}}</i></p>
+                <p>{{.Content}}</p>
+                <p><a href="/post/{{.ID}}">Read More</a></p>
                 <hr>
             </div>
             {{end}}

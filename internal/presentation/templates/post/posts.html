@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post</title>
+    <style>
+        /* القواعد الأساسية */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* تنسيق النموذج */
+        form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* تنسيق العناوين */
+        label {
+            font-weight: bold;
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        /* تنسيق الإدخالات */
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        /* تنسيق خانات الاختيار */
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        /* تنسيق الأزرار */
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <form action="/postInfo" method="get">
+        <label>Categories:</label>
+        <ul>
+            <li>
+                <input type="checkbox" name="Categories[]" id="All" value="All">
+                <label for="All">All</label>
+            </li>
+            <li>
+                <input type="checkbox" name="Categories[]" id="General" value="General">
+                <label for="General">General</label>
+            </li>
+            <li>
+                <input type="checkbox" name="Categories[]" id="Games" value="Games">
+                <label for="Games">Games</label>
+            </li>
+            <li>
+                <input type="checkbox" name="Categories[]" id="Sports" value="Sports">
+                <label for="Sports">Sports</label>
+            </li>
+            <li>
+                <input type="checkbox" name="Categories[]" id="Fashion" value="Fashion">
+                <label for="Fashion">Fashion</label>
+            </li>
+            <li>
+                <input type="checkbox" name="Categories[]" id="Travel" value="Travel">
+                <label for="Travel">Travel</label>
+            </li>
+            <li>
+                <input type="checkbox" name="Categories[]" id="Food" value="Food">
+                <label for="Food">Food</label>
+            </li>
+            <li>
+                <input type="checkbox" name="Categories[]" id="Health" value="Health">
+                <label for="Health">Health</label>
+            </li>
+        </ul>
+        <label for="title">Title:</label>
+        <input type="text" name="title" id="title">
+
+        <label for="posts">Content:</label>
+        <textarea name="posts" id="posts"></textarea>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
