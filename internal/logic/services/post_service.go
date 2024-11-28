@@ -11,7 +11,7 @@ import (
 
 type POST = utils.Post
 
-var Posts []POST
+var Posts []utils.Post
 
 // Post management logic
 
@@ -19,6 +19,7 @@ func Post_Service(r *http.Request) error {
 	title := r.FormValue("title")
 	content := r.FormValue("post")
 	categories := r.Form["category"]
+	user_id := 0
 
 	err := validators.TitleValidator(title)
 	if err != nil {
@@ -34,20 +35,23 @@ func Post_Service(r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	err = validators.Allowed(r)
+	err, user_id = validators.Allowed(r)
+	//fmt.Println(user_id)
 	if err != nil {
 		//redirect or smtg
 		return err
 	}
-	
+
 	NewPost := utils.Post{
 		Title:      title,
 		Content:    content,
 		Categories: categories,
 		Date:       time.Now().Format("2006-01-02 15:04:05"),
+		//Username:     string(user_id),
 	}
-	Posts = append(Posts, NewPost)
-	err = queries.InsertPost(NewPost)
+
+	//Posts = append(Posts, NewPost)
+	err = queries.InsertPost(NewPost, user_id)
 	if err != nil {
 		return err
 	}

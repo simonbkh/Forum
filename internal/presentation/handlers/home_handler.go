@@ -10,17 +10,22 @@ import (
 
 type PageData struct {
 	IsLogged bool
-	Posts []services.POST
+	Posts    []services.POST
 }
 
 var isLogged bool
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	 err := services.GetPosts(&services.Posts)
+	 if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	 }
 	data := PageData{
 		IsLogged: isLogged,
 		Posts:    services.Posts,
 	}
-	fmt.Println(data.Posts)
+	fmt.Println(services.Posts,isLogged)
 	if r.Method != "GET" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return

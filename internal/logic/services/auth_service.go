@@ -66,7 +66,7 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return errors.New("couldn't generate token")
 	}
-	fmt.Println(email)
+	//fmt.Println(email)
 	queries.InsertSession(email, session_token)
 	utils.SetTokenCookie(w, session_token)
 
