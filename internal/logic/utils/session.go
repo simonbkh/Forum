@@ -1,14 +1,12 @@
 package utils
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 )
 
 func SetTokenCookie(w http.ResponseWriter, token string) {
 	// Create a new cookie
-	fmt.Println(token)
 	var cookie *http.Cookie
 	if token == "" {
 		cookie = &http.Cookie{

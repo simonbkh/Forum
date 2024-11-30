@@ -15,6 +15,10 @@ type PageData struct {
 var isLogged bool
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
 	err := services.GetPosts(&services.Posts)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -23,10 +27,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	data := PageData{
 		IsLogged: isLogged,
 		Posts:    services.Posts,
-	}
-	if r.Method != "GET" {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-		return
 	}
 	templates.HomeTemplate.Execute(w, data)
 }

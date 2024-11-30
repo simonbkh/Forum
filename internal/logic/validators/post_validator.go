@@ -2,7 +2,6 @@ package validators
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
 	"forum/internal/data/queries"
@@ -10,7 +9,7 @@ import (
 
 func CategoriesValidator(categories []string) error {
 	istruecat := false
-	TrueCategories := []string{"general", "games", "sports", "fashion", "travel", "food", "health"}
+	TrueCategories := []string{"general", "games", "sports", "fashion", "travel", "food", "health", "all"}
 	for _, category := range categories {
 		for _, truecat := range TrueCategories {
 			if truecat == category {
@@ -30,9 +29,7 @@ func Allowed(w http.ResponseWriter, r *http.Request) (int, error) {
 		// redirect awla chi laeba
 		return 0, err
 	}
-	fmt.Println(cookie)
 	user_id, err := queries.Logged(cookie.Value)
-	fmt.Println(user_id)
 	if err != nil {
 		// redirect awla chi laeba
 		return 0, err
