@@ -36,14 +36,7 @@ func Register_Service(w http.ResponseWriter, r *http.Request) error {
 func Login_Service(w http.ResponseWriter, r *http.Request) (string, error) {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
-	// var cookie *http.Cookie
 
-	// cookie, err := r.Cookie("token")
-	// if cookie.Value != "" {
-	// 	return "", err
-	// }
-
-	// tier 2 logic
 
 	err := validators.Login_Validat(email, password)
 	if err != nil {
@@ -66,8 +59,17 @@ func Login_Service(w http.ResponseWriter, r *http.Request) (string, error) {
 	var tocken string
 	// Set token in cookie
 	str := queries.CheckeToken(email)
-	if str!= "" {
-		return "", errors.New("user already logged in")
+
+	if str != "" {
+		tocken = str
+		tocken, err = utils.GenerateToken(16)
+		if err != nil {
+			return "", err
+		}
+		err = queries.Insert_OR_remove_token(tocken, email)
+		if err != nil {
+			return "", err
+		}
 	}
 	if str == "" {
 		tocken, err = utils.GenerateToken(16)
@@ -79,20 +81,22 @@ func Login_Service(w http.ResponseWriter, r *http.Request) (string, error) {
 			return "", err
 		}
 	}
-
 	return tocken, nil
 }
 
-func Log_out_Service(w http.ResponseWriter, r *http.Request) error{
-	var cookie *http.Cookie
+func Log_out_Service(w http.ResponseWriter, r *http.Request) error {
+	// var cookie *http.Cookie
 
-	cookie, _ = r.Cookie("token")
-	if cookie.Value != "" {
-		// return "", err
-	}
-	err := queries.Insert_OR_remove_token(cookie.Value,"")
+	cookie, err := r.Cookie("token")
 	if err != nil {
 		return err
 	}
- return nil
+	if cookie.Value != "" {
+		// return "", err
+	}
+	err = queries.Insert_OR_remove_token(cookie.Value, "")
+	if err != nil {
+		return err
+	}
+	return nil
 }

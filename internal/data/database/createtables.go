@@ -9,7 +9,7 @@ func CreateTables(db *sql.DB) error {
 	 	username TEXT NOT NULL UNIQUE,
 		email TEXT NOT NULL UNIQUE,
 		password TEXT NOT NULL,
-		token TEXT
+		token TEXT UNIQUE 
 		);`,
 		`CREATE TABLE IF NOT EXISTS post (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -64,6 +64,15 @@ func CheckeToken(email string) string {
 	}
 	return str
 }
+func CheckToken_Prisent_or_not(token string) bool {
+	var count int
+	query := `SELECT COUNT(*) FROM users WHERE token = ?`
+	err := database.Db.QueryRow(query, token).Scan(&count)
+	if err != nil {
+		return false
+	}
+	return count == 1
+}
 
 func Insert_OR_remove_token(tocken, email string) error {
 	var qry string
@@ -137,4 +146,13 @@ func GetPosts() ([]Post, error) {
 	}
 
 	return posts, nil
+}
+
+func Update_token(tokenAfter, tokenBefore string) (error) {
+	query := `UPDATE users SET token = ? WHERE token = ?`
+	_, err := database.Db.Exec(query, tokenAfter, tokenBefore)
+	if err != nil {
+		return err
+	}
+	return nil
 }
