@@ -37,7 +37,7 @@ func RegisterInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
 func LoginInfo(w http.ResponseWriter, r *http.Request) {
@@ -57,6 +57,11 @@ func LoginInfo(w http.ResponseWriter, r *http.Request) {
 func Logout(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	}
+	err := services.Logout(w  ,r )
+	if utils.IsErrors(err) {
+		//maeereftch wach hadak howa status code
+		http.Error(w, fmt.Sprintf("%v", err), http.StatusInternalServerError)
 	}
 	isLogged = false
 	http.Redirect(w, r, "/", http.StatusSeeOther)

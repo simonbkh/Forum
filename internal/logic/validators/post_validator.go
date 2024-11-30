@@ -1,12 +1,17 @@
 package validators
 
-import "errors"
+import (
+	"errors"
+	"net/http"
+
+	"forum/internal/data/queries"
+)
 
 func CategoriesValidator(categories []string) error {
 	istruecat := false
-	TrueCategories := []string{"general", "games", "sports", "fashion", "travel", "food", "health"}
-	for _,category := range categories {
-		for _, truecat :=range TrueCategories {
+	TrueCategories := []string{"general", "games", "sports", "fashion", "travel", "food", "health", "all"}
+	for _, category := range categories {
+		for _, truecat := range TrueCategories {
 			if truecat == category {
 				istruecat = true
 			}
@@ -18,6 +23,20 @@ func CategoriesValidator(categories []string) error {
 	return nil
 }
 
+func Allowed(w http.ResponseWriter, r *http.Request) (int, error) {
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		// redirect awla chi laeba
+		return 0, err
+	}
+	user_id, err := queries.Logged(cookie.Value)
+	if err != nil {
+		// redirect awla chi laeba
+		return 0, err
+	}
+
+	return user_id, nil
+}
 func TitleValidator(title string) error{
 	
 	if len(title) > 15 {
@@ -26,5 +45,6 @@ func TitleValidator(title string) error{
 		return errors.New("title is too short")
 	}
 
+func TitleValidator(title string) error {
 	return nil
 }

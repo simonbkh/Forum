@@ -14,6 +14,7 @@ func Database() (*sql.DB, error) {
 	var err error
 	Db, err = sql.Open("sqlite3", "../internal/data/database.db")
 	if utils.IsErrors(err) {
+		//fmt.Println(err)
 		return nil, err
 	}
 	err = CreateTables(Db)

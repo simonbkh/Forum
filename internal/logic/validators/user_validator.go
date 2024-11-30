@@ -35,10 +35,10 @@ func User_Validator(username, email, password string) error {
 	if err != nil {
 		return err
 	}
-	err = EmailValidator(email)
-	if err != nil {
-		return err
-	}
+	// err = EmailValidator(email)
+	// if err != nil {
+	// 	return err
+	// }
 	return nil
 }
 
@@ -70,9 +70,9 @@ func PasswordValidator(password string) error {
 // 	// return nil
 // }
 
-func EmailValidator(email string) error{
-	if len(email) > 20 {
-		return errors.New("long password")
-	}
-	return nil
-}
+// func EmailValidator(email string) error{
+// 	if len(email) > 20 {
+// 		return errors.New("long password")
+// 	}
+// 	return nil
+// }
