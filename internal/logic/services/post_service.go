@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -22,17 +23,17 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 	categories := r.Form["category"]
 	user_id := 0
 
-	err := validators.TitleValidator(title)
-	if err != nil {
-		return err
-	}
+	// err := validators.TitleValidator(title)
+	// if err != nil {
+	// 	return err
+	// }
 	if len(categories) == 0 {
 		categories = append(categories, "general")
 	} else if len(categories) > 3 {
 		return errors.New("maximum categories to choose is 3")
 	}
 
-	err = validators.CategoriesValidator(categories)
+	err := validators.CategoriesValidator(categories)
 	if err != nil {
 		return err
 	}
@@ -50,8 +51,13 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 		// Username:     string(user_id),
 	}
 
+	fmt.Println(NewPost)
 	// Posts = append(Posts, NewPost)
-	err = queries.InsertPost(NewPost, user_id)
+	post_id , err := queries.InsertPost(NewPost, user_id)
+	if err != nil {
+		return err
+	}
+	err = queries.InsertCategories(categories, post_id)
 	if err != nil {
 		return err
 	}

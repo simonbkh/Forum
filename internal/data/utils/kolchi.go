@@ -1,9 +1,10 @@
 package utils
 
 type Post struct {
+	User_id    int
+	Username   string
 	Title      string
 	Content    string
-	Categories []string
-	Username   string
 	Date       string
+	Categories []string
 }

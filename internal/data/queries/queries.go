@@ -3,6 +3,7 @@ package queries
 import (
 	"database/sql"
 	"fmt"
+
 	"forum/internal/data/database"
 	"forum/internal/data/utils"
 	// "forum/internal/logic/services"
@@ -32,16 +33,16 @@ import (
 // 	return token, nil
 // }
 
-func Logged(token string) (int,error) {
-	//fmt.Println(token)
+func Logged(token string) (int, error) {
+	// fmt.Println(token)
 	var user_id int
 	// fmt.Println(user_id)
 	query := `SELECT user_id FROM sessions WHERE session_id = ?`
 	err := database.Db.QueryRow(query, token).Scan(&user_id)
 	if err != nil {
-		return 0,err
+		return 0, err
 	}
-	return user_id,nil
+	return user_id, nil
 }
 
 func InserUser(username, email, password string) error {
@@ -92,22 +93,33 @@ func Checkemail(email string) bool {
 	return count > 0
 }
 
-func InsertPost(post utils.Post, id int) error {
+func InsertPost(post utils.Post, id int) (string, error) {
 	// p.(NewPost)
-	//id := 0
-	//err := QueryID(post.Username, &id)
-	//err := GetId()
+	// id := 0
+	// err := QueryID(post.Username, &id)
+	// err := GetId()
 
 	statement, err := database.Db.Prepare(`INSERT INTO posts (user_id ,title, content, created_at) values (?,?,?,?)`)
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer statement.Close()
 	_, err = statement.Exec(id, post.Title, post.Content, post.Date)
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	var post_id string
+	err = database.Db.QueryRow(`
+    	SELECT id 
+    	FROM posts 
+    	WHERE user_id = ? AND title = ? AND content = ? AND created_at = ?`,
+		id, post.Title, post.Content, post.Date).
+		Scan(&post_id)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+	return post_id, nil
 }
 
 func QueryID(email string, id *int) error {
@@ -115,18 +127,17 @@ func QueryID(email string, id *int) error {
 	query := `SELECT id FROM users WHERE email = ?`
 	err := database.Db.QueryRow(query, email).Scan(&idd)
 	if err != nil {
-		//fmt.Println(username)
+		// fmt.Println(username)
 		return fmt.Errorf("no user found with email %d", idd)
-
 	}
 	// if err != nil {
 	// 	fmt.Println(err)
 	// }
-	
 
 	*id = idd
 	return nil
 }
+
 func InsertSession(email, token string) error {
 	var id int
 	err := QueryID(email, &id)
@@ -213,12 +224,11 @@ func GetPosts() ([]utils.Post, error) {
 
 	for rows.Next() {
 		var post utils.Post
-		var cat string
-		err := rows.Scan(&cat, &post.Username, &post.Title, &post.Content, &post.Date)
+		err := rows.Scan(&post.User_id, &post.Username, &post.Title, &post.Content, &post.Date)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
-		//post.Categories = append(post.Categories, cat)
+		// post.Categories = append(post.Categories, cat)
 		post.Username, err = GetUser(post.Username)
 		// fmt.Println(post.Username)
 		if err != nil {
@@ -228,7 +238,6 @@ func GetPosts() ([]utils.Post, error) {
 	}
 
 	return posts, nil
-
 }
 
 func GetUser(uid string) (string, error) {
@@ -245,11 +254,25 @@ func GetUser(uid string) (string, error) {
 	defer res.Close()
 	for res.Next() {
 		err = res.Scan(&name)
-
 		if err != nil {
 			return "", fmt.Errorf("failed to scan row: %w", err)
 		}
 	}
 	return name, nil
+}
 
+func  InsertCategories(categories []string, post_id string) error {
+	statement, err := database.Db.Prepare(`INSERT INTO categories (posts_id,category_name) values (?,?)`)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	defer statement.Close()
+	for _, cat := range categories {
+		_, err = statement.Exec(post_id, cat)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

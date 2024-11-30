@@ -29,6 +29,14 @@ func CreateTables(db *sql.DB) error {
         session_id TEXT UNIQUE,
         FOREIGN KEY (user_id) REFERENCES users(id)
         )`,
+
+        `CREATE TABLE IF NOT EXISTS categories (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            posts_id INTEGER NOT NULL,
+            category_name TEXT,
+            FOREIGN KEY (posts_id) REFERENCES posts(id)
+        )`,
+        
     }
 
     for i, table := range tables {
