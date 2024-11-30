@@ -21,7 +21,7 @@ func Router(router *http.ServeMux) error {
 	router.HandleFunc("/register", handlers.Register)
 	router.HandleFunc("/loginInfo", handlers.LoginInfo)
 	router.HandleFunc("/registerInfo", handlers.RegisterInfo)
-	router.HandleFunc("/post", handlers.PostHandler)
+	router.HandleFunc("/new_post", handlers.NewPostHandler)
 	router.HandleFunc("/postinfo", handlers.PostInfo)
 	router.HandleFunc("/logout", handlers.Logout)
 	router.HandleFunc("/category/", handlers.CategoryHandler)
