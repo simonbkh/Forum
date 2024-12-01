@@ -10,7 +10,6 @@ import (
 )
 
 func Router(router *http.ServeMux) error {
-	
 	var err error
 	err = templates.ParseFiles()
 	if utils.IsErrors(err) {
@@ -23,6 +22,7 @@ func Router(router *http.ServeMux) error {
 	router.HandleFunc("/register", handlers.Register)
 	router.HandleFunc("/loginInfo", handlers.LoginInfo)
 	router.HandleFunc("/registerInfo", handlers.RegisterInfo)
+	router.HandleFunc("/logout", handlers.Logout)
 
 	fmt.Println("website is running on: http://localhost:8080")
 

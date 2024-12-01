@@ -2,11 +2,11 @@ package services
 
 import (
 	"errors"
-	"fmt"
+	"net/http"
+
 	"forum/internal/data/queries"
 	"forum/internal/logic/utils"
 	"forum/internal/logic/validators"
-	"net/http"
 )
 
 // Authentication logic
@@ -36,25 +36,6 @@ func Register_Service(w http.ResponseWriter, r *http.Request) error {
 func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
-	/// cooxkes
-	sessionid,errr := r.Cookie("SessionToken")
-	if sessionid != nil || errr!=nil{
-		fmt.Println("okkkkkk", sessionid, errr)
-
-	}
-	sessionToken, er := utils.GenerateSessionToken()
-	if er != nil {
-		return er
-	}
-	fmt.Println(sessionToken)
-	// if queries.IsUserExist(sessionToken, email) {
-	// 	return errors.New("invalid sission token ")
-	// }
-	queries.InserSisionToken(sessionToken)
-	http.SetCookie(w, &http.Cookie{
-		Name:  "SessionToken",
-		Value: sessionToken,
-	})
 
 	// tier 2 logic
 	err := validators.User_Validator("", email, password)
@@ -75,6 +56,53 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	if !utils.ComparePassAndHashedPass(HashPassword, password) {
 		return errors.New("wrong password")
 	}
+	/// coockes
+	var sessionToke string
+	// var err error
 
+	_, errr := r.Cookie("SessionToken")
+	if errr != nil {
+		sessionToke, err = utils.GenerateSessionToken()
+		if err != nil {
+			return err
+		}
+		queries.InserSisionToken(sessionToke)
+
+	} else {
+		if queries.IssissiontokenExit(email) {
+			sessionToke, err = utils.GenerateSessionToken()
+			if err != nil {
+				return err
+			}
+			if err := queries.UpdiateSesiontoken(sessionToke, email); err != nil {
+				return err
+			}
+
+		} else {
+			sessionToke, err = utils.GenerateSessionToken()
+			if err != nil {
+				return err
+			}
+			queries.InserSisionToken(sessionToke)
+		}
+	}
+	http.SetCookie(w, &http.Cookie{
+		Name:  "SessionToken",
+		Value: sessionToke,
+	})
+
+	return nil
+}
+
+// //service logout
+func Logout_Service(w http.ResponseWriter, r *http.Request) error {
+	token, er := r.Cookie("SessionToken")
+	if er != nil {
+		return er
+	}
+	err := queries.Removesesionid(token.Value)
+	if err != nil {
+		return err
+	}
 	return nil
 }

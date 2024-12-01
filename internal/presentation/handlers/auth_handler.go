@@ -2,10 +2,11 @@ package handlers
 
 import (
 	"fmt"
+	"net/http"
+
 	"forum/internal/logic/services"
 	"forum/internal/logic/utils"
 	"forum/internal/presentation/templates"
-	"net/http"
 )
 
 // /login, /register routes
@@ -52,4 +53,15 @@ func LoginInfo(w http.ResponseWriter, r *http.Request) {
 	// http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 
-
+func Logout(w http.ResponseWriter, r *http.Request) {
+	// if r.Method != "POST" {
+	// 	http.Error(w, "metod not allowed", http.StatusMethodNotAllowed)
+	// 	return
+	// }
+	er := services.Logout_Service(w, r)
+	if utils.IsErrors(er) {
+		http.Error(w, fmt.Sprintf("%v", er), http.StatusBadRequest)
+		return
+	}
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+}
