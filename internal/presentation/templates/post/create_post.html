@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a Post</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group textarea {
+            height: 150px;
+        }
+        .form-group input[type="file"] {
+            border: none;
+        }
+        .form-group button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Create a New Post</h1>
+        <form action="/submit-post" method="POST" enctype="multipart/form-data">
+            
+            <!-- Post Title -->
+            <div class="form-group">
+                <label for="post-title">Title:</label>
+                <input type="text" id="post-title" name="title" required placeholder="Enter your post title">
+            </div>
+            
+            <!-- Post Category -->
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="">Select a Category</option>
+                    <option value="Tech Support">Tech Support</option>
+                    <option value="General Discussion">General Discussion</option>
+                    <option value="Tutorials">Tutorials</option>
+                    <option value="Announcements">Announcements</option>
+                </select>
+            </div>
+
+            <!-- Post Content -->
+            <div class="form-group">
+                <label for="post-content">Content:</label>
+                <textarea id="post-content" name="content" required placeholder="Enter your post content here..."></textarea>
+            </div>            
+            <!-- Submit Button -->
+            <div class="form-group">
+                <button type="submit">Post</button>
+            </div>
+
+        </form>
+    </div>
+
+</body>
+</html>

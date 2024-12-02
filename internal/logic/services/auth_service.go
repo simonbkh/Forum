@@ -10,6 +10,7 @@ import (
 )
 
 // Authentication logic
+var Text = "tt"
 
 func Register_Service(w http.ResponseWriter, r *http.Request) error {
 	username := r.FormValue("username")
@@ -59,33 +60,28 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	/// coockes
 	var sessionToke string
 	// var err error
-
-	_, errr := r.Cookie("SessionToken")
-	if errr != nil {
+	sessionTok, errr := r.Cookie("SessionToken")
+	if errr != nil || sessionTok.Value == "" {
 		sessionToke, err = utils.GenerateSessionToken()
 		if err != nil {
 			return err
 		}
-		queries.InserSisionToken(sessionToke)
+		er := queries.UpdiateSesiontoken(sessionToke, email)
+		if er != nil {
+			return er
+		}
 
 	} else {
-		if queries.IssissiontokenExit(email) {
-			sessionToke, err = utils.GenerateSessionToken()
-			if err != nil {
-				return err
-			}
-			if err := queries.UpdiateSesiontoken(sessionToke, email); err != nil {
-				return err
-			}
 
-		} else {
-			sessionToke, err = utils.GenerateSessionToken()
-			if err != nil {
-				return err
-			}
-			queries.InserSisionToken(sessionToke)
+		sessionToke, err = utils.GenerateSessionToken()
+		if err != nil {
+			return err
+		}
+		if err := queries.UpdiateSesiontoken(sessionToke, email); err != nil {
+			return err
 		}
 	}
+	Text = ""
 	http.SetCookie(w, &http.Cookie{
 		Name:  "SessionToken",
 		Value: sessionToke,

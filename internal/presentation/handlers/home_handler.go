@@ -1,9 +1,10 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
+	"forum/internal/data/queries"
+	"forum/internal/logic/services"
 	"forum/internal/presentation/templates"
 )
 
@@ -12,21 +13,21 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	// 	http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 	// var Posts Post
 	// }
-	Text := "tt"
-	// te, err := r.Cookie("SessionToken")
 
-	// if err != nil {
-	// 	Text = "tt"
-	// } else {
-	// 	fmt.Println(te.Value)
-	// 	if queries.IssesionidAvailable(te.Value) {
-	// 		Text = "tt"
-	// 	} else {
-	// 		Text = "ddddddd"
-	// 	}
-	// }
-	er := templates.HomeTemplate.Execute(w, Text)
-	if er != nil {
-		fmt.Println(er)
+	if services.Text == "tt" {
+		te, err := r.Cookie("SessionToken")
+		if err != nil || te.Value == "" {
+			services.Text = "tt"
+		} else {
+			if queries.IssesionidAvailable(te.Value) {
+				services.Text = ""
+			} else {
+				services.Text = "tt"
+			}
+		}
 	}
+	er := templates.HomeTemplate.Execute(w, services.Text)
+	if er != nil {
+	}
+	services.Text = "tt"
 }

@@ -23,6 +23,7 @@ func Router(router *http.ServeMux) error {
 	router.HandleFunc("/loginInfo", handlers.LoginInfo)
 	router.HandleFunc("/registerInfo", handlers.RegisterInfo)
 	router.HandleFunc("/logout", handlers.Logout)
+	router.HandleFunc("/post", handlers.Post)	
 
 	fmt.Println("website is running on: http://localhost:8080")
 

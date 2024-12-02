@@ -38,19 +38,19 @@ func RegisterInfo(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginInfo(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-	}
+	// if r.Method != "POST" {
+	// 	http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	// }
 	err := services.Login_Service(w, r)
 	if utils.IsErrors(err) {
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
 		return
 	}
-	er := templates.HomeTemplate.Execute(w, nil)
-	if er != nil {
-		return
-	}
-	// http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	// er := templates.HomeTemplate.Execute(w, nil)
+	// if er != nil {
+	// 	return
+	// }
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {

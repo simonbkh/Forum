@@ -19,18 +19,6 @@ func InserUser(username, email, password string) error {
 	return nil
 }
 
-func InserSisionToken(sessionToke string) error {
-	statement, err := database.Db.Prepare(`INSERT INTO users (sessionToke) values (?)`)
-	if err != nil {
-		return err
-	}
-	_, err = statement.Exec(sessionToke)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func IsUserExist(username, email string) bool {
 	var count int
 	query := `SELECT COUNT(*) FROM users WHERE username = ? OR email = ?`
@@ -46,7 +34,6 @@ func GetHashedPass(email string) (string, error) {
 
 	query := `SELECT password FROM users WHERE email = ?`
 	err := database.Db.QueryRow(query, email).Scan(&pass)
-	fmt.Println(pass)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			// Specific error when no user is found with the given email
@@ -84,9 +71,12 @@ func IssissiontokenExit(email string) bool {
 }
 
 // /// updiate session id of database
-func UpdiateSesiontoken(newtoken, email string) error {
-	query := `UPDATE users SET sessionToken = ? WHERE email = ?`
-	_, er := database.Db.Exec(query, newtoken, email)
+func UpdiateSesiontoken(sessionToke, email string) error {
+	statement, er := database.Db.Prepare(`UPDATE users SET sessionToke = ? WHERE email = ?`)
+	if er != nil {
+		return er
+	}
+	_, er = statement.Exec(sessionToke, email)
 	if er != nil {
 		return er
 	}
@@ -95,22 +85,21 @@ func UpdiateSesiontoken(newtoken, email string) error {
 
 // /check this token  is it available
 func IssesionidAvailable(sessionToke string) bool {
-	query := `SELECT sessionToke FROM users WHERE sessionToke = ?`
+	query := `SELECT COUNT(*) FROM users WHERE sessionToke = ?`
 	var cont int
 	er := database.Db.QueryRow(query, sessionToke).Scan(&cont)
 	if er != nil {
+		fmt.Println(er)
 		return false
 	}
-	if cont <= 0 {
-		return false
-	}
-	return true
+
+	return cont == 1
 }
 
 // /// remove token sisionid
-func Removesesionid(sessionToken string) error {
-	query := `UPDATE users SET sessionToken = '' WHERE sessionToken = ?`
-	_, er := database.Db.Exec(query, sessionToken)
+func Removesesionid(sessionToke string) error {
+	query := `UPDATE users SET sessionToke = NULL WHERE sessionToke = ?`
+	_, er := database.Db.Exec(query, sessionToke)
 	if er != nil {
 		return er
 	}
