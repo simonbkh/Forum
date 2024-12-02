@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"forum/internal/data/queries"
+	"forum/internal/logic/validators"
 	"forum/internal/presentation/templates"
 )
 
@@ -26,41 +27,9 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if !Presentation.IsLogged {
-		Presentation.IsLogged = isTokenValid(r)
+		Presentation.IsLogged = validators.IsTokenValid(r)
 	}
-	
 
 	templates.HomeTemplate.Execute(w, Presentation)
 	isLogged = false
 }
-
-func isTokenValid(r *http.Request) bool {
-	tocken, err := r.Cookie("token")
-	if err != nil || tocken.Value == "" {
-		return false 
-	}
-
-	return queries.CheckToken_Prisent_or_not(tocken.Value)
-}
-
-
-
-
-	// if !Presentation.IsLogged {
-	// 	tocken, err := r.Cookie("token")
-	// 	if err != nil {
-	// 		Presentation.IsLogged = false
-	// 	} else {
-	// 		if tocken.Value != "" {
-	// 			//fmt.Println(tocken.Value)
-	// 			if queries.CheckToken_Prisent_or_not(tocken.Value) {
-	// 				Presentation.IsLogged = true
-	// 			} else {
-	// 				Presentation.IsLogged = false
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-//http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-	

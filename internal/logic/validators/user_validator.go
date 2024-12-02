@@ -2,8 +2,10 @@ package validators
 
 import (
 	"errors"
+	"net/http"
 	"strings"
 
+	"forum/internal/data/queries"
 	"forum/internal/logic/utils"
 )
 
@@ -97,4 +99,13 @@ func Login_Validat(email, password string) error {
 		return err
 	}
 	return nil
+}
+
+func IsTokenValid(r *http.Request) bool {
+	tocken, err := r.Cookie("token")
+	if err != nil || tocken.Value == "" {
+		return false
+	}
+
+	return queries.CheckToken_Prisent_or_not(tocken.Value)
 }
