@@ -19,6 +19,6 @@ func HandlPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
 		return
 	}
-	isLogged = true
+
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }

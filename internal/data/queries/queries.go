@@ -64,6 +64,7 @@ func CheckeToken(email string) string {
 	}
 	return str
 }
+
 func CheckToken_Prisent_or_not(token string) bool {
 	var count int
 	query := `SELECT COUNT(*) FROM users WHERE token = ?`
@@ -91,40 +92,54 @@ func Insert_OR_remove_token(tocken, email string) error {
 	}
 	return nil
 }
+
 type User struct {
-    ID       int
-    Username string
+	ID       int
+	Username string
 }
-func Insert_Post(title, content, token string) error {
+
+func Insert_Post(title, content, token string, category []string) error {
 	var post_user User
-	
+
 	date := time.Now().Format(time.DateTime)
 	query := `SELECT id, username FROM users WHERE token = ?`
 	err := database.Db.QueryRow(query, token).Scan(&post_user.ID, &post_user.Username)
 	if err != nil {
 		return err
-	}
-	
+	} //////////////////////////////////////////////////////////:
+
 	statement, err := database.Db.Prepare(`INSERT INTO post (title, content,date ,user, user_id) VALUES (?, ?, ?, ?, ?)`)
 	if err != nil {
 		return err
 	}
 	defer statement.Close()
 
-	_, err = statement.Exec(title, content, date, post_user.Username, post_user.ID)
+	reslt, err := statement.Exec(title, content, date, post_user.Username, post_user.ID)
 	if err != nil {
 		return err
+	}
+	lastid, err := reslt.LastInsertId()
+	if err != nil {
+		return err
+	}
+	for _, cat := range category {
+		query := `INSERT INTO categories (category, post_id) VALUES (?, ?)`
+		_, err := database.Db.Exec(query, cat, lastid)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
+
 type Post struct {
-    ID        int
-    Title     string
-    Content   string
-    Date      string
-    Username  string
-    CreatedAt string
+	ID        int
+	Title     string
+	Content   string
+	Date      string
+	Username  string
+	CreatedAt string
 }
 
 func GetPosts() ([]Post, error) {
@@ -148,11 +163,16 @@ func GetPosts() ([]Post, error) {
 	return posts, nil
 }
 
-func Update_token(tokenAfter, tokenBefore string) (error) {
+func Update_token(tokenAfter, tokenBefore string) error {
 	query := `UPDATE users SET token = ? WHERE token = ?`
 	_, err := database.Db.Exec(query, tokenAfter, tokenBefore)
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func Insert_Category(category []string, token string) error {
+	// query := `SELECT id FROM post WHERE user = ? ORDER BY id DESC LIMIT 1`
 	return nil
 }

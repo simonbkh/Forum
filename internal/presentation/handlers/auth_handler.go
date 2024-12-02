@@ -43,20 +43,6 @@ func LoginInfo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method Not Allowed....", http.StatusMethodNotAllowed)
 	}
 
-	// if tk, err := r.Cookie("token"); err == nil {
-	// 	if tk.Value != "" {
-	// 		if queries.CheckToken_Prisent_or_not(tk.Value) {
-	// 			tock, _ := utils.GenerateToken(16)
-
-	// 			err := queries.Update_token(tock, tk.Value)
-	// 			if utils.IsErrors(err) {
-	// 				http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
-	// 				return
-	// 			}
-	// 		}
-	// 	}
-	// }
-
 	tocken, err := services.Login_Service(w, r)
 	if utils.IsErrors(err) {
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
