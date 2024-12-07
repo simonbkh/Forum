@@ -51,7 +51,8 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	// Posts = append(Posts, NewPost)
-	err = queries.InsertPost(NewPost, user_id)
+	 err := queries.InsertPost(NewPost, user_id)
+
 	if err != nil {
 		return err
 	}

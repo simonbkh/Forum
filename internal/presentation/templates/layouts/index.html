@@ -41,7 +41,7 @@
         <div class="posts-container">
             {{range .Posts}}
             <!-- i need  a post id to be added to the struct  -->
-            <div class="post" post-id="{{.Id}}">
+            <div class="post" post-id="{{.ID}}">
                 <h3>{{.Title}}</h3>
                 <p>{{.Content}}</p>
                 <p class="category">
@@ -53,7 +53,7 @@
                 <p><i>Posted by {{.Username}} on {{.Date}}</i></p>
 
 
-                <button href = "/comment/{{.Id}}"></button>
+                <button href = "/comment/{{.ID}}"></button>
                 <!-- Likes Section -->
                 <div class="reactions-section">
                     <div class="reaction">

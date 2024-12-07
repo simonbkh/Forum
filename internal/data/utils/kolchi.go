@@ -1,7 +1,7 @@
 package utils
 
 type Post struct {
-	ID         string
+	ID         int
 	Title      string
 	Content    string
 	Categories []string
