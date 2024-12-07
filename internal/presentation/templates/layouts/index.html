@@ -6,20 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum - Home</title>
     <link rel="stylesheet" href="static/css/styles.css">
+    <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
     {{if .IsLogged}}
-        {{template "log_nav" .}}
+    {{template "log_nav" .}}
     {{else}}
-        {{template "nav" .}}
+    {{template "nav" .}}
     {{end}}
 
     <div class="main-content">
         <!-- Sidebar with Categories -->
         <div class="side-bar">
             {{if .IsLogged}}
-                {{template "log_side_bar" .}}
+            {{template "log_side_bar" .}}
             {{end}}
 
             <h2>Categories</h2>
@@ -38,11 +40,12 @@
         <!-- Posts Container -->
         <div class="posts-container">
             {{range .Posts}}
+            <!-- i need  a post id to be added to the struct  -->
             <div class="post">
                 <h3>{{.Title}}</h3>
                 <p>{{.Content}}</p>
                 <p class="category">
-                    Categories: 
+                    Categories:
                     {{range .Categories}}
                     <span class="category-item">{{.}}</span>
                     {{end}}
@@ -50,9 +53,15 @@
                 <p><i>Posted by {{.Username}} on {{.Date}}</i></p>
 
                 <!-- Likes Section -->
-                <div class="likes-section">
-                    <button class="like-button" >👍 Like</button>
-                    <span class="likes-count"> Likes</span>
+                <div class="reactions-section">
+                    <div class="reaction">
+                        <span class="material-icons post-reaction">thumb_up</span>
+                        <span class="reaction-count">0</span>
+                    </div>
+                    <div class="reaction">
+                        <span class="material-icons post-reaction">thumb_down</span>
+                        <span class="reaction-count">0</span>
+                    </div>
                 </div>
                 <hr>
             </div>

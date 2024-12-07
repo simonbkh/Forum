@@ -158,10 +158,10 @@ header h1 {
 }
 
 /* Like Button Section */
-.likes-section {
+.reactions-section {
     margin-top: 15px;
     display: flex;
-    align-items: center;
+    justify-content: end;
     gap: 10px;
 }
 
