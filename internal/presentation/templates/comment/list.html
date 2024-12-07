@@ -12,10 +12,10 @@
 <body>
     <div class="all">
         <div class="post">
-            <LAbel>yassine jaouhary</LAbel>
-            <textarea name="post" id="areapost" readonly>dfthfthfhfhfhfhfhfh thffghf hfh fh</textarea>
+            <LAbel>{{.Title}}</LAbel>
+            <textarea name="post" id="areapost" readonly>{{.Content}}</textarea>
         </div>
-        <form action="/comment" method="post">
+        <form action="/comment/{{.ID}}" method="post">
             <label for="commant">Commant :</label>
             <div class="commant">
                 <textarea name="commant" id="commant" placeholder="write a commente" required  maxlength="1000"></textarea>
@@ -27,13 +27,13 @@
             </div>
         </form>
         <div class="posts-container">
-            {{range}}
+            
             <div class="commants">
-                <p><b>{{}}</b></p>
-                <p>{{}}</p>
-                <p><b>{{}}</b></p>
+                <p><b>yassine jaouary</b></p>
+                <p>trhtfhf hhtrh tyh yt t6t </p>
+                <p><b>31/05/2200</b></p>
             </div>
-            {{end}}
+           
             
 
     </div>

@@ -1,7 +1,7 @@
 package utils
 
 type Post struct {
-	User_id    int
+	ID   int
 	Username   string
 	Title      string
 	Content    string

@@ -93,7 +93,7 @@ func Checkemail(email string) bool {
 	return count > 0
 }
 
-func InsertPost(post utils.Post, id int) (string, error) {
+func InsertPost(post utils.Post, id int) (int, error) {
 	// p.(NewPost)
 	// id := 0
 	// err := QueryID(post.Username, &id)
@@ -101,14 +101,14 @@ func InsertPost(post utils.Post, id int) (string, error) {
 
 	statement, err := database.Db.Prepare(`INSERT INTO posts (user_id ,title, content, created_at) values (?,?,?,?)`)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 	defer statement.Close()
 	_, err = statement.Exec(id, post.Title, post.Content, post.Date)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
-	var post_id string
+	var post_id int
 	err = database.Db.QueryRow(`
     	SELECT id 
     	FROM posts 
@@ -117,7 +117,7 @@ func InsertPost(post utils.Post, id int) (string, error) {
 		Scan(&post_id)
 	if err != nil {
 		fmt.Println(err)
-		return "", err
+		return 0, err
 	}
 	return post_id, nil
 }
@@ -224,7 +224,7 @@ func GetPosts() ([]utils.Post, error) {
 
 	for rows.Next() {
 		var post utils.Post
-		err := rows.Scan(&post.User_id, &post.Username, &post.Title, &post.Content, &post.Date)
+		err := rows.Scan(&post.ID, &post.Username, &post.Title, &post.Content, &post.Date)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
@@ -261,7 +261,7 @@ func GetUser(uid string) (string, error) {
 	return name, nil
 }
 
-func  InsertCategories(categories []string, post_id string) error {
+func InsertCategories(categories []string, post_id string) error {
 	statement, err := database.Db.Prepare(`INSERT INTO categories (posts_id,category_name) values (?,?)`)
 	if err != nil {
 		fmt.Println(err)
@@ -274,5 +274,29 @@ func  InsertCategories(categories []string, post_id string) error {
 			return err
 		}
 	}
+	return nil
+}
+
+func GetIdUser(token string) (int, error) {
+	Query := `SELECT user_id FROM sessions WHERE session_id = ? `
+	id := 0
+	err := database.Db.QueryRow(Query, token).Scan(&id)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
+}
+
+func InsertComment(post int, id int, comment string, date string) error {
+	statement, err := database.Db.Prepare(`INSERT INTO comment (posts_id, id_user, comment, created_at) values (?,?,?,?)`)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+	_, er := statement.Exec(post, id, comment, date)
+	if er != nil {
+		return er
+	}
+
 	return nil
 }

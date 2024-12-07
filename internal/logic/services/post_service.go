@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"net/http"
+	"strconv"
 	"time"
 
 	"forum/internal/data/queries"
@@ -55,7 +56,8 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	err = queries.InsertCategories(categories, post_id)
+	NewPost.ID = post_id
+	err = queries.InsertCategories(categories, strconv.Itoa(post_id))
 	if err != nil {
 		return err
 	}
