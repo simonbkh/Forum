@@ -127,10 +127,10 @@ header h1 {
     transition: box-shadow 0.3s ease, transform 0.2s;
 }
 
-.post:hover {
+/* .post:hover {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     transform: translateY(-5px);
-}
+} */
 
 .post h3 {
     color: #007bff;
@@ -162,9 +162,33 @@ header h1 {
     margin-top: 15px;
     display: flex;
     justify-content: end;
-    gap: 10px;
+    padding: 10px 0;
 }
 
+.reaction{
+    display: flex;
+    justify-content: end;
+    cursor: default;
+}
+.reaction:not(:last-child){
+    margin-right: 12px;
+}
+
+.selected > .post-reaction,
+.selected > .reaction-count{
+    color: #007bff;
+}
+
+.post-reaction{
+margin-right: 5px;
+cursor: pointer;
+color: #4d4c4c;
+}
+
+
+.reaction:not(.selected) > .post-reaction:hover{
+    color:#000000
+}
 .like-button {
     cursor: pointer;
     padding: 8px 16px;

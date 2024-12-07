@@ -37,14 +37,13 @@ func Allowed(w http.ResponseWriter, r *http.Request) (int, error) {
 
 	return user_id, nil
 }
-func TitleValidator(title string) error{
-	
+
+func TitleValidator(title string) error {
 	if len(title) > 15 {
 		return errors.New("title is too long")
-	}else if len(title) < 4 {
+	} else if len(title) < 4 {
 		return errors.New("title is too short")
 	}
 
-func TitleValidator(title string) error {
 	return nil
 }

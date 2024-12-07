@@ -41,7 +41,7 @@
         <div class="posts-container">
             {{range .Posts}}
             <!-- i need  a post id to be added to the struct  -->
-            <div class="post">
+            <div class="post" post-id="{{.Id}}">
                 <h3>{{.Title}}</h3>
                 <p>{{.Content}}</p>
                 <p class="category">
@@ -52,10 +52,12 @@
                 </p>
                 <p><i>Posted by {{.Username}} on {{.Date}}</i></p>
 
+
+                <button href = "/comment/{{.Id}}"></button>
                 <!-- Likes Section -->
                 <div class="reactions-section">
                     <div class="reaction">
-                        <span class="material-icons post-reaction">thumb_up</span>
+                        <span onclick="react()" class="material-icons post-reaction">thumb_up</span>
                         <span class="reaction-count">0</span>
                     </div>
                     <div class="reaction">
@@ -68,11 +70,13 @@
             {{end}}
         </div>
     </div>
+   
 
     <footer>
         <p>© 2024 Forum. All rights reserved.</p>
         <p><a href="/terms">Terms of Service</a> | <a href="/privacy">Privacy Policy</a></p>
     </footer>
+    <script src="/static/js/main.js"></script>
 </body>
 
 </html>
