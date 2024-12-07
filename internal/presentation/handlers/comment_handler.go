@@ -8,17 +8,18 @@ import (
 	"time"
 
 	"forum/internal/data/queries"
+	"forum/internal/data/utils"
 	"forum/internal/logic/services"
 )
 
 func CommentHandeler(w http.ResponseWriter, r *http.Request) {
-	// if r.Method != "POST" {
-	// 	http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-	// 	return
-	// }
+	if r.Method != "POST" {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
 	id_post, _ := strconv.Atoi(r.PathValue("ID"))
 	comment := r.FormValue("commant")
-	Date := time.Now().Format("2006-01-02 15:04:05")
+	date := time.Now().Format("2006-01-02 15:04:05")
 	token, _ := r.Cookie("token")
 	id_user, err := queries.GetIdUser(token.Value)
 	if err != nil {
@@ -37,22 +38,36 @@ func CommentHandeler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
-	er := queries.InsertComment(id_post, id_user, comment, Date)
+	er := queries.InsertComment(id_post, id_user, comment, date)
 	if er != nil {
 		fmt.Println(er)
 		return
 	}
+
+	Cmt := utils.Comment{
+		Id_user: id_user,
+		Id_post: id_post,
+		Cont: comment,
+		Date: date,
+	}
+
+	fmt.Println(Cmt)
 }
 
 func GetCommment(w http.ResponseWriter, r *http.Request) {
-	id, _ := strconv.Atoi(r.PathValue("ID"))
-	temp, err := template.ParseFiles("/home/yjaouhar/Forum/internal/presentation/templates/comment/list.html")
-	if err != nil {
+	id, err := strconv.Atoi(r.PathValue("ID"))
+
+	if err != nil || id < 0 || id > len(services.Posts) {
 		return
 	}
+	temp, err := template.ParseFiles("../internal/presentation/templates/comment/list.html")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	
 	er := temp.Execute(w, services.Posts[len(services.Posts)-id])
 	if er != nil {
-		fmt.Println(er)
 		return
 	}
 }
