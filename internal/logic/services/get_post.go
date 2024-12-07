@@ -1,8 +1,6 @@
 package services
 
 import (
-	"fmt"
-
 	"forum/internal/data/queries"
 	"forum/internal/data/utils"
 )
@@ -14,6 +12,6 @@ func GetPosts(mok *[]utils.Post) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(mok)
+
 	return nil
 }

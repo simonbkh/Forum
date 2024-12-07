@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/commant.css">
+
+    <title>commant</title>
+</head>
+<body>
+    <div class="all">
+        <div class="post">
+            <LAbel>yassine jaouhary</LAbel>
+            <textarea name="post" id="areapost" readonly>dfthfthfhfhfhfhfhfh thffghf hfh fh</textarea>
+        </div>
+        <form action="/comment" method="post">
+            <label for="commant">Commant :</label>
+            <div class="commant">
+                <textarea name="commant" id="commant" placeholder="write a commente" required  maxlength="1000"></textarea>
+                <button type="submit" class="bot">
+                    <span class="material-icons">
+                send
+                </span>
+                </button>
+            </div>
+        </form>
+        <div class="posts-container">
+            {{range}}
+            <div class="commants">
+                <p><b>{{}}</b></p>
+                <p>{{}}</p>
+                <p><b>{{}}</b></p>
+            </div>
+            {{end}}
+            
+
+    </div>
+    
+
+</body>
+</html>

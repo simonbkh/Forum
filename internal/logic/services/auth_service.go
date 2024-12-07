@@ -2,13 +2,13 @@ package services
 
 import (
 	"errors"
-	"fmt"
+	"net/http"
+
 	"forum/internal/data/queries"
 
 	//"forum/internal/data/utils"
 	"forum/internal/logic/utils"
 	"forum/internal/logic/validators"
-	"net/http"
 
 	"github.com/gofrs/uuid"
 )
@@ -66,7 +66,7 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return errors.New("couldn't generate token")
 	}
-	//fmt.Println(email)
+	// fmt.Println(email)
 	queries.InsertSession(email, session_token)
 	utils.SetTokenCookie(w, session_token)
 
@@ -86,14 +86,14 @@ func GenerateSessionToken(token *string) error {
 func Logout(w http.ResponseWriter, r *http.Request) error {
 	cookie, err := r.Cookie("token")
 	if err != nil || cookie.String() == "" {
-		//deber
+		// deber
 		return err
 	}
 	err = queries.Logout(cookie.String())
 	utils.SetTokenCookie(w, "")
 	if err != nil {
-		//handli zeb
-		fmt.Println(err)
+		// handli zeb
+
 		return err
 	}
 	return nil

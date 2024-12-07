@@ -164,6 +164,11 @@ header h1 {
     align-items: center;
     gap: 10px;
 }
+.link{
+    color: #636060;
+    text-decoration: none;
+}
+
 
 .like-button {
     cursor: pointer;
