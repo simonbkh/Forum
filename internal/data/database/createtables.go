@@ -1,6 +1,8 @@
 package database
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
 func CreateTables(db *sql.DB) error {
 	////`DROP TABLE IF EXISTS users;`,

@@ -12,6 +12,7 @@ var (
 	LoginTemplate    *template.Template
 	RegisterTemplate *template.Template
 	PostTemplate     *template.Template
+	ErrorTemlate     *template.Template
 )
 
 func ParseFiles() error {
@@ -26,6 +27,7 @@ func ParseFiles() error {
 		filepath.Join(basePath, "auth/register.html"),
 		filepath.Join(basePath, "layouts/log_nav.html"),
 		filepath.Join(basePath, "post/posts.html"),
+		filepath.Join(basePath, "errors/error.html"),
 	)
 
 	if utils.IsErrors(err) {
@@ -37,6 +39,7 @@ func ParseFiles() error {
 	LoginTemplate = templates.Lookup("login.html")
 	RegisterTemplate = templates.Lookup("register.html")
 	PostTemplate = templates.Lookup("posts.html")
+	ErrorTemlate = templates.Lookup("error.html")
 
 	return nil
 }

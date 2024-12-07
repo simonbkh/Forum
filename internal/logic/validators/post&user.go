@@ -7,8 +7,15 @@ import (
 
 func TockenPrisent(w http.ResponseWriter, r *http.Request) bool {
 	cookie, err := r.Cookie("token")
-	if err != nil || cookie.Value == "" || !queries.CheckToken_Prisent_or_not(cookie.Value){
+	if err != nil || cookie.Value == "" || !queries.CheckToken_Prisent_or_not(cookie.Value) {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return false
+	}
+	return true
+}
+func Check_cokes(r *http.Request) bool {
+	cookie, err := r.Cookie("token")
+	if err != nil || cookie.Value == "" {
 		return false
 	}
 	return true

@@ -1,51 +1,52 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
 	"forum/internal/logic/services"
-	"forum/internal/logic/utils"
 	"forum/internal/presentation/templates"
 )
 
 // /login, /register routes
 func Register(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		http.Error(w, "Method Not Allowed.", http.StatusMethodNotAllowed)
+	if !services.Method(w, r, "GET") {
+		return
 	}
 	templates.RegisterTemplate.Execute(w, nil)
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	// if r.Method != "post" {
-	// 	http.Error(w, "Method Not Allowed..", http.StatusMethodNotAllowed)
-	// }
+	if !services.Method(w, r, "GET") {
+		return
+	}
 	templates.LoginTemplate.Execute(w, nil)
 }
 
 func RegisterInfo(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "Method Not Allowed...", http.StatusMethodNotAllowed)
+	// fmt.Println(r.Method)
+	if !services.Method(w,r,"POST"){
+		return
 	}
 	err := services.Register_Service(w, r)
-	if utils.IsErrors(err) {
-		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		templates.ErrorTemlate.Execute(w, err)
 		return
 	}
 	isLogged = false
-	http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 
 func LoginInfo(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "Method Not Allowed....", http.StatusMethodNotAllowed)
+	if !services.Method(w, r, "POST") {
+		return
 	}
 
 	tocken, err := services.Login_Service(w, r)
-	if utils.IsErrors(err) {
-		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		templates.ErrorTemlate.Execute(w, err)
 		return
 	}
 	http.SetCookie(w, &http.Cookie{
@@ -59,8 +60,9 @@ func LoginInfo(w http.ResponseWriter, r *http.Request) {
 
 func Log_out(w http.ResponseWriter, r *http.Request) {
 	err := services.Log_out_Service(w, r)
-	if utils.IsErrors(err) {
-		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		templates.ErrorTemlate.Execute(w, err)
 		return
 	}
 	isLogged = false

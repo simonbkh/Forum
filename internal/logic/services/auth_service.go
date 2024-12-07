@@ -7,6 +7,7 @@ import (
 	"forum/internal/data/queries"
 	"forum/internal/logic/utils"
 	"forum/internal/logic/validators"
+	"forum/internal/presentation/templates"
 )
 
 // Authentication logic
@@ -36,7 +37,6 @@ func Register_Service(w http.ResponseWriter, r *http.Request) error {
 func Login_Service(w http.ResponseWriter, r *http.Request) (string, error) {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
-
 
 	err := validators.Login_Validat(email, password)
 	if err != nil {
@@ -86,17 +86,22 @@ func Login_Service(w http.ResponseWriter, r *http.Request) (string, error) {
 
 func Log_out_Service(w http.ResponseWriter, r *http.Request) error {
 	// var cookie *http.Cookie
-
+	if !validators.Check_cokes(r) {
+		return errors.New("unauthorized")
+	}
 	cookie, err := r.Cookie("token")
-	if err != nil {
-		return err
-	}
-	if cookie.Value != "" {
-		// return "", err
-	}
 	err = queries.Insert_OR_remove_token(cookie.Value, "")
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func Method(w http.ResponseWriter, r *http.Request, method string) bool {
+	if r.Method != method {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		templates.ErrorTemlate.Execute(w, "Method Not Allowed.....")
+		return false
+	}
+	return true
 }

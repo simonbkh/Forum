@@ -18,7 +18,7 @@ func PostInfo(w http.ResponseWriter, r *http.Request) error {
 	string_catigoru := "AllGeneralGamesSportsFashionTravelFoodHealth"
 	title := r.FormValue("title")
 	post := r.FormValue("posts")
-	Categories := r.Form["Categories[]"]
+	Categories := r.Form["Categories"]
 	for _, category := range Categories {
 		if !strings.Contains(string_catigoru, category) {
 			return errors.New("invalid category")
@@ -31,6 +31,7 @@ func PostInfo(w http.ResponseWriter, r *http.Request) error {
 	if cookie.Value == "" || err != nil {
 		return errors.New("unauthorized")
 	}
+	
 	
 	queries.Insert_Post(title, post, cookie.Value, Categories)
 	return nil

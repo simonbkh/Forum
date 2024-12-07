@@ -17,7 +17,20 @@
     <div class="main-content">
         <!-- Sidebar with Categories -->
         <div class="side-bar">
-            <h2>Categories</h2>
+            <form action="Category" method="get">
+                <select name="Category" id="categorySelect">
+                    <option value="All">All</option>
+                    <option value="Sports">Sports</option>
+                    <option value="General">General</option>
+                    <option value="Games">Games</option>
+                    <option value="Fashion">Fashion</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Food">Food</option>
+                    <option value="Health">Health</option>
+                </select>
+                <input type="submit" value="Submit">
+            </form>
+            <!-- <h2>Categories</h2>
             <ul>
                 <li><a href="/category/all">All</a></li>
                 <li><a href="/category/general">General</a></li>
@@ -27,7 +40,7 @@
                 <li><a href="/category/travel">Travel</a></li>
                 <li><a href="/category/food">Food</a></li>
                 <li><a href="/category/health">Health</a></li>
-            </ul>
+            </ul> -->
         </div>
         
         

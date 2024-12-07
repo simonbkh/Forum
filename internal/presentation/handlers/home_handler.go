@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"forum/internal/data/queries"
@@ -20,17 +19,20 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	Presentation := PageData{
 		IsLogged: isLogged,
 	}
-	var err error
-	Presentation.Posts, err = queries.GetPosts()
-	if err != nil {
-		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
-		return
-	}
 	if !Presentation.IsLogged {
 		Presentation.IsLogged = validators.IsTokenValid(r)
 	}
+	var err error
 
-	templates.HomeTemplate.Execute(w, Presentation)
-	
+	Presentation.Posts, err = queries.GetPosts()
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		templates.ErrorTemlate.Execute(w, err)
+		//Presentation.IsLogged = false
+		return
+	}
+
+	templates.HomeTemplate.Execute(w, Presentation) 
+
 	isLogged = false
 }
