@@ -3,6 +3,7 @@ package queries
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	"forum/internal/data/database"
 )
@@ -59,24 +60,36 @@ func Checkemail(email string) bool {
 	return true
 }
 
-// //// check is sision id is exit or no
-func IssissiontokenExit(email string) bool {
-	query := `SELECT sessionToke FROM users WHERE email = ?`
-	var token string
-	er := database.Db.QueryRow(query, email).Scan(&token)
-	if er != nil {
-		return false
+// // insert session in database
+func Insersessions(sessionToken, email string, expiry time.Time) error {
+	query := `select id from users where email = ?`
+	var id int
+	err := database.Db.QueryRow(query, email).Scan(&id)
+	if err != nil {
+		return err
 	}
-	return token != ""
-}
-
-// /// updiate session id of database
-func UpdiateSesiontoken(sessionToke, email string) error {
-	statement, er := database.Db.Prepare(`UPDATE users SET sessionToke = ? WHERE email = ?`)
+	statement, er := database.Db.Prepare(`INSERT INTO sessions (sessionToken, user_id, expiry) values (?,?,?)`)
 	if er != nil {
 		return er
 	}
-	_, er = statement.Exec(sessionToke, email)
+	_, er = statement.Exec(sessionToken, id, expiry)
+	if er != nil {
+		return er
+	}
+	return nil
+}
+
+// /// updiate session id of database
+func UpdiateSesiontoken(sessionToke, email string, expiry time.Time) error {
+	query := `select id from users where email = ?`
+	var id int
+	err := database.Db.QueryRow(query, email).Scan(&id)
+	if err != nil {
+		return err
+	}
+
+	query = `UPDATE sessions SET sessionToken = ?, expiry = ? WHERE user_id = ?`
+	_, er := database.Db.Exec(query, sessionToke, expiry, id)
 	if er != nil {
 		return er
 	}
@@ -84,24 +97,42 @@ func UpdiateSesiontoken(sessionToke, email string) error {
 }
 
 // /check this token  is it available
-func IssesionidAvailable(sessionToke string) bool {
-	query := `SELECT COUNT(*) FROM users WHERE sessionToke = ?`
-	var cont int
-	er := database.Db.QueryRow(query, sessionToke).Scan(&cont)
-	if er != nil {
-		fmt.Println(er)
-		return false
-	}
+func IssesionidAvailable(sessionToke, email string) (bool, time.Time) {
+	var expiry time.Time
+	if email == "" {
+		query := `select expiry from sessions where sessionToken = ?`
+		err := database.Db.QueryRow(query, sessionToke).Scan(&expiry)
+		if err != nil {
+			return false, expiry
+		}
+		return err == nil, expiry
+	} else {
+		query := `select id from users where email = ?`
+		var id int
 
-	return cont == 1
+		err := database.Db.QueryRow(query, email).Scan(&id)
+		if err != nil {
+			return false, time.Time{}
+		}
+		query = `select expiry from sessions where user_id = ?`
+		err = database.Db.QueryRow(query, id).Scan(&expiry)
+		if err != nil {
+			return false, expiry
+		}
+		ex := expiry
+		if ex.Before(time.Now()) {
+			return false, ex
+		}
+	}
+	return true, expiry
 }
 
 // /// remove token sisionid
 func Removesesionid(sessionToke string) error {
-	query := `UPDATE users SET sessionToke = NULL WHERE sessionToke = ?`
-	_, er := database.Db.Exec(query, sessionToke)
-	if er != nil {
-		return er
+	query := `DELETE FROM sessions WHERE sessionToken = ?`
+	_, err := database.Db.Exec(query, sessionToke)
+	if err != nil {
+		return err
 	}
 	return nil
 }

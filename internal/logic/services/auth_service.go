@@ -2,7 +2,9 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
+	"time"
 
 	"forum/internal/data/queries"
 	"forum/internal/logic/utils"
@@ -57,34 +59,40 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	if !utils.ComparePassAndHashedPass(HashPassword, password) {
 		return errors.New("wrong password")
 	}
-	/// coockes
-	var sessionToke string
-	// var err error
-	sessionTok, errr := r.Cookie("SessionToken")
-	if errr != nil || sessionTok.Value == "" {
-		sessionToke, err = utils.GenerateSessionToken()
-		if err != nil {
-			return err
-		}
-		er := queries.UpdiateSesiontoken(sessionToke, email)
+	// tier 4 cookie
+	var sessionToken string
+	var expryTime time.Time
+	token, errr := r.Cookie("SessionToken")
+	sessionToken, err = utils.GenerateSessionToken()
+	if err != nil {
+		return err
+	}
+	expryTime = time.Now().Add(time.Hour * 24)
+	if errr != nil || token.Value == "" {
+		er := queries.Insersessions(sessionToken, email, expryTime)
 		if er != nil {
 			return er
 		}
-
 	} else {
-
-		sessionToke, err = utils.GenerateSessionToken()
-		if err != nil {
-			return err
-		}
-		if err := queries.UpdiateSesiontoken(sessionToke, email); err != nil {
-			return err
+		exit, _ := queries.IssesionidAvailable(token.Value, email)
+		if exit {
+			er := queries.UpdiateSesiontoken(sessionToken, email, expryTime)
+			if er != nil {
+				fmt.Println(er)
+				return er
+			}
+		} else {
+			er := queries.Insersessions(sessionToken, email, expryTime)
+			if er != nil {
+				return er
+			}
 		}
 	}
 	Text = ""
 	http.SetCookie(w, &http.Cookie{
-		Name:  "SessionToken",
-		Value: sessionToke,
+		Name:    "SessionToken",
+		Value:   sessionToken,
+		Expires: expryTime,
 	})
 
 	return nil

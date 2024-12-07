@@ -6,6 +6,7 @@ import (
 	"errors"
 )
 
+/// generate session token
 func GenerateSessionToken() (string, error) {
 	tokne := make([]byte, 32)
 	_, err := rand.Read(tokne)

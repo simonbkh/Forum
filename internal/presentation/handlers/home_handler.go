@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"time"
 
 	"forum/internal/data/queries"
 	"forum/internal/logic/services"
@@ -19,9 +20,14 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil || te.Value == "" {
 			services.Text = "tt"
 		} else {
-			if queries.IssesionidAvailable(te.Value) {
+			bol, expiry := queries.IssesionidAvailable(te.Value, "")
+			if bol && expiry.After(time.Now()) {
 				services.Text = ""
 			} else {
+				err := queries.Removesesionid(te.Value)
+				if err != nil {
+					return 
+				}
 				services.Text = "tt"
 			}
 		}
