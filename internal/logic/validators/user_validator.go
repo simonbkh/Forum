@@ -2,18 +2,20 @@ package validators
 
 import (
 	"errors"
-	// "fmt"
 	"regexp"
+
+	"forum/internal/logic/utils"
+	// "fmt"
 )
 
+// function validator emal & password & username of user
 func User_Validator(username, email, password string) error {
-	if username != "" {
-		err := UsernameValidator(username)
-		if err != nil {
-			return err
-		}
+	err := UsernameValidator(username)
+	if err != nil {
+		return err
 	}
-	err := PasswordValidator(password)
+
+	err = PasswordValidator(password)
 	if err != nil {
 		return err
 	}
@@ -23,7 +25,7 @@ func User_Validator(username, email, password string) error {
 	}
 	return nil
 }
-
+// check username is corect or not
 func UsernameValidator(username string) error {
 	re, err := regexp.Compile(`^[a-zA-Z][a-zA-Z0-9_]{2,15}$`)
 	if err != nil {
@@ -40,7 +42,7 @@ func UsernameValidator(username string) error {
 	}
 	return nil
 }
-
+// check password is corect or not
 func PasswordValidator(password string) error {
 	if len(password) > 15 {
 		return errors.New("password is too long (max: 15 characters)")
@@ -49,7 +51,7 @@ func PasswordValidator(password string) error {
 	}
 	return nil
 }
-
+// check email is corect or not
 func EmailValidator(email string) error {
 	re, err := regexp.Compile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
 	if err != nil {
@@ -63,6 +65,18 @@ func EmailValidator(email string) error {
 		return errors.New("email is too long (max: 25 characters)")
 	} else if len(email) < 13 {
 		return errors.New("email is too short (min: 13 characters)")
+	}
+	return nil
+}
+
+func Login_Validat(email, password string) error {
+	err := EmailValidator(email)
+	if utils.IsErrors(err) {
+		return err
+	}
+	err = PasswordValidator(password)
+	if utils.IsErrors(err) {
+		return err
 	}
 	return nil
 }

@@ -18,9 +18,9 @@ func Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-	}
+	// if r.Method != "GET" {
+	// 	http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	// }
 	templates.LoginTemplate.Execute(w, nil)
 }
 
@@ -30,6 +30,7 @@ func RegisterInfo(w http.ResponseWriter, r *http.Request) {
 	}
 	err := services.Register_Service(w, r)
 	if utils.IsErrors(err) {
+		fmt.Println(err)
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
 		return
 	}

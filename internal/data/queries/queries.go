@@ -19,7 +19,7 @@ func InserUser(username, email, password string) error {
 	}
 	return nil
 }
-
+// check if user exist or not 
 func IsUserExist(username, email string) bool {
 	var count int
 	query := `SELECT COUNT(*) FROM users WHERE username = ? OR email = ?`
@@ -29,7 +29,7 @@ func IsUserExist(username, email string) bool {
 	}
 	return count > 0
 }
-
+// get hashed password in database 
 func GetHashedPass(email string) (string, error) {
 	var pass string
 
@@ -45,7 +45,7 @@ func GetHashedPass(email string) (string, error) {
 	}
 	return pass, nil
 }
-
+// check if email in database o``
 func Checkemail(email string) bool {
 	var count int
 	query := `SELECT COUNT(*) FROM users WHERE email = ?`
@@ -54,10 +54,8 @@ func Checkemail(email string) bool {
 		fmt.Println("error here")
 		return false
 	}
-	if count < 0 {
-		return false
-	}
-	return true
+	
+	return count == 1
 }
 
 // // insert session in database

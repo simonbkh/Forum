@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"time"
 
+	models "forum/internal/data/database/modles"
 	"forum/internal/data/queries"
-	"forum/internal/logic/services"
 	"forum/internal/presentation/templates"
 )
 
@@ -14,26 +14,26 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	// 	http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 	// var Posts Post
 	// }
-
-	if services.Text == "tt" {
-		te, err := r.Cookie("SessionToken")
+	te, err := r.Cookie("SessionToken")
+	if !models.UserStatus {
 		if err != nil || te.Value == "" {
-			services.Text = "tt"
+			models.UserStatus = false
 		} else {
 			bol, expiry := queries.IssesionidAvailable(te.Value, "")
 			if bol && expiry.After(time.Now()) {
-				services.Text = ""
+				models.UserStatus = true
 			} else {
 				err := queries.Removesesionid(te.Value, "")
 				if err != nil {
 					return
 				}
-				services.Text = "tt"
+
+				models.UserStatus = false
 			}
 		}
 	}
-	er := templates.HomeTemplate.Execute(w, services.Text)
+	er := templates.HomeTemplate.Execute(w, models.UserStatus)
 	if er != nil {
 	}
-	services.Text = "tt"
+	models.UserStatus = false
 }
