@@ -69,10 +69,19 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	}
 	expryTime = time.Now().Add(time.Hour * 24)
 	if errr != nil || token.Value == "" {
-		er := queries.Insersessions(sessionToken, email, expryTime)
-		if er != nil {
-			return er
+		exit, _ := queries.IssesionidAvailable(token.Value, email)
+		if exit {
+			er := queries.UpdiateSesiontoken(sessionToken, email, expryTime)
+			if er != nil {
+				return er
+			}
+		} else {
+			er := queries.Insersessions(sessionToken, email, expryTime)
+			if er != nil {
+				return er
+			}
 		}
+
 	} else {
 		exit, _ := queries.IssesionidAvailable(token.Value, email)
 		if exit {
