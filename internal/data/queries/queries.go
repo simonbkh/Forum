@@ -227,7 +227,9 @@ func GetPosts() ([]model.Post, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
+
 		post.Username, err = GetUser(post.Username)
+
 		if err != nil {
 			return nil, err
 		}
@@ -252,7 +254,12 @@ func GetCommment(id int) ([]model.Comment, error) {
 
 	for rows.Next() {
 		var com model.Comment
-		err := rows.Scan(&com.ID, &com.Id_user, &com.Id_post, &com.Cont, &com.Date)
+		err := rows.Scan(&com.ID, &com.Id_post, &com.Username, &com.Cont, &com.Date)
+		if err != nil {
+			return nil, err
+		}
+		com.Username, err = GetUser(com.Username)
+
 		if err != nil {
 			return nil, err
 		}
@@ -284,6 +291,7 @@ func GetUser(uid string) (string, error) {
 			return "", fmt.Errorf("failed to scan row: %w", err)
 		}
 	}
+	// fmt.Println("=======>", name)
 	return name, nil
 }
 

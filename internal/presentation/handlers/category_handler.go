@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"forum/internal/logic/services"
 	"forum/internal/presentation/templates"
 	"net/http"
@@ -14,19 +13,19 @@ type CatData struct {
 
 func CategoryHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
-		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-		return
+		Errore(w, http.StatusMethodNotAllowed)
+
 	}
-	filteredPosts , err := services.Category_Service(w, r)
+	filteredPosts, err := services.Category_Service(w, r)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
+		Errore(w, http.StatusBadRequest)
 	}
 
-	data := CatData {
+	data := CatData{
 		IsLogged: isLogged,
 		Posts:    filteredPosts,
 	}
 
-	templates.HomeTemplate.Execute(w,data)
+	templates.HomeTemplate.Execute(w, data)
 
 }

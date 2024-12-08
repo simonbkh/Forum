@@ -11,7 +11,7 @@ type Post struct {
 
 type Comment struct {
 	ID      int
-	Id_user int
+	Username string
 	Id_post int
 	Cont    string
 	Date    string

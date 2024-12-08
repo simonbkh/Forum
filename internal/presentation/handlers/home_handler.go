@@ -16,13 +16,13 @@ var isLogged bool
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-		return
+		Errore(w, http.StatusMethodNotAllowed)
+
 	}
 	err := services.GetPosts(&services.Posts)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		Errore(w, http.StatusInternalServerError)
+
 	}
 	data := PageData{
 		IsLogged: isLogged,
