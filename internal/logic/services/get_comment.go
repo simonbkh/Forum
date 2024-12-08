@@ -1,17 +1,18 @@
 package services
 
 import (
+	"fmt"
+
 	"forum/internal/data/model"
 	"forum/internal/data/queries"
 )
 
-func GetPosts(mok *[]model.Post) error {
+func GetCommment(Cmt *[]model.Comment, id int) error {
 	var err error
-
-	*mok, err = queries.GetPosts()
+	*Cmt, err = queries.GetCommment(id)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
-
 	return nil
 }

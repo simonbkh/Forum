@@ -3,9 +3,10 @@ package queries
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"forum/internal/data/database"
-	"forum/internal/data/utils"
+	"forum/internal/data/model"
 	// "forum/internal/logic/services"
 )
 
@@ -93,7 +94,7 @@ func Checkemail(email string) bool {
 	return count > 0
 }
 
-func InsertPost(post utils.Post, id int) (int, error) {
+func InsertPost(post model.Post, id int) (int, error) {
 	// p.(NewPost)
 	// id := 0
 	// err := QueryID(post.Username, &id)
@@ -110,9 +111,7 @@ func InsertPost(post utils.Post, id int) (int, error) {
 	}
 	var post_id int
 	err = database.Db.QueryRow(`
-    	SELECT id 
-    	FROM posts 
-    	WHERE user_id = ? AND title = ? AND content = ? AND created_at = ?`,
+    	SELECT id FROM posts WHERE user_id = ? AND title = ? AND content = ? AND created_at = ?`,
 		id, post.Title, post.Content, post.Date).
 		Scan(&post_id)
 	if err != nil {
@@ -208,8 +207,8 @@ func Logout(token string) error {
 	return nil
 }
 
-func GetPosts() ([]utils.Post, error) {
-	var posts []utils.Post
+func GetPosts() ([]model.Post, error) {
+	var posts []model.Post
 	statement, err := database.Db.Prepare(`SELECT * FROM posts ORDER BY created_at DESC`)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare statement: %w", err)
@@ -223,14 +222,12 @@ func GetPosts() ([]utils.Post, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var post utils.Post
+		var post model.Post
 		err := rows.Scan(&post.ID, &post.Username, &post.Title, &post.Content, &post.Date)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
-		// post.Categories = append(post.Categories, cat)
 		post.Username, err = GetUser(post.Username)
-		// fmt.Println(post.Username)
 		if err != nil {
 			return nil, err
 		}
@@ -238,6 +235,35 @@ func GetPosts() ([]utils.Post, error) {
 	}
 
 	return posts, nil
+}
+
+func GetCommment(id int) ([]model.Comment, error) {
+	var cmt []model.Comment
+	statement, err := database.Db.Prepare(`SELECT * FROM comment  where posts_id = ?  ORDER BY created_at DESC`)
+	if err != nil {
+		return nil, err
+	}
+	defer statement.Close()
+	rows, err := statement.Query(id)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute statement: %w", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var com model.Comment
+		err := rows.Scan(&com.ID, &com.Id_user, &com.Id_post, &com.Cont, &com.Date)
+		if err != nil {
+			return nil, err
+		}
+		com.Date = strings.ReplaceAll(com.Date, "T", " / ")
+		if len(com.Date) != 0 {
+			com.Date = com.Date[:len(com.Date)-1]
+		}
+		cmt = append(cmt, com)
+	}
+
+	return cmt, nil
 }
 
 func GetUser(uid string) (string, error) {
@@ -293,6 +319,7 @@ func InsertComment(post int, id int, comment string, date string) error {
 		return err
 	}
 	defer statement.Close()
+
 	_, er := statement.Exec(post, id, comment, date)
 	if er != nil {
 		return er

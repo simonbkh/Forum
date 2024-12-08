@@ -1,4 +1,4 @@
-package utils
+package model
 
 type Post struct {
 	ID         int
@@ -10,8 +10,9 @@ type Post struct {
 }
 
 type Comment struct {
-	Id_user      int
+	ID      int
+	Id_user int
 	Id_post int
-	Cont string
-	Date string
+	Cont    string
+	Date    string
 }

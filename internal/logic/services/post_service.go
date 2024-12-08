@@ -6,14 +6,14 @@ import (
 	"strconv"
 	"time"
 
+	"forum/internal/data/model"
 	"forum/internal/data/queries"
-	"forum/internal/data/utils"
 	"forum/internal/logic/validators"
 )
 
-type POST = utils.Post
+type POST = model.Post
 
-var Posts []utils.Post
+var Posts []model.Post
 
 // Post management logic
 
@@ -43,7 +43,7 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	NewPost := utils.Post{
+	NewPost := model.Post{
 		Title:      title,
 		Content:    content,
 		Categories: categories,

@@ -1,43 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../../static/css/commant.css">
 
-    <title>commant</title>
+    <title>Forum - Comment</title>
 </head>
+<header>
+    <a href="/" style="text-decoration: none; color: white;">
+        <h1>Forum</h1>
+    </a>
+    <div class="header-buttons">
+        <a href="/new_post">New Post</a>
+        <a href="/logout">Logout</a>
+    </div>
+</header>
+
 <body>
     <div class="all">
+
+
         <div class="post">
-            <LAbel>{{.Title}}</LAbel>
-            <textarea name="post" id="areapost" readonly>{{.Content}}</textarea>
+            <div class="lbl">
+                <label class="top-label">{{.Post.Username}}</label>
+                <label class="center-label">{{.Post.Title}}</label>
+                <label class="bottom-label">{{.Post.Date}}</label>
+            </div>
+            <p name="post" id="areapost" readonly>{{.Post.Content}}</p>
         </div>
-        <form action="/comment/{{.ID}}" method="post">
-            <label for="commant">Commant :</label>
+        <form action="/comment/{{.Post.ID}}" method="post">
+            <label for="commant" class="com">Commant :</label>
             <div class="commant">
-                <textarea name="commant" id="commant" placeholder="write a commente" required  maxlength="1000"></textarea>
+                <textarea name="commant" id="commant" placeholder="write a commente" required
+                    maxlength="1000"></textarea>
                 <button type="submit" class="bot">
                     <span class="material-icons">
-                send
-                </span>
+                        send
+                    </span>
                 </button>
             </div>
         </form>
         <div class="posts-container">
-            
+            {{range .Cmts}}
             <div class="commants">
-                <p><b>yassine jaouary</b></p>
-                <p>trhtfhf hhtrh tyh yt t6t </p>
-                <p><b>31/05/2200</b></p>
+                <p><b>{{.Id_user}}</b></p>
+                <p>{{.Cont}}</p>
+                <p><b>{{.Date}}</b></p>
             </div>
-           
-            
+            {{end}}
 
-    </div>
-    
+
+        </div>
+
 
 </body>
+
 </html>

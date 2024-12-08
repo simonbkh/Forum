@@ -5,23 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum - Home</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../../static/css/styles.css">
 </head>
 
 <body>
     {{if .IsLogged}}
-        {{template "log_nav" .}}
+    {{template "log_nav" .}}
     {{else}}
-        {{template "nav" .}}
+    {{template "nav" .}}
     {{end}}
 
     <div class="main-content">
         <!-- Sidebar with Categories -->
         <div class="side-bar">
             {{if .IsLogged}}
-                {{template "log_side_bar" .}}
+            {{template "log_side_bar" .}}
             {{end}}
 
             <h2>Categories</h2>
@@ -44,7 +43,7 @@
                 <h3>{{.Title}}</h3>
                 <p>{{.Content}}</p>
                 <p class="category">
-                    Categories: 
+                    Categories:
                     {{range .Categories}}
                     <span class="category-item">{{.}}</span>
                     {{end}}
@@ -53,12 +52,12 @@
 
                 <!-- Likes Section -->
                 <div class="likes-section">
-                    <button class="like-button" >👍 Like</button>
+                    <button class="like-button">👍 Like</button>
                     <span class="likes-count"> Likes</span>
                     <a href="/getcomment/{{.ID}}" class="link">
                         <span class="material-icons">
                             chat
-                            </span>
+                        </span>
                     </a>
                 </div>
                 <hr>

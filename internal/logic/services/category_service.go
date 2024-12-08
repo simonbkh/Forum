@@ -5,11 +5,12 @@ import (
 	"net/http"
 	"strings"
 
-	"forum/internal/data/utils"
+	"forum/internal/data/model"
+
 	"forum/internal/logic/validators"
 )
 
-func Category_Service(w http.ResponseWriter, r *http.Request) ([]utils.Post, error) {
+func Category_Service(w http.ResponseWriter, r *http.Request) ([]model.Post, error) {
 	path := strings.Split(r.URL.Path, "/")
 	if len(path) != 3 {
 		return nil, errors.New("invalid path")
@@ -23,7 +24,7 @@ func Category_Service(w http.ResponseWriter, r *http.Request) ([]utils.Post, err
 	if err != nil {
 		return nil, err
 	}
-	newPosts := []utils.Post{}
+	newPosts := []model.Post{}
 	for _, post := range Posts {
 		for _, cat := range post.Categories {
 			if cat == category {
