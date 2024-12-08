@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"forum/internal/logic/services"
@@ -29,6 +28,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		IsLogged: isLogged,
 		Posts:    services.Posts,
 	}
-	fmt.Println(data)
+	//	fmt.Println(data)
 	templates.HomeTemplate.Execute(w, data)
 }

@@ -132,7 +132,7 @@ func InsertSession(email, token string) error {
 	var id int
 	err := QueryID(email, &id)
 	if err != nil {
-		fmt.Println(err)
+		//.Println(err)
 		return err
 	}
 	// get id

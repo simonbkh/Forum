@@ -17,6 +17,7 @@ func Router(router *http.ServeMux) error {
 	}
 	router.HandleFunc("/", handlers.HomeHandler)
 	router.HandleFunc("/login", handlers.Login)
+	router.HandleFunc("/api/posts/{id}/{reaction}", handlers.Like)
 	router.HandleFunc("/static/css/{file}", handlers.Static)
 	router.HandleFunc("/static/js/{js}", handlers.Jss)
 	router.HandleFunc("/register", handlers.Register)
@@ -25,7 +26,7 @@ func Router(router *http.ServeMux) error {
 	router.HandleFunc("/new_post", handlers.NewPostHandler)
 	router.HandleFunc("/postinfo", handlers.PostInfo)
 	router.HandleFunc("/logout", handlers.Logout)
-	router.HandleFunc("/category/", handlers.CategoryHandler)
+	//router.HandleFunc("/category/", handlers.CategoryHandler)
 
 	fmt.Println("website is running on: http://localhost:8080")
 
