@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"forum/internal/data/queries"
-	"forum/internal/data/utils"
 	"forum/internal/logic/services"
 )
 
@@ -43,15 +42,6 @@ func CommentHandeler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(er)
 		return
 	}
-
-	Cmt := utils.Comment{
-		Id_user: id_user,
-		Id_post: id_post,
-		Cont: comment,
-		Date: date,
-	}
-
-	fmt.Println(Cmt)
 }
 
 func GetCommment(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +55,7 @@ func GetCommment(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-	
+
 	er := temp.Execute(w, services.Posts[len(services.Posts)-id])
 	if er != nil {
 		return
