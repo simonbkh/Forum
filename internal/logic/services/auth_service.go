@@ -69,25 +69,23 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	}
 	expryTime = time.Now().Add(time.Hour * 24)
 	if errr != nil || token.Value == "" {
-		exit, _ := queries.IssesionidAvailable(token.Value, email)
+		exit, _ := queries.IssesionidAvailable("", email)
 		if exit {
-			er := queries.UpdiateSesiontoken(sessionToken, email, expryTime)
+			er := queries.Removesesionid("", email)
 			if er != nil {
-				return er
-			}
-		} else {
-			er := queries.Insersessions(sessionToken, email, expryTime)
-			if er != nil {
+				fmt.Println(er)
 				return er
 			}
 		}
-
+		er := queries.Insersessions(sessionToken, email, expryTime)
+		if er != nil {
+			return er
+		}
 	} else {
 		exit, _ := queries.IssesionidAvailable(token.Value, email)
 		if exit {
 			er := queries.UpdiateSesiontoken(sessionToken, email, expryTime)
 			if er != nil {
-				fmt.Println(er)
 				return er
 			}
 		} else {
@@ -113,7 +111,7 @@ func Logout_Service(w http.ResponseWriter, r *http.Request) error {
 	if er != nil {
 		return er
 	}
-	err := queries.Removesesionid(token.Value)
+	err := queries.Removesesionid(token.Value, "")
 	if err != nil {
 		return err
 	}

@@ -50,10 +50,10 @@ func LoginInfo(w http.ResponseWriter, r *http.Request) {
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Error(w, "metod not allowed", http.StatusMethodNotAllowed)
-		return
-	}
+	// if r.Method != "POST" {
+	// 	http.Error(w, "metod not allowed", http.StatusMethodNotAllowed)
+	// 	return
+	// }
 	er := services.Logout_Service(w, r)
 	if utils.IsErrors(er) {
 		http.Error(w, fmt.Sprintf("%v", er), http.StatusBadRequest)

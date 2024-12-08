@@ -128,11 +128,27 @@ func IssesionidAvailable(sessionToke, email string) (bool, time.Time) {
 }
 
 // /// remove token sisionid
-func Removesesionid(sessionToke string) error {
-	query := `DELETE FROM sessions WHERE sessionToken = ?`
-	_, err := database.Db.Exec(query, sessionToke)
-	if err != nil {
-		return err
+func Removesesionid(sessionToke, email string) error {
+	if email != "" {
+		query := `select id from users where email = ?`
+		var id int
+		err := database.Db.QueryRow(query, email).Scan(&id)
+		if err != nil {
+			return err
+		}
+		query = `DELETE FROM sessions WHERE user_id = ?`
+		_, err = database.Db.Exec(query, id)
+		if err != nil {
+			return err
+		}
+
+	} else {
+		query := `DELETE FROM sessions WHERE sessionToken = ?`
+		_, err := database.Db.Exec(query, sessionToke)
+		if err != nil {
+			return err
+		}
+		return nil
 	}
 	return nil
 }

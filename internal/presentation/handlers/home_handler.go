@@ -24,9 +24,9 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 			if bol && expiry.After(time.Now()) {
 				services.Text = ""
 			} else {
-				err := queries.Removesesionid(te.Value)
+				err := queries.Removesesionid(te.Value, "")
 				if err != nil {
-					return 
+					return
 				}
 				services.Text = "tt"
 			}
