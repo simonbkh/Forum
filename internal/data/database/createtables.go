@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 )
 
 func CreateTables(db *sql.DB) error {
@@ -24,7 +23,7 @@ func CreateTables(db *sql.DB) error {
 		`CREATE TABLE IF NOT EXISTS sessions (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			sessionToken TEXT NOT NULL UNIQUE,
-			user_id INTEGER NOT NULL unique,
+			user_id INTEGER NOT NULL UNIQUE,
 			expiry TIMESTAMP NOT NULL,
 			FOREIGN KEY(user_id) REFERENCES users(id)
 			)`,
@@ -32,7 +31,6 @@ func CreateTables(db *sql.DB) error {
 	for _, v := range UsersTable {
 		_, err := db.Exec(v)
 		if err != nil {
-			fmt.Println(err)
 			return err
 		}
 	}

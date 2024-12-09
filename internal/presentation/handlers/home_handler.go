@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"time"
 
-	models "forum/internal/data/database/modles"
-	"forum/internal/data/queries"
+	"forum/internal/data/modles"
+	"forum/internal/logic/utils"
 	"forum/internal/presentation/templates"
 )
 
@@ -14,26 +14,19 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	// 	http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 	// var Posts Post
 	// }
-	te, err := r.Cookie("SessionToken")
-	if !models.UserStatus {
-		if err != nil || te.Value == "" {
-			models.UserStatus = false
-		} else {
-			bol, expiry := queries.IssesionidAvailable(te.Value, "")
-			if bol && expiry.After(time.Now()) {
-				models.UserStatus = true
-			} else {
-				err := queries.Removesesionid(te.Value, "")
-				if err != nil {
-					return
-				}
-
-				models.UserStatus = false
-			}
-		}
+	er := utils.CheckUserSession(r)
+	if er != nil {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 	}
-	er := templates.HomeTemplate.Execute(w, models.UserStatus)
+	if !modles.UserStatus {
+		http.SetCookie(w, &http.Cookie{
+			Name:    "SessionToken",
+			Value:   "",
+			Expires: time.Unix(0, 0),
+		})
+	}
+	er = templates.HomeTemplate.Execute(w, modles.UserStatus)
 	if er != nil {
 	}
-	models.UserStatus = false
+
 }

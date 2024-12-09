@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"forum/internal/data/modles"
 	"forum/internal/data/queries"
 )
 
@@ -60,4 +61,21 @@ func ManageSessionToken(email string, r *http.Request) (string, time.Time, error
 	}
 
 	return sessionToken, expryTime, nil
+}
+func CheckUserSession(r *http.Request) error {
+	modles.UserStatus = false
+	te, err := r.Cookie("SessionToken")
+	if !modles.UserStatus {
+		if err != nil || te.Value == "" {
+			modles.UserStatus = false
+		} else {
+			bol, expiry := queries.IssesionidAvailable(te.Value, "")
+			if bol && expiry.After(time.Now()) {
+				modles.UserStatus = true
+			} else {
+				modles.UserStatus = false
+			}
+		}
+	}
+	return nil
 }

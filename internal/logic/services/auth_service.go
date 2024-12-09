@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	models "forum/internal/data/database/modles"
 	"forum/internal/data/queries"
 	"forum/internal/logic/utils"
 	"forum/internal/logic/validators"
@@ -71,7 +70,6 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 		Value:   sessionToken,
 		Expires: expryTime,
 	})
-	models.UserStatus = true
 	return nil
 }
 
