@@ -44,10 +44,10 @@
                 <p class="category">
                     Categories: 
                     {{range .Categories}}
-                    <span class="category-item">{{.}}</span>
+                    <span class="category-item">-[{{.}}]</span>
                     {{end}}
                 </p>
-                <p><i>Posted by {{.Username}} on {{.Date}}</i></p>
+                <p><i>Posted by <b>{{.Username}} </b> on {{.Date}}</i></p>
 
                 <!-- Likes Section -->
                 <div class="likes-section">
