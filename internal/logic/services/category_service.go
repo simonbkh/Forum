@@ -18,6 +18,9 @@ func Category_Service(w http.ResponseWriter, r *http.Request) ([]utils.Post, err
 	if category == "" {
 		return nil, errors.New("wrong category")
 	}
+	if category == "all" {
+		return Posts, nil
+	}
 	slice := []string{category}
 	err := validators.CategoriesValidator(slice)
 	if err != nil {

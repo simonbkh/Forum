@@ -62,3 +62,13 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 	}
 	return nil
 }
+
+func UserPosts(id int) []utils.Post{
+	NewPosts := []utils.Post{}
+	for _,post := range Posts {
+		if post.User_id == id {
+			NewPosts = append(NewPosts, post)
+		}
+	}
+	return NewPosts
+}
