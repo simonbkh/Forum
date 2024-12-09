@@ -2,15 +2,14 @@ package services
 
 import (
 	"errors"
-	"fmt"
-	"forum/internal/data/utils"
-	"forum/internal/logic/validators"
 	"net/http"
 	"strings"
+
+	"forum/internal/data/utils"
+	"forum/internal/logic/validators"
 )
 
 func Category_Service(w http.ResponseWriter, r *http.Request) ([]utils.Post, error) {
-
 	path := strings.Split(r.URL.Path, "/")
 	if len(path) != 3 {
 		return nil, errors.New("invalid path")
@@ -32,7 +31,7 @@ func Category_Service(w http.ResponseWriter, r *http.Request) ([]utils.Post, err
 			}
 		}
 	}
-	fmt.Println(newPosts)
+	// fmt.Println(newPosts)
 
 	return newPosts, nil
 }

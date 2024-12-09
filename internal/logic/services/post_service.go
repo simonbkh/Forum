@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -51,9 +50,9 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 		// Username:     string(user_id),
 	}
 
-	fmt.Println(NewPost)
+	// fmt.Println(NewPost)
 	// Posts = append(Posts, NewPost)
-	post_id , err := queries.InsertPost(NewPost, user_id)
+	post_id, err := queries.InsertPost(NewPost, user_id)
 	if err != nil {
 		return err
 	}

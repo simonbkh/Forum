@@ -116,7 +116,6 @@ func InsertPost(post utils.Post, id int) (string, error) {
 		id, post.Title, post.Content, post.Date).
 		Scan(&post_id)
 	if err != nil {
-		fmt.Println(err)
 		return "", err
 	}
 	return post_id, nil
@@ -142,7 +141,6 @@ func InsertSession(email, token string) error {
 	var id int
 	err := QueryID(email, &id)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	// get id
@@ -224,12 +222,20 @@ func GetPosts() ([]utils.Post, error) {
 
 	for rows.Next() {
 		var post utils.Post
-		err := rows.Scan(&post.User_id, &post.Username, &post.Title, &post.Content, &post.Date)
+		err := rows.Scan(&post.Post_id, &post.User_id, &post.Title, &post.Content, &post.Date)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+		post.Categories,err = GetCategories(post.Post_id)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+		// fmt.Println(post.Title)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
 		// post.Categories = append(post.Categories, cat)
-		post.Username, err = GetUser(post.Username)
+		post.Username, err = GetUser(post.User_id)
 		// fmt.Println(post.Username)
 		if err != nil {
 			return nil, err
@@ -240,7 +246,35 @@ func GetPosts() ([]utils.Post, error) {
 	return posts, nil
 }
 
-func GetUser(uid string) (string, error) {
+func GetCategories(post_id int) ([]string, error)  {
+	var categories  = []string{}
+	statement, err := database.Db.Prepare(`SELECT category_name FROM categories WHERE posts_id = ?`)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare statement: %w", err)
+	}
+	defer statement.Close()
+	res, err := statement.Query(post_id)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute statement: %w", err)
+	}
+	defer res.Close()
+	for res.Next() {
+		var cat string 
+		err = res.Scan(&cat)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+		categories = append(categories, cat)
+	}
+	// fmt.Println(categories)
+
+
+
+	return categories , nil
+
+}
+
+func GetUser(uid int) (string, error) {
 	name := ""
 	statement, err := database.Db.Prepare(`SELECT username FROM users WHERE id = ?`)
 	if err != nil {
@@ -261,10 +295,9 @@ func GetUser(uid string) (string, error) {
 	return name, nil
 }
 
-func  InsertCategories(categories []string, post_id string) error {
+func InsertCategories(categories []string, post_id string) error {
 	statement, err := database.Db.Prepare(`INSERT INTO categories (posts_id,category_name) values (?,?)`)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	defer statement.Close()
