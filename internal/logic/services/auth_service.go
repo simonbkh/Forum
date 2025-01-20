@@ -64,7 +64,6 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-
 	http.SetCookie(w, &http.Cookie{
 		Name:    "SessionToken",
 		Value:   sessionToken,
