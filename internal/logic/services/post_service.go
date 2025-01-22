@@ -22,23 +22,23 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 	categories := r.Form["category"]
 	user_id := 0
 
-	// err := validators.TitleValidator(title)
-	// if err != nil {
-	// 	return err
-	// }
+	err := validators.TitleValidator(title, content)
+	if err != nil {
+		return err
+	}
 	if len(categories) == 0 {
 		categories = append(categories, "general")
 	} else if len(categories) > 3 {
 		return errors.New("maximum categories to choose is 3")
 	}
 
-	err := validators.CategoriesValidator(categories)
+
+	err = validators.CategoriesValidator(categories)
 	if err != nil {
 		return err
 	}
 	user_id, err = validators.Allowed(w, r)
 	if err != nil {
-		// redirect or smtg
 		return err
 	}
 

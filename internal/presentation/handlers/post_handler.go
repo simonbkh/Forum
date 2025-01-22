@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"forum/internal/logic/services"
@@ -30,7 +29,8 @@ func PostInfo(w http.ResponseWriter, r *http.Request) {
 	}
 	err := services.Post_Service(w, r)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
+		templates.PostTemplate.Execute(w, err)
+		// http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
 		return
 	}
 	http.Redirect(w, r, "/", http.StatusSeeOther)

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 )
@@ -24,7 +23,6 @@ func Static(w http.ResponseWriter, r *http.Request) {
 }
 func StaticCat(w http.ResponseWriter, r *http.Request) {
 	file := r.PathValue("file")
-	fmt.Println("hhgfh")
 
 	style := http.StripPrefix("/category/static/css/", http.FileServer(http.Dir("../internal/presentation/static/css")))
 
