@@ -12,21 +12,27 @@ func CreateTables(db *sql.DB) error {
 			email TEXT NOT NULL unique,
 			password TEXT NOT NULL
 		)`,
-		`CREATE TABLE IF NOT EXISTS post (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-	 		titele TEXT NOT NULL,
-			content TEXT NOT NULL,
-			categorie TEXT NOT NULL,
-			user_id INTEGER NOT NULL,			
-			FOREIGN KEY(user_id) REFERENCES users(id)
-			)`,
+		`CREATE TABLE IF NOT EXISTS posts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            content TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )`,
 		`CREATE TABLE IF NOT EXISTS sessions (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			sessionToken TEXT NOT NULL UNIQUE,
 			user_id INTEGER NOT NULL UNIQUE,
 			expiry TIMESTAMP NOT NULL,
 			FOREIGN KEY(user_id) REFERENCES users(id)
-			)`,
+		)`,
+		`CREATE TABLE IF NOT EXISTS categories (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            posts_id INTEGER NOT NULL,
+            category_name TEXT,
+            FOREIGN KEY (posts_id) REFERENCES posts(id)
+        )`,
 	}
 	for _, v := range UsersTable {
 		_, err := db.Exec(v)

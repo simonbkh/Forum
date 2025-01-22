@@ -34,7 +34,6 @@ func ManageSessionToken(email string, r *http.Request) (string, time.Time, error
 	token, errr := r.Cookie("SessionToken")
 	if errr != nil || token.Value == "" {
 
-		
 		exit, _ := queries.IssesionidAvailable("", email) // katchof wax kayn aluser
 		if exit {
 			fmt.Println(err, "ok1")

@@ -9,24 +9,23 @@
 </head>
 
 <body>
-    {{if eq . false}}
-     {{template "nav"}}
+    {{if .UserStatus}}
+    {{template "login"}}
     {{else}}
-         {{template "login"}}
+    {{template "nav"}}
     {{end}}
     <div class="main-content">
         <!-- Sidebar with Categories -->
         <div class="side-bar">
+            {{if .UserStatus}}
+            {{template "side"}}
+        {{end}}
             <h2>Categories</h2>
             <ul>
-                <li><a href="/category/all">All</a></li>
-                <li><a href="/category/general">General</a></li>
-                <li><a href="/category/games">Games</a></li>
-                <li><a href="/category/sports">Sports</a></li>
-                <li><a href="/category/fashion">Fashion</a></li>
-                <li><a href="/category/travel">Travel</a></li>
-                <li><a href="/category/food">Food</a></li>
-                <li><a href="/category/health">Health</a></li>
+                <li><a href="/category/Tech-Support">Tech Support</a></li>
+                <li><a href="/category/General-Discussion">General Discussion</a></li>
+                <li><a href="/category/Tutorials">Tutorials</a></li>
+                <li><a href="/category/Announcements">Announcements</a></li>
             </ul>
         </div>
         
@@ -34,14 +33,20 @@
         <!-- Posts Container -->
         
         <div class="posts-container">
-            
+            {{range .Posts}}
             <div class="post">
-                <h3>Posted by</h3>
-                <p>ssss</p>
-                <hr>
-                <a href="#cmt" >click her</a>
+                <h3>{{.Title}}</h3>
+                <p>{{.Content}}</p>
+                <p class="category">
+                    Categories: 
+                    {{range .Categories}}
+                    <span class="category-item">-[{{.}}]</span>
+                    {{end}}
+                </p>
+                <p><i>Posted by <b>{{.Username}} </b> on {{.Date}}</i></p>
+
             </div>
-            
+            {{end}}
         </div>
         
     </div>
