@@ -3,7 +3,7 @@ package templates
 import (
 	"html/template"
 
-	"forum/internal/logic/utils"
+	"forum/internal/logic/Utils"
 )
 
 var (

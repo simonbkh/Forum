@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"forum/internal/logic/utils"
+	"forum/internal/logic/Utils"
 	"forum/internal/presentation/handlers"
 	"forum/internal/presentation/templates"
 )
@@ -27,10 +27,11 @@ func Router(router *http.ServeMux) error {
 	router.HandleFunc("/logout", handlers.Logout)
 	router.HandleFunc("/category/", handlers.CategoryHandler)
 	router.HandleFunc("/myPosts", handlers.Myposts)
+	router.HandleFunc("/newcomment", handlers.Creatcomment)
+	router.HandleFunc("/getcomment", handlers.GetComment)
+	fmt.Println("website is running on: http://localhost:8081")
 
-	fmt.Println("website is running on: http://localhost:8080")
-
-	err = http.ListenAndServe(":8080", router)
+	err = http.ListenAndServe(":8081", router)
 	if utils.IsErrors(err) {
 		return err
 	}

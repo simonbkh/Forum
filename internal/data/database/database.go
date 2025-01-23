@@ -3,7 +3,7 @@ package database
 import (
 	"database/sql"
 
-	"forum/internal/logic/utils"
+	"forum/internal/logic/Utils"
 
 	_ "github.com/mattn/go-sqlite3"
 )

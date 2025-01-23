@@ -3,6 +3,8 @@ package queries
 import (
 	"database/sql"
 	"fmt"
+	"strconv"
+	"strings"
 
 	"forum/internal/data/database"
 	"forum/internal/data/utils"
@@ -226,7 +228,7 @@ func GetPosts() ([]utils.Post, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
-		post.Categories,err = GetCategories(post.Post_id)
+		post.Categories, err = GetCategories(post.Post_id)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
@@ -246,8 +248,8 @@ func GetPosts() ([]utils.Post, error) {
 	return posts, nil
 }
 
-func GetCategories(post_id int) ([]string, error)  {
-	var categories  = []string{}
+func GetCategories(post_id int) ([]string, error) {
+	categories := []string{}
 	statement, err := database.Db.Prepare(`SELECT category_name FROM categories WHERE posts_id = ?`)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare statement: %w", err)
@@ -259,7 +261,7 @@ func GetCategories(post_id int) ([]string, error)  {
 	}
 	defer res.Close()
 	for res.Next() {
-		var cat string 
+		var cat string
 		err = res.Scan(&cat)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
@@ -268,10 +270,7 @@ func GetCategories(post_id int) ([]string, error)  {
 	}
 	// fmt.Println(categories)
 
-
-
-	return categories , nil
-
+	return categories, nil
 }
 
 func GetUser(uid int) (string, error) {
@@ -308,4 +307,64 @@ func InsertCategories(categories []string, post_id string) error {
 		}
 	}
 	return nil
+}
+
+func InsertComment(post int, id int, comment string, date string) error {
+	statement, err := database.Db.Prepare(`INSERT INTO comment (posts_id, id_user, comment, created_at) values (?,?,?,?)`)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	_, er := statement.Exec(post, id, comment, date)
+	if er != nil {
+		return er
+	}
+
+	return nil
+}
+
+func GetCommment(id int) ([]utils.Comment, error) {
+	var cmt []utils.Comment
+	
+	statement, err := database.Db.Prepare(`SELECT * FROM comment  where posts_id = ?  ORDER BY created_at DESC`)
+	if err != nil {
+		
+		return nil, err
+	}
+	
+	defer statement.Close()
+	rows, err := statement.Query(id)
+	
+	if err != nil {
+
+		return nil, fmt.Errorf("failed to execute statement: %w", err)
+	}
+	defer rows.Close()
+	
+	for rows.Next() {
+		
+		var com utils.Comment
+		err := rows.Scan(&com.ID, &com.Id_post, &com.Username, &com.Cont, &com.Date)
+		
+		if err != nil {
+			
+			return nil, err
+		}
+		id, _ := strconv.Atoi(com.Username)
+		
+		com.Username, err = GetUser(id)
+		if err != nil {
+			
+			return nil, err
+		}
+		
+		com.Date = strings.ReplaceAll(com.Date, "T", " / ")
+		if len(com.Date) != 0 {
+			com.Date = com.Date[:len(com.Date)-1]
+		}
+		cmt = append(cmt, com)
+	}
+	// fmt.Println("------",cmt)
+	return cmt, nil
 }

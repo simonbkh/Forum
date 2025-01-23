@@ -7,7 +7,7 @@ import (
 	"forum/internal/data/queries"
 
 	//"forum/internal/data/utils"
-	"forum/internal/logic/utils"
+	"forum/internal/logic/Utils"
 	"forum/internal/logic/validators"
 
 	"github.com/gofrs/uuid"

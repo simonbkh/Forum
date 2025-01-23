@@ -19,8 +19,14 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
+
 	err := services.GetPosts(&services.Posts)
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	er := services.Getcomment()
+	if er != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -28,5 +34,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		IsLogged: isLogged,
 		Posts:    services.Posts,
 	}
+	// fmt.Println(data.Posts[5].Title)
 	templates.HomeTemplate.Execute(w, data)
 }

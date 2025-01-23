@@ -9,6 +9,7 @@ func Static(w http.ResponseWriter, r *http.Request) {
 	file := r.PathValue("file")
 	// fmt.Println(r.URL)
 	style := http.StripPrefix("/static/css/", http.FileServer(http.Dir("../internal/presentation/static/css")))
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("../internal/presentation/static"))))
 
 	//	fmt.Println(style)
 	// Check if the requested file exists by trying to read it
@@ -21,6 +22,7 @@ func Static(w http.ResponseWriter, r *http.Request) {
 
 	style.ServeHTTP(w, r)
 }
+
 func StaticCat(w http.ResponseWriter, r *http.Request) {
 	file := r.PathValue("file")
 

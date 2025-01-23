@@ -120,6 +120,7 @@ header h1 {
 
 /* Post Styling */
 .post {
+
     background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
@@ -143,7 +144,7 @@ header h1 {
     font-size: 1.1em;
     color: #555;
     margin-bottom: 10px;
-    line-height: 1.6;
+    /* line-height: 1.6; */
 }
 
 .post i {
@@ -207,6 +208,137 @@ footer a:hover {
     text-decoration: underline;
 }
 
+
+/*---------------------------------------------------*/
+#chat{
+    width:  0;
+    color: rgb(35, 143, 251);
+    cursor: pointer;
+
+}
+#chat:hover{
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+
+}
+#cansel{
+    margin-bottom: 30px;
+    color: red;
+    cursor: pointer;
+}
+#cansel:hover{
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 100%;
+    border: red solid 2px;
+    transform: translateY(-5px);
+}
+.post {
+    display: grid;
+    place-items: center;
+    padding-bottom: 30px;
+}
+
+.lbl {
+    width: 85%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    /* padding-bottom: 5px; */
+    font-weight: 900;
+}
+
+.center-label {
+    text-align: center;
+}
+
+.bottom-label {
+    text-align: end;
+}
+
+
+#areapost {
+
+    width: 80%;
+    padding: 15px;
+    font-size: 1.1em;
+    border: 1px #ddd;
+    border-radius: 10px;
+    /* min-height: 100px; */
+    line-height: 1.6;
+    outline: none;
+    transition: border-color 0.3s;
+    resize: none;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+
+}
+
+.bot {
+    color: rgb(0 170 255);
+    display: flex;
+    place-items: center;
+    padding-left: 3%;
+
+}
+
+.commant {
+    display: flex;
+    place-items: center;
+
+}
+
+#commant {
+
+    width: 50%;
+    padding-left: 1%;
+    padding-top: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    border: 1px #9b9494;
+    border-radius: 2px;
+    line-height: 1.6;
+    outline: none;
+    resize: none;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+
+}
+
+button {
+    width: 0;
+    height: 0;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+}
+
+.com {
+
+    font-weight: 900;
+
+}
+
+form {
+    padding-left: 8%;
+    margin: 6px auto;
+}
+
+.posts-container {
+    padding-left: 8%;
+    margin: 6px auto;
+}
+
+.commants {
+
+    padding: 1px 20px 5px 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.2s;
+}
+
+
+/*--------------------------------------------------------------*/
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .main-content {
@@ -221,6 +353,7 @@ footer a:hover {
     .posts-container {
         max-width: 100%;
     }
+  
 }
 
 @media (max-width: 480px) {

@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"net/http"
 
+	utils "forum/internal/logic/Utils"
 	"forum/internal/logic/services"
-	"forum/internal/logic/utils"
 	"forum/internal/presentation/templates"
 )
 
 //      /login, /register routes
-
 
 func Register(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
@@ -58,9 +57,9 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 	}
-	err := services.Logout(w  ,r )
+	err := services.Logout(w, r)
 	if utils.IsErrors(err) {
-		//maeereftch wach hadak howa status code
+		// maeereftch wach hadak howa status code
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusInternalServerError)
 	}
 	isLogged = false

@@ -5,21 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum - Home</title>
-    <link rel="stylesheet" href="static/css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/styles.css">
 </head>
 
 <body>
     {{if .IsLogged}}
-        {{template "log_nav" .}}
+    {{template "log_nav" .}}
     {{else}}
-        {{template "nav" .}}
+    {{template "nav" .}}
     {{end}}
 
     <div class="main-content">
         <!-- Sidebar with Categories -->
         <div class="side-bar">
             {{if .IsLogged}}
-                {{template "log_side_bar" .}}
+            {{template "log_side_bar" .}}
             {{end}}
 
             <h2>Categories</h2>
@@ -39,31 +41,55 @@
         <div class="posts-container">
             {{range .Posts}}
             <div class="post">
-                <h3>{{.Title}}</h3>
-                <p>{{.Content}}</p>
-                <p class="category">
-                    Categories: 
-                    {{range .Categories}}
-                    <span class="category-item">-[{{.}}]</span>
-                    {{end}}
-                </p>
-                <p><i>Posted by <b>{{.Username}} </b> on {{.Date}}</i></p>
+                <div id="tt">
+                    <h3>{{.Title}}</h3>
+                    <p>{{.Content}}</p>
+                    <p class="category">
+                        Categories:
+                        {{range .Categories}}
+                        <span class="category-item">-[{{.}}]</span>
+                        {{end}}
+                    </p>
+                    <p><i>Posted by <b>{{.Username}} </b> on {{.Date}}</i></p>
 
-                <!-- Likes Section -->
-                <div class="likes-section">
-                    <button class="like-button" >👍 Like</button>
-                    <span class="likes-count"> Likes</span>
+                    <!-- Likes Section -->
+                    <div class="likes-section">
+                        <button class="like-button">👍 Like</button>
+                        <span class="likes-count"> Likes</span>
+                        <span id="chat" data-id="{{.Post_id}}" class="material-icons">
+                            chat
+                        </span>
+                    </div>
                 </div>
+
                 <hr>
+                <div id="all" style="display: none;">
+                    <span id="cansel" class="material-icons">
+                        cancel
+                    </span>
+                    <label for="commant" class="com">Commant :</label>
+                    <div class="commant">
+                        <textarea name="commant" id="commant" placeholder="write a commente" required
+                            maxlength="1000"></textarea>
+                        <button type="submit" class="bot">
+                            <span id="send" class="material-icons">
+                                send
+                            </span>
+                        </button>
+                    </div>
+
+                </div>
+
             </div>
             {{end}}
         </div>
-    </div>
 
-    <footer>
-        <p>© 2024 Forum. All rights reserved.</p>
-        <p><a href="/terms">Terms of Service</a> | <a href="/privacy">Privacy Policy</a></p>
-    </footer>
+        <script type="module" src="../../static/js/comment.js"></script>
+        <!-- <footer>
+            <p>© 2024 Forum. All rights reserved.</p>
+            <p><a href="/terms">Terms of Service</a> | <a href="/privacy">Privacy Policy</a></p>
+        </footer> -->
+
 </body>
 
 </html>
