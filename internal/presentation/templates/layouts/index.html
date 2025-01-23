@@ -19,13 +19,17 @@
         <div class="side-bar">
             {{if .UserStatus}}
             {{template "side"}}
-        {{end}}
+            {{end}}
             <h2>Categories</h2>
             <ul>
                 <li><a href="/category/Tech-Support">Tech Support</a></li>
                 <li><a href="/category/General-Discussion">General Discussion</a></li>
                 <li><a href="/category/Tutorials">Tutorials</a></li>
+                <li><a href="/category/Gaming">Gaming</a></li>
+                <li><a href="/category/Job-Listings">Job Listings</a></li>
+                <li><a href="/category/Hobbies-&-Interests">Hobbies & Interests</a></li>
                 <li><a href="/category/Announcements">Announcements</a></li>
+
             </ul>
         </div>
         
@@ -38,13 +42,15 @@
                 <h3>{{.Title}}</h3>
                 <p>{{.Content}}</p>
                 <p class="category">
-                    <b style="color: black;">Categories: </b>
+                    <b>Category: </b>
                     {{range .Categories}}
                     <span class="category-item">{{.}}</span>
                     {{end}}
                 </p>
-                <p><i>Posted by <b>{{.Username}} </b> on {{.Date}}</i></p>
-
+                <p class="posted-by">
+                    <img src="../../static/images/profile.png" class="profile-img">
+                    <i>Posted by <b>{{.Username}}</b> on {{.Date}}</i>
+                </p>
             </div>
             {{end}}
         </div>

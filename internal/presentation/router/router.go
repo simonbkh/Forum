@@ -23,6 +23,9 @@ func Router(router *http.ServeMux) error {
 	router.Handle("/", Middleware(http.HandlerFunc(handlers.HomeHandler)))
 	router.Handle("/login", Middleware(http.HandlerFunc(handlers.Login)))
 	router.Handle("/static/css/{file}", http.HandlerFunc(handlers.Static))
+	router.Handle("/static/images/{file}", http.HandlerFunc(handlers.Image))
+
+
 	router.Handle("/loginInfo", http.HandlerFunc(handlers.LoginInfo))
 	router.Handle("/registerInfo", http.HandlerFunc(handlers.RegisterInfo))
 	router.Handle("/logout", Middleware(http.HandlerFunc(handlers.Logout)))
@@ -41,7 +44,6 @@ func Middleware(next http.Handler) http.Handler {
 		te, err := r.Cookie("SessionToken")
 		if err != nil || te.Value == "" {
 			modles.UserStatus = false
-			fmt.Println(r.URL.Path)
 			if r.URL.Path != "/" && r.URL.Path != "/login"  {
 				http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 				return

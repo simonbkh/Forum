@@ -2,9 +2,8 @@ package validators
 
 import (
 	"errors"
-	"regexp"
-
 	"forum/internal/logic/utils"
+	"regexp"
 	// "fmt"
 )
 
@@ -65,7 +64,7 @@ func EmailValidator(email string) error {
 		return errors.New("the format  email not corect ")
 	}
 	if len(email) > 25 {
-		return errors.New("email is too long (max: 25 characters)")	
+		return errors.New("email is too long (max: 25 characters)")
 	} else if len(email) < 13 {
 		return errors.New("email is too short (min: 13 characters)")
 	}

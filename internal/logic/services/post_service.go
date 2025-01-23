@@ -12,8 +12,6 @@ import (
 
 type POST = database.Post
 
-
-
 var Posts []database.Post
 
 // Post management logic
@@ -21,7 +19,6 @@ var Posts []database.Post
 func Post_Service(w http.ResponseWriter, r *http.Request) error {
 	title := r.FormValue("title")
 	content := r.FormValue("content")
-	fmt.Println(content)
 	categories := r.Form["category"]
 	// user_id := 0
 
@@ -35,7 +32,6 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 	}
 	user_id, err := validators.Allowed(w, r)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	NewPost := database.Post{
@@ -45,9 +41,6 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 		Date:       time.Now().Format("2006-01-02 15:04:05"),
 		// Username:     string(user_id),
 	}
-
-	fmt.Println(Posts)
-	fmt.Println(NewPost)
 	// Posts = append(Posts, NewPost)
 	post_id, err := queries.InsertPost(NewPost, user_id)
 	if err != nil {
@@ -80,4 +73,47 @@ func GetPosts(mok *[]database.Post) error {
 	// *mok,err = queries.GetCategories()
 	// fmt.Println(mok)
 	return nil
+}
+
+func TimeDifference(newPosts,oldPosts []database.Post) []database.Post {
+	newPosts = nil
+	for _, post := range oldPosts {
+		mainDate := post.Date
+		duration := timeAgo(mainDate)
+		NewPost := database.Post{
+			Username:   post.Username,
+			Title:      post.Title,
+			Content:    post.Content,
+			Categories: post.Categories,
+			Date:       (duration),
+		}
+		newPosts = append(newPosts, NewPost)
+	}
+	return newPosts
+}
+
+func timeAgo(t string) string {
+
+	parsedTime, err := time.Parse(time.RFC3339, t)
+	if err != nil {
+		fmt.Println("Error parsing time:", err)
+		return "Invalid date"
+	}
+
+	duration := time.Since(parsedTime)
+	duration += time.Hour
+	switch {
+	case duration < time.Minute:
+		return fmt.Sprintf("%d Seconds ago", int(duration.Seconds()))
+	case duration < time.Hour:
+		return fmt.Sprintf("%d Minutes ago", int(duration.Minutes()))
+	case duration < 24*time.Hour:
+		return fmt.Sprintf("%d Hours ago", int(duration.Hours()))
+	case duration < 30*24*time.Hour:
+		return fmt.Sprintf("%d Days ago", int(duration.Hours()/24))
+	case duration < 12*30*24*time.Hour:
+		return fmt.Sprintf("%d Months ago", int(duration.Hours()/(24*30)))
+	default:
+		return fmt.Sprintf("%d Years ago", int(duration.Hours()/(24*365)))
+	}
 }
