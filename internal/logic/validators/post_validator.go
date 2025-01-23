@@ -2,9 +2,8 @@ package validators
 
 import (
 	"errors"
-	"net/http"
-
 	"forum/internal/data/queries"
+	"net/http"
 )
 
 func CategoriesValidator(categories []string) error {
@@ -29,12 +28,12 @@ func CategoriesValidator(categories []string) error {
 }
 
 func Allowed(w http.ResponseWriter, r *http.Request) (int, error) {
-	cookie, err := r.Cookie("token")
+	cookie, err := r.Cookie("SessionToken")
 	if err != nil {
 		// redirect awla chi laeba
 		return 0, err
 	}
-	user_id, err := queries.Logged(cookie.Value)
+	user_id, err := queries.Hh(cookie.Value)
 	if err != nil {
 		// redirect awla chi laeba
 		return 0, err

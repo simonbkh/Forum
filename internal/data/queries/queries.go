@@ -154,11 +154,11 @@ func Removesesionid(sessionToke, email string) error {
 	return nil
 }
 
-func Logged(token string) (int, error) {
+func Hh(token string) (int, error) {
 	// fmt.Println(token)
 	var user_id int
 	// fmt.Println(user_id)
-	query := `SELECT user_id FROM sessions WHERE session_id = ?`
+	query := `SELECT user_id FROM sessions WHERE SessionToken = ?`
 	err := database.Db.QueryRow(query, token).Scan(&user_id)
 	if err != nil {
 		return 0, err
@@ -172,7 +172,6 @@ func InsertPost(post database.Post, id int) (string, error) {
 	// err := QueryID(post.Username, &id)
 	// err := GetId()
 
-	fmt.Println(id)
 	statement, err := database.Db.Prepare(`INSERT INTO posts (user_id ,title, content, created_at) values (?,?,?,?)`)
 	if err != nil {
 		fmt.Println(err)
@@ -211,7 +210,6 @@ func InsertCategories(categories []string, post_id string) error {
 	return nil
 }
 
-
 func GetPosts() ([]database.Post, error) {
 	var posts []database.Post
 	statement, err := database.Db.Prepare(`SELECT * FROM posts ORDER BY created_at DESC`)
@@ -234,10 +232,6 @@ func GetPosts() ([]database.Post, error) {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
 		post.Categories, err = GetCategories(post.Post_id)
-		if err != nil {
-			return nil, fmt.Errorf("failed to scan row: %w", err)
-		}
-		// fmt.Println(post.Title)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
@@ -273,13 +267,11 @@ func GetCategories(post_id int) ([]string, error) {
 		}
 		categories = append(categories, cat)
 	}
-	// fmt.Println(categories)
-
 	return categories, nil
 
 }
 
-func GetUser(uid int) (string, error) {
+func GetUser(uid string) (string, error) {
 	name := ""
 	statement, err := database.Db.Prepare(`SELECT username FROM users WHERE id = ?`)
 	if err != nil {
@@ -299,4 +291,3 @@ func GetUser(uid int) (string, error) {
 	}
 	return name, nil
 }
-

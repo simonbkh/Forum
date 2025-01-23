@@ -38,9 +38,9 @@
                 <h3>{{.Title}}</h3>
                 <p>{{.Content}}</p>
                 <p class="category">
-                    Categories: 
+                    <b style="color: black;">Categories: </b>
                     {{range .Categories}}
-                    <span class="category-item">-[{{.}}]</span>
+                    <span class="category-item">{{.}}</span>
                     {{end}}
                 </p>
                 <p><i>Posted by <b>{{.Username}} </b> on {{.Date}}</i></p>

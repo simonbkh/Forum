@@ -10,7 +10,7 @@ var Db *sql.DB
 
 type Post struct {
 	Post_id int
-	User_id    int
+	User_id    string
 	Username   string
 	Title      string
 	Content    string

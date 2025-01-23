@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -11,13 +12,16 @@ import (
 
 type POST = database.Post
 
+
+
 var Posts []database.Post
 
 // Post management logic
 
 func Post_Service(w http.ResponseWriter, r *http.Request) error {
 	title := r.FormValue("title")
-	content := r.FormValue("post")
+	content := r.FormValue("content")
+	fmt.Println(content)
 	categories := r.Form["category"]
 	// user_id := 0
 
@@ -31,10 +35,9 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 	}
 	user_id, err := validators.Allowed(w, r)
 	if err != nil {
-		// redirect or smtg
+		fmt.Println(err)
 		return err
 	}
-
 	NewPost := database.Post{
 		Title:      title,
 		Content:    content,
@@ -43,7 +46,8 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 		// Username:     string(user_id),
 	}
 
-	// fmt.Println(NewPost)
+	fmt.Println(Posts)
+	fmt.Println(NewPost)
 	// Posts = append(Posts, NewPost)
 	post_id, err := queries.InsertPost(NewPost, user_id)
 	if err != nil {
@@ -56,10 +60,10 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func UserPosts(id int) []database.Post {
+func UserPosts(id string) []database.Post {
 	NewPosts := []database.Post{}
 	for _, post := range Posts {
-		if post.User_id == id {
+		if (post.User_id) == id {
 			NewPosts = append(NewPosts, post)
 		}
 	}
