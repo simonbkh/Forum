@@ -40,8 +40,8 @@
         <!-- Posts Container -->
         <div class="posts-container">
             {{range .Posts}}
-            <div class="post">
-                <div id="tt">
+            <div class="posts" id="{{.Post_id}}-container-for-post">
+                <div id="post-{{.Post_id}}">
                     <h3>{{.Title}}</h3>
                     <p>{{.Content}}</p>
                     <p class="category">
@@ -63,28 +63,33 @@
                 </div>
 
                 <hr>
-                <div id="all" style="display: none;">
-                    <span id="cansel" class="material-icons">
-                        cancel
-                    </span>
-                    <label for="commant" class="com">Commant :</label>
-                    <div class="commant">
-                        <textarea name="commant" id="commant" placeholder="write a commente" required
-                            maxlength="1000"></textarea>
-                        <button type="submit" class="bot">
-                            <span id="send" class="material-icons">
-                                send
-                            </span>
-                        </button>
+                <div id="comments-container-for-{{.Post_id}}" style="display: none;">
+                    <div id="{{.Post_id}}">
+                        <span id="cansel-for-{{.Post_id}}" class="material-icons" title="cancel">
+                            cancel
+                        </span>
+                        <label for="commant" class="com">Commant :</label>
+                        <div class="commant">
+                            <textarea name="commant" class="comment" id="commantair-for-{{.Post_id}}"
+                                placeholder="write a commente" required maxlength="1000"></textarea>
+                            <button type="submit" class="bot">
+                                <span id="send-Comment-for-{{.Post_id}}" data-post="{{.Post_id}}"
+                                    data-user="{{.User_id}}" class="material-icons">
+                                    send
+                                </span>
+                            </button>
+                        </div>
                     </div>
+
 
                 </div>
 
             </div>
+
             {{end}}
         </div>
 
-        <script type="module" src="../../static/js/comment.js"></script>
+        <script src="../../static/js/comment.js"></script>
         <!-- <footer>
             <p>© 2024 Forum. All rights reserved.</p>
             <p><a href="/terms">Terms of Service</a> | <a href="/privacy">Privacy Policy</a></p>

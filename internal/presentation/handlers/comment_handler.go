@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"forum/internal/data/queries"
@@ -25,7 +26,7 @@ func Creatcomment(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "internal server error", http.StatusInternalServerError)
 			return
 		}
-
+		fmt.Println("------", info)
 		er := queries.InsertComment(utils.Convstr(info.User_id), utils.Convstr(info.Post_id), info.Comment, info.Date)
 		if er != nil {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -57,7 +58,7 @@ func GetComment(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
-		// fmt.Println("------", comment)
+		//
 		if err := json.NewEncoder(w).Encode(comment); err != nil {
 
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)

@@ -119,7 +119,7 @@ header h1 {
 }
 
 /* Post Styling */
-.post {
+.posts {
 
     background-color: #ffffff;
     padding: 20px;
@@ -128,31 +128,31 @@ header h1 {
     transition: box-shadow 0.3s ease, transform 0.2s;
 }
 
-.post:hover {
+.posts:hover {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     transform: translateY(-5px);
 }
 
-.post h3 {
+.posts h3 {
     color: #007bff;
     font-size: 1.5em;
     margin-bottom: 10px;
     font-weight: bold;
 }
 
-.post p {
+.posts p {
     font-size: 1.1em;
     color: #555;
     margin-bottom: 10px;
     /* line-height: 1.6; */
 }
 
-.post i {
+.posts i {
     font-size: 0.9em;
     color: #888;
 }
 
-.post .category {
+.posts .category {
     font-style: italic;
     color: #007bff;
     margin-top: 10px;
@@ -210,29 +210,36 @@ footer a:hover {
 
 
 /*---------------------------------------------------*/
-#chat{
-    width:  0;
+#chat {
+    width: 0;
     color: rgb(35, 143, 251);
     cursor: pointer;
+    margin-left: 30px;
 
 }
-#chat:hover{
+
+#chat:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transform: translateY(-5px);
 
 }
-#cansel{
-    margin-bottom: 30px;
+
+span[title="cancel"] {
     color: red;
     cursor: pointer;
+    margin-right: 1vw;
 }
-#cansel:hover{
+
+
+
+span[title="cancel"]:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     border-radius: 100%;
     border: red solid 2px;
     transform: translateY(-5px);
 }
-.post {
+
+.posts {
     display: grid;
     place-items: center;
     padding-bottom: 30px;
@@ -285,14 +292,14 @@ footer a:hover {
 
 }
 
-#commant {
+.comment {
 
-    width: 50%;
-    padding-left: 1%;
-    padding-top: 10px;
-    margin-top: 10px;
+    width: 100%;
+    padding-left: 10%;
+    padding-top: 11px;
+    margin-top: 15px;
     margin-bottom: 10px;
-    font-size: 1.1em;
+    font-size: 1.3em;
     border: 1px #9b9494;
     border-radius: 2px;
     line-height: 1.6;
@@ -311,7 +318,7 @@ button {
 }
 
 .com {
-
+    font-size:1.5vw;
     font-weight: 900;
 
 }
@@ -353,7 +360,7 @@ form {
     .posts-container {
         max-width: 100%;
     }
-  
+
 }
 
 @media (max-width: 480px) {

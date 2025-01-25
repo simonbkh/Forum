@@ -309,14 +309,15 @@ func InsertCategories(categories []string, post_id string) error {
 	return nil
 }
 
-func InsertComment(post int, id int, comment string, date string) error {
-	statement, err := database.Db.Prepare(`INSERT INTO comment (posts_id, id_user, comment, created_at) values (?,?,?,?)`)
+func InsertComment(post_id int, user_id int, comment string, date string) error {
+
+	statement, err := database.Db.Prepare(`INSERT INTO comments (posts_id, user_id, comment, created_at) values (?,?,?,?)`)
 	if err != nil {
 		return err
 	}
 	defer statement.Close()
 
-	_, er := statement.Exec(post, id, comment, date)
+	_, er := statement.Exec(user_id, post_id, comment, date)
 	if er != nil {
 		return er
 	}
@@ -324,47 +325,47 @@ func InsertComment(post int, id int, comment string, date string) error {
 	return nil
 }
 
-func GetCommment(id int) ([]utils.Comment, error) {
+func GetCommment(post_id int) ([]utils.Comment, error) {
 	var cmt []utils.Comment
-	
-	statement, err := database.Db.Prepare(`SELECT * FROM comment  where posts_id = ?  ORDER BY created_at DESC`)
+	// fmt.Println("000",id)
+	statement, err := database.Db.Prepare(`SELECT * FROM comments  where posts_id = ?  ORDER BY created_at DESC`)
+
 	if err != nil {
-		
 		return nil, err
 	}
-	
+
 	defer statement.Close()
-	rows, err := statement.Query(id)
-	
+	rows, err := statement.Query(post_id)
+
 	if err != nil {
 
 		return nil, fmt.Errorf("failed to execute statement: %w", err)
 	}
 	defer rows.Close()
-	
+
 	for rows.Next() {
-		
+
 		var com utils.Comment
 		err := rows.Scan(&com.ID, &com.Id_post, &com.Username, &com.Cont, &com.Date)
-		
+
 		if err != nil {
-			
+
 			return nil, err
 		}
+
 		id, _ := strconv.Atoi(com.Username)
-		
+
 		com.Username, err = GetUser(id)
 		if err != nil {
-			
 			return nil, err
 		}
-		
+
 		com.Date = strings.ReplaceAll(com.Date, "T", " / ")
 		if len(com.Date) != 0 {
 			com.Date = com.Date[:len(com.Date)-1]
 		}
 		cmt = append(cmt, com)
 	}
-	// fmt.Println("------",cmt)
+
 	return cmt, nil
 }

@@ -36,10 +36,10 @@ func CreateTables(db *sql.DB) error {
             category_name TEXT,
             FOREIGN KEY (posts_id) REFERENCES posts(id)
         )`,
-		`CREATE TABLE IF NOT EXISTS comment (
+		`CREATE TABLE IF NOT EXISTS comments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             posts_id INTEGER NOT NULL,
-            id_user INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
             comment TEXT,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (posts_id) REFERENCES posts(id)
