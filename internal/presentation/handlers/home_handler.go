@@ -2,38 +2,52 @@ package handlers
 
 import (
 	"net/http"
+	"time"
 
+	"forum/internal/data/database"
+	"forum/internal/data/modles"
 	"forum/internal/logic/services"
+	"forum/internal/logic/utils"
 	"forum/internal/presentation/templates"
 )
 
+var newPosts []database.Post
+
 type PageData struct {
-	IsLogged bool
-	Posts    []services.POST
+	UserStatus bool
+	Posts      []services.POST
 }
 
-var isLogged bool
-
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
+	// if r.Method != "GET" {
+	// 	http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	// 	return
+	// }
+	// fmt.Println("===>", r.URL.Path)
+	er := utils.CheckUserSession(r)
+	if er != nil { ///????????????,,,,,,,????????
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-		return
 	}
-
-	err := services.GetPosts(&services.Posts)
+	if !modles.UserStatus {
+		http.SetCookie(w, &http.Cookie{
+			Name:    "SessionToken",
+			Value:   "",
+			Expires: time.Unix(0, 0),
+		})
+	}
+	err := services.GetPosts(&services.Posts) //???????
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	er := services.Getcomment()
+	newPosts = services.TimeDifference(newPosts, services.Posts)
+	data := PageData{
+		UserStatus: modles.UserStatus,
+		Posts:      newPosts,
+	}
+	er = templates.HomeTemplate.Execute(w, data)
 	if er != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, er.Error(), http.StatusInternalServerError)
 		return
 	}
-	data := PageData{
-		IsLogged: isLogged,
-		Posts:    services.Posts,
-	}
-	// fmt.Println(data.Posts[5].Title)
-	templates.HomeTemplate.Execute(w, data)
 }

@@ -2,18 +2,16 @@ package database
 
 import (
 	"database/sql"
-	"log"
 )
 
 func CreateTables(db *sql.DB) error {
-	tables := []string{
+	UsersTable := []string{
 		`CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL UNIQUE,
-            email TEXT NOT NULL,
-            password TEXT NOT NULL
-        )`,
-
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+	 		username TEXT NOT NULL UNIQUE,
+			email TEXT NOT NULL unique,
+			password TEXT NOT NULL
+		)`,
 		`CREATE TABLE IF NOT EXISTS posts (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
@@ -22,14 +20,13 @@ func CreateTables(db *sql.DB) error {
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id)
         )`,
-
 		`CREATE TABLE IF NOT EXISTS sessions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL,
-        session_id TEXT UNIQUE,
-        FOREIGN KEY (user_id) REFERENCES users(id)
-        )`,
-
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			sessionToken TEXT NOT NULL UNIQUE,
+			user_id INTEGER NOT NULL UNIQUE,
+			expiry TIMESTAMP NOT NULL,
+			FOREIGN KEY(user_id) REFERENCES users(id)
+		)`,
 		`CREATE TABLE IF NOT EXISTS categories (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             posts_id INTEGER NOT NULL,
@@ -45,12 +42,9 @@ func CreateTables(db *sql.DB) error {
             FOREIGN KEY (posts_id) REFERENCES posts(id)
         )`,
 	}
-
-	for i, table := range tables {
-		_, err := db.Exec(table)
+	for _, v := range UsersTable {
+		_, err := db.Exec(v)
 		if err != nil {
-			log.Printf("Error creating table %d: %v\n", i+1, err)
-			log.Printf("SQL: %s\n", table)
 			return err
 		}
 	}

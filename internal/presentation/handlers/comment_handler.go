@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"forum/internal/data/queries"
-	utils "forum/internal/logic/Utils"
+	"forum/internal/logic/utils"
 )
 
 type newcom struct {
@@ -52,7 +52,7 @@ func GetComment(w http.ResponseWriter, r *http.Request) {
 		}
 
 		comment, er := queries.GetCommment(utils.Convstr(comm.Post_id))
-
+		fmt.Println("=====>",comm)
 		if er != nil {
 
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)

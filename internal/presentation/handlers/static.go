@@ -7,10 +7,14 @@ import (
 )
 
 func Static(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("++++++++")
 	file := r.PathValue("file")
 	// fmt.Println(r.URL)
+
 	style := http.StripPrefix("/static/css/", http.FileServer(http.Dir("../internal/presentation/static/css")))
 
+	//	fmt.Println(style)
+	// Check if the requested file exists by trying to read it
 	_, err := os.ReadFile("../internal/presentation/static/css/" + file)
 	if err != nil {
 		// fmt.Println(file)
@@ -20,31 +24,35 @@ func Static(w http.ResponseWriter, r *http.Request) {
 
 	style.ServeHTTP(w, r)
 }
+
 func JS(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("--------")
+	fmt.Println("-------")
 	file := r.PathValue("file")
-	// fmt.Println(r.URL)
-	style := http.StripPrefix("/static/js/", http.FileServer(http.Dir("../internal/presentation/static/js")))
+	style := http.StripPrefix("/forum/internal/presentation/static/js/", http.FileServer(http.Dir("/forum/internal/presentation/static/js/")))
 
-	_, err := os.ReadFile("../internal/presentation/static/js/" + file)
+	_, err := os.ReadFile("/forum/internal/presentation/static/js/" + file)
 	if err != nil {
-		// fmt.Println(file)
-		// Error(w, http.StatusNotFound)
 		return
 	}
 
 	style.ServeHTTP(w, r)
 }
 
-func StaticCat(w http.ResponseWriter, r *http.Request) {
+func Image(w http.ResponseWriter, r *http.Request) {
 	file := r.PathValue("file")
 
-	style := http.StripPrefix("/category/static/css/", http.FileServer(http.Dir("../internal/presentation/static/css")))
+	// Specify the directory where images are stored
+	imageDir := "../internal/presentation/static/images/"
 
-	_, err := os.ReadFile("../internal/presentation/static/css/" + file)
+	// Attempt to read the requested image file
+	_, err := os.ReadFile(imageDir + file)
 	if err != nil {
+		// If the image does not exist, respond with a 404 error
+		http.Error(w, "Image not found", http.StatusNotFound)
 		return
 	}
 
-	style.ServeHTTP(w, r)
+	// Serve the image file using FileServer
+	imageServer := http.StripPrefix("/static/images/", http.FileServer(http.Dir(imageDir)))
+	imageServer.ServeHTTP(w, r)
 }

@@ -3,56 +3,18 @@ package queries
 import (
 	"database/sql"
 	"fmt"
-	"strconv"
 	"strings"
+	"time"
 
 	"forum/internal/data/database"
-	"forum/internal/data/utils"
-	// "forum/internal/logic/services"
+	"forum/internal/data/modles"
 )
-
-// // SetSessionToken sets a UUID session token for a user
-// func SetSessionToken(db *sql.DB, username string) (string, error) {
-// 	// Generate new UUID
-// 	token := uuid.DefaultGenerator
-
-// 	// Update the user's session token in the database
-// 	query := `UPDATE users SET session_token = ? WHERE username = ?`
-// 	result, err := db.Exec(query, token, username)
-// 	if err != nil {
-// 		return "", err
-// 	}
-
-// 	// Check if the user was found and updated
-// 	rowsAffected, err := result.RowsAffected()
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	if rowsAffected == 0 {
-// 		return "", sql.ErrNoRows
-// 	}
-
-// 	return token, nil
-// }
-
-func Logged(token string) (int, error) {
-	// fmt.Println(token)
-	var user_id int
-	// fmt.Println(user_id)
-	query := `SELECT user_id FROM sessions WHERE session_id = ?`
-	err := database.Db.QueryRow(query, token).Scan(&user_id)
-	if err != nil {
-		return 0, err
-	}
-	return user_id, nil
-}
 
 func InserUser(username, email, password string) error {
 	statement, err := database.Db.Prepare(`INSERT INTO users (username, email, password) values (?,?,?)`)
 	if err != nil {
 		return err
 	}
-	defer statement.Close()
 	_, err = statement.Exec(username, email, password)
 	if err != nil {
 		return err
@@ -60,6 +22,7 @@ func InserUser(username, email, password string) error {
 	return nil
 }
 
+// check if user exist or not
 func IsUserExist(username, email string) bool {
 	var count int
 	query := `SELECT COUNT(*) FROM users WHERE username = ? OR email = ?`
@@ -70,8 +33,10 @@ func IsUserExist(username, email string) bool {
 	return count > 0
 }
 
+// get hashed password in database
 func GetHashedPass(email string) (string, error) {
 	var pass string
+
 	query := `SELECT password FROM users WHERE email = ?`
 	err := database.Db.QueryRow(query, email).Scan(&pass)
 	if err != nil {
@@ -85,17 +50,125 @@ func GetHashedPass(email string) (string, error) {
 	return pass, nil
 }
 
+// check if email in database o“
 func Checkemail(email string) bool {
 	var count int
 	query := `SELECT COUNT(*) FROM users WHERE email = ?`
 	err := database.Db.QueryRow(query, email).Scan(&count)
 	if err != nil {
+		fmt.Println("error here")
 		return false
 	}
-	return count > 0
+
+	return count == 1
 }
 
-func InsertPost(post utils.Post, id int) (string, error) {
+// // insert session in database
+func Insersessions(sessionToken, email string, expiry time.Time) error {
+	query := `select id from users where email = ?`
+	var id int
+	err := database.Db.QueryRow(query, email).Scan(&id)
+	if err != nil {
+		return err
+	}
+	statement, er := database.Db.Prepare(`INSERT INTO sessions (sessionToken, user_id, expiry) values (?,?,?)`)
+	if er != nil {
+		return er
+	}
+	_, er = statement.Exec(sessionToken, id, expiry)
+	if er != nil {
+		return er
+	}
+	return nil
+}
+
+// /// updiate session id of database
+func UpdiateSesiontoken(sessionToke, email string, expiry time.Time) error {
+	query := `select id from users where email = ?`
+	var id int
+	err := database.Db.QueryRow(query, email).Scan(&id)
+	if err != nil {
+		return err
+	}
+
+	query = `UPDATE sessions SET sessionToken = ?, expiry = ? WHERE user_id = ?`
+	_, er := database.Db.Exec(query, sessionToke, expiry, id)
+	if er != nil {
+		return er
+	}
+	return nil
+}
+
+// /check this token  is it available
+func IssesionidAvailable(sessionToke, email string) (bool, time.Time) {
+	var expiry time.Time
+	if email == "" {
+		query := `select expiry from sessions where sessionToken = ?`
+		err := database.Db.QueryRow(query, sessionToke).Scan(&expiry)
+		if err != nil {
+			return false, expiry
+		}
+		return err == nil, expiry
+	} else {
+		query := `select id from users where email = ?`
+		var id int
+
+		err := database.Db.QueryRow(query, email).Scan(&id)
+		if err != nil {
+			return false, time.Time{}
+		}
+		query = `select expiry from sessions where user_id = ?`
+		err = database.Db.QueryRow(query, id).Scan(&expiry)
+		if err != nil {
+			return false, expiry
+		}
+		ex := expiry
+		if ex.Before(time.Now()) {
+			return false, ex
+		}
+	}
+	return true, expiry
+}
+
+// /// remove token sisionid
+func Removesesionid(sessionToke, email string) error {
+	if email != "" {
+		query := `select id from users where email = ?`
+		var id int
+		err := database.Db.QueryRow(query, email).Scan(&id)
+		if err != nil {
+			return err
+		}
+		query = `DELETE FROM sessions WHERE user_id = ?`
+		_, err = database.Db.Exec(query, id)
+		if err != nil {
+			return err
+		}
+
+	} else {
+		query := `DELETE FROM sessions WHERE sessionToken = ?`
+		_, err := database.Db.Exec(query, sessionToke)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+	return nil
+}
+
+func Hh(token string) (int, error) {
+	// fmt.Println(token)
+	var user_id int
+	// fmt.Println(user_id)
+	query := `SELECT user_id FROM sessions WHERE SessionToken = ?`
+	err := database.Db.QueryRow(query, token).Scan(&user_id)
+	if err != nil {
+		return 0, err
+	}
+	return user_id, nil
+}
+
+func InsertPost(post database.Post, id int) (string, error) {
 	// p.(NewPost)
 	// id := 0
 	// err := QueryID(post.Username, &id)
@@ -103,6 +176,7 @@ func InsertPost(post utils.Post, id int) (string, error) {
 
 	statement, err := database.Db.Prepare(`INSERT INTO posts (user_id ,title, content, created_at) values (?,?,?,?)`)
 	if err != nil {
+		fmt.Println(err)
 		return "", err
 	}
 	defer statement.Close()
@@ -123,95 +197,26 @@ func InsertPost(post utils.Post, id int) (string, error) {
 	return post_id, nil
 }
 
-func QueryID(email string, id *int) error {
-	var idd int
-	query := `SELECT id FROM users WHERE email = ?`
-	err := database.Db.QueryRow(query, email).Scan(&idd)
-	if err != nil {
-		// fmt.Println(username)
-		return fmt.Errorf("no user found with email %d", idd)
-	}
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-
-	*id = idd
-	return nil
-}
-
-func InsertSession(email, token string) error {
-	var id int
-	err := QueryID(email, &id)
-	if err != nil {
-		return err
-	}
-	// get id
-
-	statement, err := database.Db.Prepare(`INSERT INTO sessions (user_id , session_id) values (?,?)`)
+func InsertCategories(categories []string, post_id string) error {
+	statement, err := database.Db.Prepare(`INSERT INTO categories (posts_id,category_name) values (?,?)`)
 	if err != nil {
 		return err
 	}
 	defer statement.Close()
-	_, err = statement.Exec(id, token)
-	if err != nil {
-		return err
+	for _, cat := range categories {
+		_, err = statement.Exec(post_id, cat)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
 
-// // SetSessionToken sets a UUID session token for a user
-// func SetSessionToken(email, uuid string) error {
-
-// 	// Update the user's session token in the database
-// 	query := `UPDATE sessions SET session_id = ? WHERE user_id = ?`
-// 	result, err := database.Db.Exec(query, uuid)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	// Check if the user was found and updated
-// 	rowsAffected, err := result.RowsAffected()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	if rowsAffected == 0 {
-// 		return sql.ErrNoRows
-// 	}
-
-// 	return nil
-// }
-
-// //  Function to validate a session token
-// func ValidateSessionToken(db *sql.DB, token string) (string, error) {
-// 	var username string
-// 	query := `SELECT username FROM users WHERE session_token = ?`
-// 	err := db.QueryRow(query, token).Scan(&username)
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	return username, nil
-// }
-
-func Logout(token string) error {
-	// Prepare the SQL statement to delete the token from the users table
-	statement, err := database.Db.Prepare(`DELETE FROM sessions WHERE session_id = ?`)
-	if err != nil {
-		return fmt.Errorf("failed to prepare statement: %w", err)
-	}
-	defer statement.Close()
-
-	_, err = statement.Exec(token[6:])
-	if err != nil {
-		return fmt.Errorf("failed to execute statement: %w", err)
-	}
-
-	return nil
-}
-
-func GetPosts() ([]utils.Post, error) {
-	var posts []utils.Post
+func GetPosts() ([]database.Post, error) {
+	var posts []database.Post
 	statement, err := database.Db.Prepare(`SELECT * FROM posts ORDER BY created_at DESC`)
 	if err != nil {
+		fmt.Println(err)
 		return nil, fmt.Errorf("failed to prepare statement: %w", err)
 	}
 	defer statement.Close()
@@ -223,16 +228,12 @@ func GetPosts() ([]utils.Post, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var post utils.Post
+		var post database.Post
 		err := rows.Scan(&post.Post_id, &post.User_id, &post.Title, &post.Content, &post.Date)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
 		post.Categories, err = GetCategories(post.Post_id)
-		if err != nil {
-			return nil, fmt.Errorf("failed to scan row: %w", err)
-		}
-		// fmt.Println(post.Title)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
@@ -242,6 +243,7 @@ func GetPosts() ([]utils.Post, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		posts = append(posts, post)
 	}
 
@@ -268,14 +270,13 @@ func GetCategories(post_id int) ([]string, error) {
 		}
 		categories = append(categories, cat)
 	}
-	// fmt.Println(categories)
-
 	return categories, nil
 }
 
-func GetUser(uid int) (string, error) {
+func GetUser(uid string) (string, error) {
 	name := ""
 	statement, err := database.Db.Prepare(`SELECT username FROM users WHERE id = ?`)
+
 	if err != nil {
 		return "", fmt.Errorf("failed to prepare statement: %w", err)
 	}
@@ -285,7 +286,7 @@ func GetUser(uid int) (string, error) {
 		return "", fmt.Errorf("failed to execute statement: %w", err)
 	}
 	defer res.Close()
-	for res.Next() {
+	for res.Next() {/////?????
 		err = res.Scan(&name)
 		if err != nil {
 			return "", fmt.Errorf("failed to scan row: %w", err)
@@ -294,20 +295,67 @@ func GetUser(uid int) (string, error) {
 	return name, nil
 }
 
-func InsertCategories(categories []string, post_id string) error {
-	statement, err := database.Db.Prepare(`INSERT INTO categories (posts_id,category_name) values (?,?)`)
+
+
+// func GetUser(uid string) (string, error) {
+// 	name := ""
+
+// 	err := database.Db.QueryRow(`SELECT username FROM users WHERE id = ?`, uid).Scan(&name)
+// 	if err != nil {
+// 		if err == sql.ErrNoRows {
+
+// 			return "", fmt.Errorf("user not found")
+// 		}
+// 		return "", fmt.Errorf("failed to execute query: %w", err)
+// 	}
+
+// 	return name, nil
+// }
+/////////////////////////////////////////////////////////////////////
+func GetId(token string) (int, error) {
+	var id int
+	err := database.Db.QueryRow(`SELECT user_id FROM sessions WHERE sessionToken = ?`, token).Scan(&id)
 	if err != nil {
-		return err
+		return 0, fmt.Errorf("failed to execute query: %w", err)
+	}
+	return id, nil
+}
+
+func GetPost(post_id int) ([]database.Post, error) {
+	var posts []database.Post
+	
+
+	statement, err := database.Db.Prepare(`SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC`)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare statement: %w", err)
 	}
 	defer statement.Close()
-	for _, cat := range categories {
-		_, err = statement.Exec(post_id, cat)
-		if err != nil {
-			return err
-		}
+	res, err := statement.Query(post_id)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute statement: %w", err)
 	}
-	return nil
+	defer res.Close()
+
+	for res.Next() {
+		var post database.Post
+		err = res.Scan(&post.Post_id, &post.User_id, &post.Title, &post.Content, &post.Date)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+		post.Categories, err = GetCategories(post.Post_id)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+		post.Username, err = GetUser(post.User_id)
+		if err != nil {
+			return nil, err
+		}
+		posts = append(posts, post)
+	}
+
+	return posts, nil
 }
+
 
 func InsertComment(post_id int, user_id int, comment string, date string) error {
 
@@ -325,8 +373,8 @@ func InsertComment(post_id int, user_id int, comment string, date string) error 
 	return nil
 }
 
-func GetCommment(post_id int) ([]utils.Comment, error) {
-	var cmt []utils.Comment
+func GetCommment(post_id int) ([]modles.Comment, error) {
+	var cmt []modles.Comment
 	// fmt.Println("000",id)
 	statement, err := database.Db.Prepare(`SELECT * FROM comments  where posts_id = ?  ORDER BY created_at DESC`)
 
@@ -345,7 +393,7 @@ func GetCommment(post_id int) ([]utils.Comment, error) {
 
 	for rows.Next() {
 
-		var com utils.Comment
+		var com modles.Comment
 		err := rows.Scan(&com.ID, &com.Id_post, &com.Username, &com.Cont, &com.Date)
 
 		if err != nil {
@@ -353,9 +401,9 @@ func GetCommment(post_id int) ([]utils.Comment, error) {
 			return nil, err
 		}
 
-		id, _ := strconv.Atoi(com.Username)
+		// id, _ := strconv.Atoi(com.Username)
 
-		com.Username, err = GetUser(id)
+		com.Username, err = GetUser(com.Username)
 		if err != nil {
 			return nil, err
 		}

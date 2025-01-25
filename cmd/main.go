@@ -14,7 +14,9 @@ func main() {
 	}
 
 	defer db.Close()
+
 	serv := http.NewServeMux()
+
 	err = router.Router(serv)
 	if err != nil {
 		return

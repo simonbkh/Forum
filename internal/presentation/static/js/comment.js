@@ -58,7 +58,7 @@ async function comment(e) {
         let user_id = send.getAttribute("data-user")
 
         try {
-            const response = await fetch('http://localhost:8085/newcomment', {
+            const response = await fetch('http://localhost:8081/newcomment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ async function comment(e) {
 
 async function getcomment(post_id) {
     try {
-        const response = await fetch('http://localhost:8085/getcomment', {
+        const response = await fetch('http://localhost:8081/getcomment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -97,6 +97,3 @@ async function getcomment(post_id) {
     return data
 }
 
-function setcomment() {
-
-}

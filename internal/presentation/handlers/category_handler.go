@@ -4,13 +4,17 @@ import (
 	"fmt"
 	"net/http"
 
+	"forum/internal/data/database"
+	"forum/internal/data/modles"
 	"forum/internal/logic/services"
 	"forum/internal/presentation/templates"
 )
 
+var catPosts []database.Post
+
 type CatData struct {
-	IsLogged bool
-	Posts    []services.POST
+	UserStatus bool
+	Posts      []services.POST
 }
 
 func CategoryHandler(w http.ResponseWriter, r *http.Request) {
@@ -26,10 +30,10 @@ func CategoryHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, fmt.Sprintf("%v", err), http.StatusBadRequest)
 	}
-
+	catPosts = services.TimeDifference(catPosts,filteredPosts)
 	data := CatData{
-		IsLogged: isLogged,
-		Posts:    filteredPosts,
+		UserStatus: modles.UserStatus,
+		Posts:      catPosts,
 	}
 
 	templates.HomeTemplate.Execute(w, data)
