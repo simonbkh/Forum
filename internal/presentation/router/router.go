@@ -48,7 +48,7 @@ func Middleware(next http.Handler) http.Handler {
 		te, err := r.Cookie("SessionToken")
 		if err != nil || te.Value == "" {
 			modles.UserStatus = false
-			if r.URL.Path != "/" && r.URL.Path != "/login" && r.URL.Path != "/register" && r.URL.Path != "/static/js/{file}" {
+			if r.URL.Path != "/" && r.URL.Path != "/login" && r.URL.Path != "/register"  {
 				http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 				return
 
@@ -60,7 +60,7 @@ func Middleware(next http.Handler) http.Handler {
 		bol, expiry := queries.IssesionidAvailable(te.Value, "")
 		if !bol || expiry.Before(time.Now()) {
 			modles.UserStatus = false
-			if r.URL.Path != "/"  {
+			if r.URL.Path != "/"  && r.URL.Path != "/login"  {
 				http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 				return
 			}
