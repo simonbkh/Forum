@@ -26,11 +26,10 @@ func Static(w http.ResponseWriter, r *http.Request) {
 }
 
 func JS(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("-------")
 	file := r.PathValue("file")
-	style := http.StripPrefix("/forum/internal/presentation/static/js/", http.FileServer(http.Dir("/forum/internal/presentation/static/js/")))
+	style := http.StripPrefix("/static/js/", http.FileServer(http.Dir("../internal/presentation/static/js/")))
 
-	_, err := os.ReadFile("/forum/internal/presentation/static/js/" + file)
+	_, err := os.ReadFile("../internal/presentation/static/js/" + file)
 	if err != nil {
 		return
 	}

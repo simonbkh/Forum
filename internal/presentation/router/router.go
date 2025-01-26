@@ -23,12 +23,10 @@ func Router(router *http.ServeMux) error {
 	router.Handle("/", Middleware(http.HandlerFunc(handlers.HomeHandler)))
 	router.Handle("/login", Middleware(http.HandlerFunc(handlers.Login)))
 	router.Handle("/static/css/{file}", http.HandlerFunc(handlers.Static))
+	router.Handle("/static/js/{file}", http.HandlerFunc(handlers.JS))
 	router.Handle("/forum/internal/presentation/static/js/{file}", http.HandlerFunc(handlers.JS))
-	// router.HandleFunc("/static/js/{file}", )
 	router.Handle("/static/images/{file}", http.HandlerFunc(handlers.Image))
-
 	router.Handle("/loginInfo", http.HandlerFunc(handlers.LoginInfo))
-	router.Handle("/register", Middleware(http.HandlerFunc(handlers.Register)))
 	router.Handle("/registerInfo", http.HandlerFunc(handlers.RegisterInfo))
 	router.Handle("/logout", Middleware(http.HandlerFunc(handlers.Logout)))
 	router.Handle("/post", Middleware(http.HandlerFunc(handlers.PostHandler)))
@@ -62,7 +60,7 @@ func Middleware(next http.Handler) http.Handler {
 		bol, expiry := queries.IssesionidAvailable(te.Value, "")
 		if !bol || expiry.Before(time.Now()) {
 			modles.UserStatus = false
-			if r.URL.Path != "/" {
+			if r.URL.Path != "/"  {
 				http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 				return
 			}

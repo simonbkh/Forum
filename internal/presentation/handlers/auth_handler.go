@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -13,32 +14,36 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	templates.LoginTemplate.Execute(w, nil)
 }
 
-func Register(w http.ResponseWriter, r *http.Request) {
-	templates.RegisterTemplate.Execute(w, nil)
-}
+// func Register(w http.ResponseWriter, r *http.Request) {
+// 	templates.RegisterTemplate.Execute(w, nil)
+// }
 func RegisterInfo(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 	}
+	w.Header().Set("Content-Type", "application/json")
 	err := services.Register_Service(w, r)
 	if utils.IsErrors(err) {
-		HandleError(w, err, http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]interface{}{"success": false,"message": err.Error(),})
 		return
 	}
-	http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
+	json.NewEncoder(w).Encode(map[string]interface{}{"success": true,"message": ""})
 }
 
 func LoginInfo(w http.ResponseWriter, r *http.Request) {
-
 	if r.Method != "POST" {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 	}
+
+	w.Header().Set("Content-Type", "application/json")	
+
 	err := services.Login_Service(w, r)
 	if utils.IsErrors(err) {
-		HandleError(w, err, http.StatusBadRequest)
+	json.NewEncoder(w).Encode(map[string]interface{}{"success": false,"message": err.Error(),}) //json.NewEncoder(w).Encode(err.type)
 		return
 	}
-	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	json.NewEncoder(w).Encode(map[string]interface{}{"success": true,"message": ""})
+
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
