@@ -3,18 +3,14 @@ package services
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"forum/internal/data/queries"
-
-	//"forum/internal/data/utils"
 	"forum/internal/logic/utils"
 	"forum/internal/logic/validators"
-
-	"github.com/gofrs/uuid"
 )
 
-// Authentication logic
-
+// service register
 func Register_Service(w http.ResponseWriter, r *http.Request) error {
 	username := r.FormValue("username")
 	email := r.FormValue("email")
@@ -32,19 +28,21 @@ func Register_Service(w http.ResponseWriter, r *http.Request) error {
 	if queries.IsUserExist(username, email) {
 		return errors.New("invalid credentiels")
 	}
-	queries.InserUser(username, email, hashedpass)
+	err = queries.InserUser(username, email, hashedpass)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
+// service login
 func Login_Service(w http.ResponseWriter, r *http.Request) error {
-	session_token := ""
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
 	// tier 2 logic
-
-	err := validators.User_Validator("", email, password)
+	err := validators.Login_Validat(email, password)
 	if err != nil {
 		return err
 	}
@@ -62,39 +60,32 @@ func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	if !utils.ComparePassAndHashedPass(HashPassword, password) {
 		return errors.New("wrong password")
 	}
-	err = GenerateSessionToken(&session_token)
+	sessionToken, expryTime, err := utils.ManageSessionToken(email, r)
 	if err != nil {
-		return errors.New("couldn't generate token")
+		return err
 	}
-	// fmt.Println(email)
-	queries.InsertSession(email, session_token)
-	utils.SetTokenCookie(w, session_token)
-
+	http.SetCookie(w, &http.Cookie{
+		Name:    "SessionToken",
+		Value:   sessionToken,
+		Expires: expryTime,
+	})
 	return nil
 }
 
-// Generate UUID v4
-func GenerateSessionToken(token *string) error {
-	uuid, err := uuid.NewV4()
-	*token = uuid.String()
+// service logout
+func Logout_Service(w http.ResponseWriter, r *http.Request) error {
+	token, er := r.Cookie("SessionToken")
+	if er != nil {
+		return er
+	}
+	err := queries.Removesesionid(token.Value, "")
 	if err != nil {
 		return err
 	}
-	return nil
-}
-
-func Logout(w http.ResponseWriter, r *http.Request) error {
-	cookie, err := r.Cookie("token")
-	if err != nil || cookie.String() == "" {
-		// deber
-		return err
-	}
-	err = queries.Logout(cookie.String())
-	utils.SetTokenCookie(w, "")
-	if err != nil {
-		// handli zeb
-
-		return err
-	}
+	http.SetCookie(w, &http.Cookie{
+		Name:    "SessionToken",
+		Value:   "",
+		Expires: time.Unix(0, 0),
+	})
 	return nil
 }

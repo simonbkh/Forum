@@ -2,20 +2,32 @@ package validators
 
 import (
 	"errors"
-	"net/http"
-
+	"fmt"
 	"forum/internal/data/queries"
+	"net/http"
+	"strings"
 )
 
 func CategoriesValidator(categories []string) error {
 	istruecat := false
-	TrueCategories := []string{"general", "games", "sports", "fashion", "travel", "food", "health", "all"}
+	fmt.Println(categories)
+	if len(categories) == 0 || len(categories) > 7 {
+		return errors.New("invalid category! ")
+	}
+
+	TrueCategories := []string{"Tech Support", "General Discussion", "Tutorials", "Announcements", "Gaming", "Job Listings", "Hobbies & Interests"}
 	for _, category := range categories {
+		bool := false
 		for _, truecat := range TrueCategories {
-			if truecat == category {
+			if strings.EqualFold(category, truecat) {
+				bool = true
 				istruecat = true
 			}
 		}
+		if !bool {
+			return errors.New("invalid category! ")
+		}
+
 	}
 	if !istruecat {
 		return errors.New("invalid category! ")
@@ -24,12 +36,12 @@ func CategoriesValidator(categories []string) error {
 }
 
 func Allowed(w http.ResponseWriter, r *http.Request) (int, error) {
-	cookie, err := r.Cookie("token")
+	cookie, err := r.Cookie("SessionToken")
 	if err != nil {
 		// redirect awla chi laeba
 		return 0, err
 	}
-	user_id, err := queries.Logged(cookie.Value)
+	user_id, err := queries.Hh(cookie.Value)
 	if err != nil {
 		// redirect awla chi laeba
 		return 0, err
@@ -37,14 +49,12 @@ func Allowed(w http.ResponseWriter, r *http.Request) (int, error) {
 
 	return user_id, nil
 }
-// func TitleValidator(title string) error{
-	
-// 	if len(title) > 15 {
-// 		return errors.New("title is too long")
-// 	}else if len(title) < 4 {
-// 		return errors.New("title is too short")
-// 	}
-// }
-// func TitleValidator(title string) error {
-// 	return nil
-// }
+
+func TitleValidator(title string) error {
+	if len(title) > 40 {
+		return errors.New("title is too long")
+	} else if len(title) < 4 {
+		return errors.New("title is too short")
+	}
+	return nil
+}

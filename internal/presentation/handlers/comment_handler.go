@@ -1,39 +1,71 @@
 package handlers
 
 import (
-	"fmt"
+	"encoding/json"
 	"net/http"
-	"strconv"
-	"time"
 
 	"forum/internal/data/queries"
-	"forum/internal/logic/services"
 	"forum/internal/logic/utils"
-	"forum/internal/presentation/templates"
 )
 
-func CommentHandeler(w http.ResponseWriter, r *http.Request) {
-	id_post, _ := strconv.Atoi(r.PathValue("ID"))
-	comment := r.FormValue("commant")
-	date := time.Now().Format("2006-01-02 15:04:05")
-	token, _ := r.Cookie("token")
-	Username, err := queries.GetIdUser(token.Value)
-	if err != nil {
-		Errore(w,http.StatusInternalServerError)
-	}
-	er := queries.InsertComment(id_post, Username, comment, date)
-	if er != nil {
-		Errore(w,http.StatusInternalServerError)
-	}
-	utils.Check_Comment(comment)
-	http.Redirect(w, r, fmt.Sprintf("/getcomment/%v", id_post), http.StatusSeeOther)
+type newcom struct {
+	Post_id string `json:"post"`
+	Comment string `json:"comment"`
+	Date    string `json:"date"`
 }
 
-func GetCommment(w http.ResponseWriter, r *http.Request) {
-	Comment, err := services.Comment_service(r.PathValue("ID"))
-	if err != nil {
-		Errore(w,http.StatusInternalServerError)
-	}
+func Creatcomment(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		sesiontoken, _ := r.Cookie("SessionToken")
+		User_id, err := queries.GetId(sesiontoken.Value)
+		if err != nil {
+			HandleError(w, err, http.StatusUnauthorized)
+		}
+		var info newcom
+		errore := json.NewDecoder(r.Body).Decode(&info)
+		if errore != nil {
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
+		}
+		if info.Comment != "" && len(info.Comment) <= 1000 {
+			er := queries.InsertComment(User_id, utils.Convstr(info.Post_id), info.Comment, info.Date)
+			if er != nil {
+				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+				return
+			}
+		}
 
-	templates.CommentTemplate.Execute(w, Comment)
+	}
+}
+
+type get struct {
+	Post_id string `json:"post"`
+}
+
+func GetComment(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == "POST" {
+
+		var comm get
+
+		err := json.NewDecoder(r.Body).Decode(&comm)
+		if err != nil {
+
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
+		}
+
+		comment, er := queries.GetCommment(utils.Convstr(comm.Post_id))
+
+		if er != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+		if err := json.NewEncoder(w).Encode(comment); err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+	}
 }

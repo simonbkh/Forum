@@ -1,14 +1,35 @@
 {{define "nav"}}
 
 <header>
+    <!-- <div class="header-buttons"> -->
     <a href="/" style="text-decoration: none; color: white;">
-        <h1>Forum</h1>
+        <!-- <h1>Forum</h1> -->
+        <img src="../../static/images/logo.png" alt="Forum" class="logo">
     </a>
+    <!-- </div> -->
+
     <div class="header-buttons">
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
+        <a href="/login">
+            <img src="../../static/images/profile.png" alt="">
+            Join Us</a>
     </div>
 </header>
 
 
+{{end}}
+
+{{define "login"}}
+<header>
+    <a href="/" style="text-decoration: none; color: white;">
+        <img src="../../static/images/logo.png" alt="Forum" class="logo">
+    </a>
+    <div class="header-buttons">
+        <a href="/post">
+            <img src="../../static/images/post.png" alt="">
+            Create Post</a>
+        <a href="/logout">
+            <img src="../../static/images/logout.png" alt="">
+            Logout</a>
+    </div>
+</header>
 {{end}}

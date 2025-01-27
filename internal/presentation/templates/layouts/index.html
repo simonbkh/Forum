@@ -10,62 +10,84 @@
 </head>
 
 <body>
-    {{if .IsLogged}}
-    {{template "log_nav" .}}
+    {{if .UserStatus}}
+    {{template "login"}}
     {{else}}
-    {{template "nav" .}}
+    {{template "nav"}}
     {{end}}
-
     <div class="main-content">
         <!-- Sidebar with Categories -->
         <div class="side-bar">
-            {{if .IsLogged}}
-            {{template "log_side_bar" .}}
+            {{if .UserStatus}}
+            {{template "side"}}
             {{end}}
-
             <h2>Categories</h2>
             <ul>
-                <li><a href="/category/all">All</a></li>
-                <li><a href="/category/general">General</a></li>
-                <li><a href="/category/games">Games</a></li>
-                <li><a href="/category/sports">Sports</a></li>
-                <li><a href="/category/fashion">Fashion</a></li>
-                <li><a href="/category/travel">Travel</a></li>
-                <li><a href="/category/food">Food</a></li>
-                <li><a href="/category/health">Health</a></li>
+                <li><a href="/category/Tech-Support">Tech Support</a></li>
+                <li><a href="/category/General-Discussion">General Discussion</a></li>
+                <li><a href="/category/Tutorials">Tutorials</a></li>
+                <li><a href="/category/Gaming">Gaming</a></li>
+                <li><a href="/category/Job-Listings">Job Listings</a></li>
+                <li><a href="/category/Hobbies-&-Interests">Hobbies & Interests</a></li>
+                <li><a href="/category/Announcements">Announcements</a></li>
+
             </ul>
         </div>
 
+
         <!-- Posts Container -->
+
         <div class="posts-container">
             {{range .Posts}}
-            <div class="post">
-                <h3>{{.Title}}</h3>
-                <p>{{.Content}}</p>
-                <p class="category">
-                    Categories:
-                    {{range .Categories}}
-                    <span class="category-item">{{.}}</span>
-                    {{end}}
-                </p>
-                <p><i>Posted by {{.Username}} on {{.Date}}</i></p>
-
-                <!-- Likes Section -->
-                <div class="likes-section">
-                    <button class="like-button">👍 Like</button>
-                    <span class="likes-count"> Likes</span>
-                    <a href="/getcomment/{{.ID}}" class="link">
-                        <span class="material-icons">
+            <div class="post" id="{{.Post_id}}-container-for-post">
+                <div id="post-{{.Post_id}}">
+                    <h3>{{.Title}}</h3>
+                    <p>{{.Content}}</p>
+                    <p class="category">
+                        <b>Category: </b>
+                        {{range .Categories}}
+                        <span class="category-item">{{.}}</span>
+                        {{end}}
+                    </p>
+                    <p class="posted-by">
+                        <img src="../../static/images/profile.png" class="profile-img">
+                        <i>Posted by <b>{{.Username}}</b> on {{.Date}}</i>
+                    </p>
+                    <div class="likes-section">
+                        <span id="chat" data-id="{{.Post_id}}" class="material-icons">
                             chat
                         </span>
-                    </a>
+                    </div>
                 </div>
                 <hr>
+
+                <div id="comments-container-for-{{.Post_id}}" style="display: none;">
+
+                    <div id="{{.Post_id}}">
+                        <span id="cansel-for-{{.Post_id}}" class="material-icons" title="cancel">
+                            cancel
+                        </span>
+                        <label for="commant" class="com">Commant :</label>
+                        <div class="commant">
+                            <textarea name="commant" class="comment" id="commantair-for-{{.Post_id}}"
+                                placeholder="write a commente" required maxlength="1000"></textarea>
+                            <button type="submit" class="bot">
+                                <span id="send-Comment-for-{{.Post_id}}" data-post="{{.Post_id}}"
+                                    data-user="{{.User_id}}" class="material-icons">
+                                    send
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
             {{end}}
         </div>
     </div>
-
+    <script src="../../static/js/comment.js"></script>
+    </div>
     <footer>
         <p>© 2024 Forum. All rights reserved.</p>
         <p><a href="/terms">Terms of Service</a> | <a href="/privacy">Privacy Policy</a></p>

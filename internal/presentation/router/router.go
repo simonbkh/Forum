@@ -3,7 +3,10 @@ package router
 import (
 	"fmt"
 	"net/http"
+	"time"
 
+	"forum/internal/data/modles"
+	"forum/internal/data/queries"
 	"forum/internal/logic/utils"
 	"forum/internal/presentation/handlers"
 	"forum/internal/presentation/templates"
@@ -13,28 +16,60 @@ func Router(router *http.ServeMux) error {
 	var err error
 	err = templates.ParseFiles()
 	if utils.IsErrors(err) {
+		fmt.Println(err)
 		return err
 	}
-	router.HandleFunc("/", handlers.HomeHandler)
-	router.HandleFunc("/login", handlers.Login)
-	router.HandleFunc("/static/css/{file}", handlers.Static)
-	router.HandleFunc("/register", handlers.Register)
-	router.HandleFunc("/loginInfo", handlers.LoginInfo)
-	router.HandleFunc("/registerInfo", handlers.RegisterInfo)
-	router.HandleFunc("/new_post", handlers.NewPostHandler)
-	router.HandleFunc("/postinfo", handlers.PostInfo)
-	router.HandleFunc("/logout", handlers.Logout)
-	router.HandleFunc("/category/", handlers.CategoryHandler)
-	router.HandleFunc("/getcomment/{ID}", handlers.GetCommment)
-	router.HandleFunc("/comment/{ID}", handlers.CommentHandeler)
+	// hhh:= Middleware(http.HandlerFunc(handlers.HomeHandler))
+	router.Handle("/", Middleware(http.HandlerFunc(handlers.HomeHandler)))
+	router.Handle("/login", Middleware(http.HandlerFunc(handlers.Login)))
+	router.Handle("/static/css/{file}", http.HandlerFunc(handlers.Static))
+	router.Handle("/static/js/{file}", http.HandlerFunc(handlers.JS))
+	// router.HandleFunc("/static/js/{file}", )
+	router.Handle("/static/images/{file}", http.HandlerFunc(handlers.Image))
 
-
-
-	fmt.Println("website is running on: http://localhost:8080")
-
-	err = http.ListenAndServe(":8080", router)
+	router.Handle("/loginInfo", http.HandlerFunc(handlers.LoginInfo))
+	router.Handle("/register", Middleware(http.HandlerFunc(handlers.Register)))
+	router.Handle("/registerInfo", http.HandlerFunc(handlers.RegisterInfo))
+	router.Handle("/logout", Middleware(http.HandlerFunc(handlers.Logout)))
+	router.Handle("/post", Middleware(http.HandlerFunc(handlers.PostHandler)))
+	router.Handle("/submit-post", Middleware(http.HandlerFunc(handlers.SubmittedPost)))
+	router.Handle("/category/", Middleware(http.HandlerFunc(handlers.CategoryHandler)))
+	router.Handle("/myPosts", Middleware(http.HandlerFunc(handlers.MyPosts)))
+	router.Handle("/newcomment", Middleware(http.HandlerFunc(handlers.Creatcomment)))
+	router.HandleFunc("/getcomment", handlers.GetComment)
+	fmt.Println("website is running on: http://localhost:8052")
+	err = http.ListenAndServe(":8052", router)
 	if utils.IsErrors(err) {
 		return err
 	}
 	return nil
+}
+
+func Middleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		te, err := r.Cookie("SessionToken")
+		if err != nil || te.Value == "" {
+			modles.UserStatus = false
+			if r.URL.Path != "/" && r.URL.Path != "/login" && r.URL.Path != "/register" && r.URL.Path != "/static/js/{file}" {
+				http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+				return
+
+			}
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		bol, expiry := queries.IssesionidAvailable(te.Value, "")
+		if !bol || expiry.Before(time.Now()) {
+			modles.UserStatus = false
+			if r.URL.Path != "/" {
+				http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
+				return
+			}
+			next.ServeHTTP(w, r)
+			return
+		}
+		modles.UserStatus = true
+		next.ServeHTTP(w, r)
+	})
 }
