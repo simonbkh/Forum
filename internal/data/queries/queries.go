@@ -3,7 +3,6 @@ package queries
 import (
 	"database/sql"
 	"fmt"
-	"strings"
 	"time"
 
 	"forum/internal/data/database"
@@ -246,7 +245,7 @@ func GetPosts() ([]database.Post, error) {
 
 		posts = append(posts, post)
 	}
-
+	// fmt.Println(",,,,,,,,,", posts[0].User_id)
 	return posts, nil
 }
 
@@ -286,7 +285,7 @@ func GetUser(uid string) (string, error) {
 		return "", fmt.Errorf("failed to execute statement: %w", err)
 	}
 	defer res.Close()
-	for res.Next() {/////?????
+	for res.Next() { /////?????
 		err = res.Scan(&name)
 		if err != nil {
 			return "", fmt.Errorf("failed to scan row: %w", err)
@@ -294,8 +293,6 @@ func GetUser(uid string) (string, error) {
 	}
 	return name, nil
 }
-
-
 
 // func GetUser(uid string) (string, error) {
 // 	name := ""
@@ -309,9 +306,10 @@ func GetUser(uid string) (string, error) {
 // 		return "", fmt.Errorf("failed to execute query: %w", err)
 // 	}
 
-// 	return name, nil
-// }
-/////////////////////////////////////////////////////////////////////
+//		return name, nil
+//	}
+//
+// ///////////////////////////////////////////////////////////////////
 func GetId(token string) (int, error) {
 	var id int
 	err := database.Db.QueryRow(`SELECT user_id FROM sessions WHERE sessionToken = ?`, token).Scan(&id)
@@ -323,7 +321,6 @@ func GetId(token string) (int, error) {
 
 func GetPost(post_id int) ([]database.Post, error) {
 	var posts []database.Post
-	
 
 	statement, err := database.Db.Prepare(`SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC`)
 	if err != nil {
@@ -356,7 +353,6 @@ func GetPost(post_id int) ([]database.Post, error) {
 	return posts, nil
 }
 
-
 func InsertComment(post_id int, user_id int, comment string, date string) error {
 
 	statement, err := database.Db.Prepare(`INSERT INTO comments (posts_id, user_id, comment, created_at) values (?,?,?,?)`)
@@ -375,7 +371,7 @@ func InsertComment(post_id int, user_id int, comment string, date string) error 
 
 func GetCommment(post_id int) ([]modles.Comment, error) {
 	var cmt []modles.Comment
-	// fmt.Println("000",id)
+
 	statement, err := database.Db.Prepare(`SELECT * FROM comments  where posts_id = ?  ORDER BY created_at DESC`)
 
 	if err != nil {
@@ -401,19 +397,40 @@ func GetCommment(post_id int) ([]modles.Comment, error) {
 			return nil, err
 		}
 
-		// id, _ := strconv.Atoi(com.Username)
-
 		com.Username, err = GetUser(com.Username)
 		if err != nil {
 			return nil, err
 		}
 
-		com.Date = strings.ReplaceAll(com.Date, "T", " / ")
-		if len(com.Date) != 0 {
-			com.Date = com.Date[:len(com.Date)-1]
-		}
+		com.Date = timeAgo(com.Date)
+
 		cmt = append(cmt, com)
 	}
 
 	return cmt, nil
+}
+
+func timeAgo(t string) string {
+	parsedTime, err := time.Parse(time.RFC3339, t)
+	if err != nil {
+		fmt.Println("Error parsing time:", err)
+		return "Invalid date"
+	}
+
+	duration := time.Since(parsedTime)
+	duration += time.Hour
+	switch {
+	case duration < time.Minute:
+		return fmt.Sprintf("%d Seconds ago", int(duration.Seconds()))
+	case duration < time.Hour:
+		return fmt.Sprintf("%d Minutes ago", int(duration.Minutes()))
+	case duration < 24*time.Hour:
+		return fmt.Sprintf("%d Hours ago", int(duration.Hours()))
+	case duration < 30*24*time.Hour:
+		return fmt.Sprintf("%d Days ago", int(duration.Hours()/24))
+	case duration < 12*30*24*time.Hour:
+		return fmt.Sprintf("%d Months ago", int(duration.Hours()/(24*30)))
+	default:
+		return fmt.Sprintf("%d Years ago", int(duration.Hours()/(24*365)))
+	}
 }

@@ -66,7 +66,7 @@ func ManageSessionToken(email string, r *http.Request) (string, time.Time, error
 
 	return sessionToken, expryTime, nil
 }
-func CheckUserSession(r *http.Request) error {////hna kayna xi zyada dyal error
+func CheckUserSession(r *http.Request) error { ////hna kayna xi zyada dyal error
 	modles.UserStatus = false
 	te, err := r.Cookie("SessionToken")
 	if !modles.UserStatus {

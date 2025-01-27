@@ -1,192 +1,185 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-* {
+/* General Body Styling */
+body {
+   font-family: 'Arial', sans-serif;
    margin: 0;
    padding: 0;
-   box-sizing: border-box;
-   font-family: 'Poppins', sans-serif;
-}
-
-body {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   min-height: 100vh;
-   background: linear-gradient(90deg,#9aa3bf, #29293d);
-}
-
-.container {
-   position: relative;
-   width: 850px;
-   height: 550px;
-   background: #fff;
-   border-radius: 30px;
-   box-shadow: 0 0 30px rgba(0, 0, 0, .2);
-   margin: 20px;
-   overflow: hidden;
-
-}
-
-.form-box {
-   position: absolute;
-   right: 0;
-   width: 50%;
-   height: 100%;
-   background: #fff;
-   display: flex;
-   align-items: center;
-   color: #333;
-   text-align: center;
-   padding: 40px;
-   z-index: 1;
-   transition: .6s ease-in-out 1.2s visiblity 0s 1s;
-}
-
-.container.active .form-box {
-   right: 50%;
-}
-
-
-.form-box.register {
-   visibility: hidden;
-}
-
-.container.active .form-box.register {
-   visibility: visible;
-}
-
-form {
-   width: 100%;
-}
-
-.container h1 {
-   font-size: 36px;
-   margin: -10px 0
-}
-
-.input-box {
-   position: relative;
-   margin: 30px 0;
-}
-
-.input-box input {
-   width: 100%;
-   padding: 13px 50px 13px 20px;
-   background: #eee;
-   border-radius: 8px;
-   border: none;
-   outline: none;
-   box-shadow: none;
-   font-size: 16px;
-   color: #333;
-   font-weight: 500;
-}
-
-.input-box input::placeholder {
-   color: #888;
-   font-weight: 400;
-}
-
-.input-box i {
-   position: absolute;
-   right: 20px;
-   top: 50%;
-   transform: translateY(-50%);
-   right: 8px;
-   font-size: 20px;
-   color: #888;
-   cursor: pointer;
-}
-
-.btn {
-   width: 100%;
-   height: 45px;
-   background: #29293d;
-   border-radius: 8px;
-   border: none;
-   outline: none;
-   box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-   cursor: pointer;
-   font-size: 16px;
-   color: #fff;
-   font-weight: 600;
-   margin: 20px 0 10px 0;
-}
-
-.toggle-box {
-   position: absolute;
-   width: 100%;
-   height: 100%;
-}
-
-.toggle-box::before {
-   content: '';
-   position: absolute;
-   left: -250%;
-   width: 300%;
-   height: 100%;
-   background: #29293d;
-   border-radius: 150px;
-   box-shadow: 0 0 30px rgba(0, 0, 0, .2);
-   z-index: 2;
-   transition: 1.8s ease-in-out;
-
-}
-
-.container.active .toggle-box::before {
-   left: 50%;
-
-}
-
-.toggle-panel {
-   position: absolute;
-   width: 50%;
-   height: 100%;
-   /* background: red; */
+   background-color: #121212;
+   color: #e0e0e0;
    display: flex;
    flex-direction: column;
-   justify-content: center;
-   color: #fff;
+   min-height: 100vh;
+}
+
+/* Header */
+header {
+   background-color: #1f1f1f;
+   color: #e0e0e0;
+   padding: 20px 20px;
+   display: flex;
+   justify-content: space-between;
    align-items: center;
-   cursor: pointer;
-   z-index: 2;
-   transition: .6s ease-in-out;
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-.toggle-panel.toggle-left {
-   left: 0;
-   transition-delay: 1.2s;
+header h1 {
+   margin: 0;
+   font-size: 2.5em;
+   font-weight: bold;
 }
 
-.container.active .toggle-panel.toggle-left {
-   left: -50%;
-   transition-delay: .6s;
+/* Buttons in Header */
+.header-buttons {
+   display: flex;
+   gap: 15px;
 }
 
-.toggle-panel.toggle-right {
-   right: -50%;
-   transition-delay: .6s;
+.header-buttons a {
+   text-decoration: none;
+   color: #e0e0e0;
+   font-size: 1em;
+   padding: 10px 20px;
+   border: 2px solid #e0e0e0;
+   border-radius: 5px;
+   transition: background-color 0.3s, color 0.3s;
 }
 
-.container.active .toggle-panel.toggle-right {
-   right: 0;
-   transition-delay: 1.2s;
+.header-buttons a:hover {
+   background-color: #e0e0e0;
+   color: #1f1f1f;
 }
 
-.toggle-panel h1 {
-   font-size: 36px;
-   margin: -10px 0
+/* Layout */
+.main-content {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: center;
+   gap: 20px;
+   padding: 20px;
+   flex-grow: 1;
 }
 
-.toggle-panel p {
-   font-size: 16px;
-   margin: 5px 0 20px 0;
+/* Sidebar */
+.side-bar {
+   background: #1f1f1f;
+   border-radius: 8px;
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+   padding: 20px;
+   max-width: 300px;
+   width: 100%;
 }
 
-.toggle-panel .btn {
-   width: 160px;
-   height: 45px;
-   background: transparent;
-   border: 2px solid #fff;
-   box-shadow: none;
+.side-bar h2 {
+   font-size: 1.5em;
+   color: #90caf9;
+   margin-bottom: 15px;
+   text-align: center;
+}
+
+.side-bar ul {
+   list-style: none;
+   padding: 0;
+}
+
+.side-bar li {
+   margin: 10px 0;
+}
+
+.side-bar a {
+   text-decoration: none;
+   color: #90caf9;
+   font-size: 1em;
+   padding: 10px;
+   display: block;
+   border: 1px solid #333;
+   border-radius: 5px;
+   transition: background-color 0.3s, color 0.3s;
+}
+
+.side-bar a:hover {
+   background-color: #90caf9;
+   color: #121212;
+}
+
+/* Posts Container */
+.posts-container {
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+   flex-grow: 1;
+   max-width: 900px;
+   width: 100%;
+}
+
+/* Post Styling */
+.post {
+   background-color: #1f1f1f;
+   padding: 20px;
+   border-radius: 8px;
+   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+   transition: box-shadow 0.3s ease;
+}
+
+.post:hover {
+   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
+.post h3 {
+   color: #90caf9;
+   font-size: 1.3em;
+   margin-bottom: 10px;
+   font-weight: bold;
+}
+
+.post p {
+   font-size: 1em;
+   color: #b0bec5;
+   margin-bottom: 5px;
+   line-height: 1.6;
+}
+
+.post i {
+   font-size: 0.9em;
+   color: #78909c;
+}
+
+.post .category {
+   font-style: italic;
+   color: #90caf9;
+}
+
+/* Footer Styling */
+footer {
+   background-color: #1f1f1f;
+   color: #b0bec5;
+   text-align: center;
+   padding: 10px 0;
+}
+
+footer a {
+   color: #90caf9;
+   text-decoration: none;
+}
+
+footer a:hover {
+   text-decoration: underline;
+}
+
+/* Hidden Dropdown */
+.dd {
+   display: none;
+   background-color: #333;
+   border: 1px solid #444;
+   color: #e0e0e0;
+   padding: 20px;
+   position: fixed;
+   top: 20%;
+   left: 30%;
+   height: 30%;
+   width: 30%;
+   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+   border-radius: 8px;
+}
+
+.dd:target {
+   display: block;
 }
