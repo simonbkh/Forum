@@ -7,7 +7,6 @@ import (
 	"forum/internal/data/database"
 	"forum/internal/data/modles"
 	"forum/internal/logic/services"
-	"forum/internal/logic/utils"
 	"forum/internal/presentation/templates"
 )
 
@@ -24,10 +23,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// }
 	// fmt.Println("===>", r.URL.Path)
-	er := utils.CheckUserSession(r)
-	if er != nil { ///????????????,,,,,,,????????
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-	}
+
 	if !modles.UserStatus {
 		http.SetCookie(w, &http.Cookie{
 			Name:    "SessionToken",
@@ -45,7 +41,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		UserStatus: modles.UserStatus,
 		Posts:      newPosts,
 	}
-	er = templates.HomeTemplate.Execute(w, data)
+	er := templates.HomeTemplate.Execute(w, data)
 	if er != nil {
 		http.Error(w, er.Error(), http.StatusInternalServerError)
 		return

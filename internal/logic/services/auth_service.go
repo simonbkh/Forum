@@ -40,7 +40,7 @@ func Register_Service(w http.ResponseWriter, r *http.Request) error {
 func Login_Service(w http.ResponseWriter, r *http.Request) error {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
-
+	// fmt.Println(email, password)
 	// tier 2 logic
 	err := validators.Login_Validat(email, password)
 	if err != nil {
