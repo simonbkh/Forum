@@ -7,7 +7,6 @@ import (
 )
 
 func Convstr(s string) int {
-	fmt.Println(s)
 	nb, err := strconv.Atoi(s)
 	if err != nil {
 		fmt.Println(err)

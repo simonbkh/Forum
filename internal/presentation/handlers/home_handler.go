@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"time"
 
 	"forum/internal/data/database"
 	"forum/internal/data/modles"
@@ -24,13 +23,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	// }
 	// fmt.Println("===>", r.URL.Path)
 
-	if !modles.UserStatus {
-		http.SetCookie(w, &http.Cookie{
-			Name:    "SessionToken",
-			Value:   "",
-			Expires: time.Unix(0, 0),
-		})
-	}
 	err := services.GetPosts(&services.Posts) //???????
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

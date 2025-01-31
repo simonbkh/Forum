@@ -7,11 +7,11 @@ import (
 )
 
 var (
-	HomeTemplate     *template.Template
-	LoginTemplate    *template.Template
-	Create_post      *template.Template
-	ErrorTemplate    *template.Template
-	MyPossts        *template.Template
+	HomeTemplate  *template.Template
+	LoginTemplate *template.Template
+	Create_post   *template.Template
+	ErrorTemplate *template.Template
+	MyPossts      *template.Template
 )
 
 func ParseFiles() error {

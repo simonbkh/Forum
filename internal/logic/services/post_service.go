@@ -71,7 +71,7 @@ func GetPosts(mok *[]database.Post) error {
 		return err
 	}
 	// *mok,err = queries.GetCategories()
-	// fmt.Println(mok)
+	// fmt.Println("[[[[[[[[[[]]]]]]]]]]",mok)
 	return nil
 }
 
@@ -81,6 +81,8 @@ func TimeDifference(newPosts, oldPosts []database.Post) []database.Post {
 		mainDate := post.Date
 		duration := timeAgo(mainDate)
 		NewPost := database.Post{
+			User_id:    post.User_id,
+			Post_id:    post.Post_id,
 			Username:   post.Username,
 			Title:      post.Title,
 			Content:    post.Content,
@@ -101,6 +103,7 @@ func timeAgo(t string) string {
 
 	duration := time.Since(parsedTime)
 	duration += time.Hour
+	// fmt.Println(">>>>>>>",duration)
 	switch {
 	case duration < time.Minute:
 		return fmt.Sprintf("%d Seconds ago", int(duration.Seconds()))
@@ -118,5 +121,5 @@ func timeAgo(t string) string {
 }
 
 // func GetmyPosts(w http.ResponseWriter, r *http.Request) []database.Post {
-	
+
 // }

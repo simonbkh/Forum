@@ -3,16 +3,15 @@ package validators
 import (
 	"errors"
 	"fmt"
+	"forum/internal/data/queries"
 	"net/http"
 	"strings"
-
-	"forum/internal/data/queries"
 )
 
 func CategoriesValidator(categories []string) error {
 	istruecat := false
 	fmt.Println(categories)
-	if len(categories) == 0  || len(categories) > 7 {
+	if len(categories) == 0 || len(categories) > 7 {
 		return errors.New("invalid category! ")
 	}
 

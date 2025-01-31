@@ -18,11 +18,16 @@ header {
     /* Dark purple background */
     color: #ffffff;
     /* White text for header */
-    padding: 20px 20px;
+    padding-left: 30px;
+    padding-right: 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+hr {
+    margin-bottom: 20px;
 }
 
 header h1 {
@@ -149,7 +154,7 @@ header h1 {
 .post {
     background-color: #29293d;
     /* Dark purple */
-    padding: 20px;
+    padding: 50px 50px 0 50px;
     border-radius: 8px;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
     transition: box-shadow 0.3s ease;
@@ -187,6 +192,11 @@ header h1 {
     /* Soft purple for categories */
 }
 
+.logo {
+    width: 30%;
+
+}
+
 /* Profile Image Styling */
 .profile-img {
     width: 40px;
@@ -218,6 +228,7 @@ header h1 {
 
 .posted-by i {
     font-size: 0.9em;
+
     /* Keeps the posted date text smaller than the username */
     color: #a0a0a0;
     /* Light gray color for the "Posted by" text */
@@ -275,6 +286,8 @@ footer a:hover {
     color: rgb(35, 143, 251);
     cursor: pointer;
     margin-left: 30px;
+    margin-top: 20px;
+    grid-area: 1 / 1 / 2 / 2;
 
 }
 
@@ -284,13 +297,14 @@ footer a:hover {
 
 }
 
+
+
 span[title="cancel"] {
     color: red;
     cursor: pointer;
     margin-right: 1vw;
+    margin-top: 10px;
 }
-
-
 
 span[title="cancel"]:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -298,6 +312,7 @@ span[title="cancel"]:hover {
     border: red solid 2px;
     transform: translateY(-5px);
 }
+
 
 .posts {
     display: grid;
@@ -342,8 +357,14 @@ span[title="cancel"]:hover {
     color: rgb(0 170 255);
     display: flex;
     place-items: center;
-    padding-left: 3%;
+    padding-right: 3vw;
+    padding-left: 1.5vw;
+}
 
+.bot:hover {
+    color: rgb(0 170 255);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
 }
 
 .commant {
@@ -354,19 +375,27 @@ span[title="cancel"]:hover {
 
 .comment {
 
-    width: 100%;
-    padding-left: 10%;
-    padding-top: 11px;
-    margin-top: 15px;
-    margin-bottom: 10px;
+    width: 60%;
+    padding-left: 5%;
+    padding-top: 3%;
+    margin-top: 30px;
+    margin-bottom: 30px;
     font-size: 1.3em;
-    border: 1px #9b9494;
+    border: 2px #9b9494;
     border-radius: 2px;
     line-height: 1.6;
     outline: none;
     resize: none;
+    border: 2px solid rgb(68, 68, 68);
+    border-radius: 15px;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
 
+}
+
+strong {
+    color: #000000;
+    overflow-wrap: break-word
+        /* font-size: ; */
 }
 
 button {
@@ -378,7 +407,8 @@ button {
 }
 
 .com {
-    font-size: 1.5vw;
+    /* font-size: 1.5vw; */
+    overflow-wrap: break-word;
     font-weight: 900;
 
 }
@@ -393,11 +423,63 @@ form {
     margin: 6px auto;
 }
 
-.commants {
+h4 {
+    margin-bottom: 0;
+    margin-left: 30%;
+    overflow-wrap: break-word;
+}
 
+em {
+    font-size: 1em;
+    color: #a0a0a0;
+    margin-left: 25%;
+    overflow-wrap: break-word;
+}
+
+small {
+    overflow-wrap: break-word;
+}
+
+.mutch {
+    overflow-wrap: break-word;
+}
+
+.commants {
+    width: 90%;
+    color: black;
+    background-color: white;
     padding: 1px 20px 5px 20px;
+    margin-top: 20px;
     margin-bottom: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s ease, transform 0.2s;
+}
+
+.commants>p {
+    color: black;
+}
+
+.chat {
+    margin-left: 3.5vw;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.len {
+    color: rgb(169, 169, 169);
+    text-align: end;
+    margin-top: 20px;
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+@media (max-width: 218px) {
+    .len {
+
+        margin-top: 50px;
+
+    }
 }

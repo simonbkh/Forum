@@ -41,6 +41,16 @@ func CreateTables(db *sql.DB) error {
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (posts_id) REFERENCES posts(id)
         )`,
+		`CREATE TABLE IF NOT EXISTS likes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            post_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            reaction TEXT NOT NULL,
+            FOREIGN KEY (post_id) REFERENCES posts(id)
+            FOREIGN KEY ( user_id ) REFERENCES users(id)
+			UNIQUE(user_id, post_id)  
+
+        )`,
 	}
 	for _, v := range UsersTable {
 		_, err := db.Exec(v)
