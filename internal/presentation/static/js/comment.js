@@ -12,7 +12,7 @@ comment_bottone.forEach(chat => {
             existingLenElement.remove();
         }
         let i = document.createElement("sup")
-        i.textContent = `${len} 🗩`
+        i.textContent = `${len} 🗨`
         i.setAttribute("class", "len")
         chat.parentNode.append(i)
     }
@@ -111,11 +111,11 @@ comment_bottone.forEach(chat => {
                         },
                         body: JSON.stringify({ post: `${post_id}`, id: `${user_id}`, comment: comment.value, date: new Date() })
                     });
-                    if (response.ok) {
-                        console.log('Request sent successfully');
                         data = await response.json();
-                        console.log(data)
+                    if (!data.success) {
+                        window.location.href = "/login"
                     }
+               
 
                 } catch (error) {
                     console.log('Error:', error);

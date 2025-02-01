@@ -17,13 +17,13 @@ type PageData struct {
 }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	// if r.Method != "GET" {
-	// 	http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-	// 	return
-	// }
-	// fmt.Println("===>", r.URL.Path)
+	if r.URL.Path != "/" {
+		// HandleError(w, nil, http.StatusNotFound)
+		http.Error(w, "not found", http.StatusNotFound)
+		return
+	}
 
-	err := services.GetPosts(&services.Posts) //???????
+	err := services.GetPosts(&services.Posts) 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

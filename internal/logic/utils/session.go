@@ -36,15 +36,12 @@ func ManageSessionToken(email string, r *http.Request) (string, time.Time, error
 
 		exit, _ := queries.IssesionidAvailable("", email) // katchof wax kayn aluser
 		if exit {
-			fmt.Println(err, "ok1")
-
 			er := queries.Removesesionid("", email)
 			if er != nil {
 				fmt.Println(er)
 				return "", time.Time{}, er
 			}
 		}
-		queries.Removesesionid("", email)
 		er := queries.Insersessions(sessionToken, email, expryTime)
 		if er != nil {
 			return "", time.Time{}, er

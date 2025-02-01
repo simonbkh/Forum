@@ -68,6 +68,6 @@ func HandleError(w http.ResponseWriter, err error, status int)  {
 		ErrorCode:    status,
 		ErrorMessage: err.Error(),
 	}
-	fmt.Println(errorData)
+	// fmt.Println(errorData)
 	templates.ErrorTemplate.Execute(w, errorData)
 }
