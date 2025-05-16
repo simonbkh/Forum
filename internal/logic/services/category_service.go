@@ -18,12 +18,9 @@ func Category_Service(w http.ResponseWriter, r *http.Request) ([]database.Post, 
 	if category == "" {
 		return nil, errors.New("wrong category")
 	}
-	if strings.Contains(category,"-") {
-		category = strings.ReplaceAll(category,"-"," ")
+	if strings.Contains(category, "-") {
+		category = strings.ReplaceAll(category, "-", " ")
 	}
-	// if category == "all" {
-	// 	return Posts, nil
-	// }
 	slice := []string{category}
 	err := validators.CategoriesValidator(slice)
 	if err != nil {
@@ -32,7 +29,6 @@ func Category_Service(w http.ResponseWriter, r *http.Request) ([]database.Post, 
 	newPosts := []database.Post{}
 	for _, post := range Posts {
 		for _, cat := range post.Categories {
-
 			if cat == category {
 				newPosts = append(newPosts, post)
 			}

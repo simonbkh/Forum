@@ -1,70 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../static/css/create-post.css">
     <title>Create a Post</title>
-   
+
 </head>
+
 <body>
 
     <div class="container">
-        <h1>Create a New Post</h1>
+        <h1><a href="/">Create a Post</a></h1>
         <form action="/submit-post" method="POST" enctype="multipart/form-data">
-            
+
             <!-- Post Title -->
             <div class="form-group">
                 <label for="post-title">Title:</label>
                 <input type="text" id="post-title" name="title" required placeholder="Enter your post title">
             </div>
-            
+
             <!-- Post Category (Checkboxes) -->
-            <div class="form-group">
+            <div class="form-group category-group">
                 <label>Category:</label>
-                <div>
-                    <input type="checkbox" id="tech-support" name="categories" value="Tech Support">
-                    <label for="tech-support">Tech Support</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="general-discussion" name="categories" value="General Discussion">
-                    <label for="general-discussion">General Discussion</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="tutorials" name="categories" value="Tutorials">
-                    <label for="tutorials">Tutorials</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="announcements" name="categories" value="Announcements">
-                    <label for="announcements">Announcements</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="gaming" name="categories" value="Gaming">
-                    <label for="gaming">Gaming</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="job-listings" name="categories" value="Job Listings">
-                    <label for="job-listings">Job Listings</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="hobbies" name="categories" value="Hobbies & Interests">
-                    <label for="hobbies">Hobbies & Interests</label>
+                <div class="categories">
+                    <div class="category-item">
+                        <input type="checkbox" id="tech-support" name="categories" value="Tech Support">
+                        <label for="tech-support">Tech Support</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="general-discussion" name="categories" value="General Discussion">
+                        <label for="general-discussion">General Discussion</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="tutorials" name="categories" value="Tutorials">
+                        <label for="tutorials">Tutorials</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="announcements" name="categories" value="Announcements">
+                        <label for="announcements">Announcements</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="gaming" name="categories" value="Gaming">
+                        <label for="gaming">Gaming</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="job-listings" name="categories" value="Job Listings">
+                        <label for="job-listings">Job Listings</label>
+                    </div>
+                    <div class="category-item">
+                        <input type="checkbox" id="hobbies" name="categories" value="Hobbies & Interests">
+                        <label for="hobbies">Hobbies & Interests</label>
+                    </div>
                 </div>
             </div>
+
 
             <!-- Post Content -->
             <div class="form-group">
                 <label for="post-content">Content:</label>
-                <textarea id="post-content" name="content" required placeholder="Enter your post content here..."></textarea>
-            </div>            
+                <textarea style="resize: none;" id="post-content" name="content" required
+                    placeholder="Enter your post content here..."></textarea>
+            </div>
 
             <!-- Submit Button -->
             <div class="form-group">
                 <button type="submit">Post</button>
             </div>
 
+            <div style="color: red;">{{.Err}}</div>
+
         </form>
     </div>
 
 </body>
+
 </html>

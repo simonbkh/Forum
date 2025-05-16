@@ -2,9 +2,7 @@ package validators
 
 import (
 	"errors"
-	"forum/internal/logic/utils"
 	"regexp"
-	// "fmt"
 )
 
 // function validator emal & password & username of user
@@ -29,24 +27,19 @@ func User_Validator(username, email, password string) error {
 func UsernameValidator(username string) error {
 	re, err := regexp.Compile(`^[a-zA-Z][a-zA-Z0-9_]{2,14}$`)
 	if err != nil {
-		return errors.New("username is not corect ---")
+		return err
 	}
 	match := re.MatchString(username)
 	if !match {
-		return errors.New("username is not corect ---")
-	}
-	if len(username) > 16 {
-		return errors.New("username is too long (max: 10 characters)")
-	} else if len(username) < 3 {
-		return errors.New("username is too short (min: 3 characters)")
+		return errors.New("username is not corect ")
 	}
 	return nil
 }
 
 // check password is corect or not
 func PasswordValidator(password string) error {
-	if len(password) > 200 {
-		return errors.New("password is too long (max: 15 characters)")
+	if len(password) > 21 {
+		return errors.New("password is too long (max: 20 characters)")
 	} else if len(password) < 5 {
 		return errors.New("password is too short (min: 5 characters)")
 	}
@@ -55,25 +48,24 @@ func PasswordValidator(password string) error {
 
 // check email is corect or not
 func EmailValidator(email string) error {
-	regex := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
-
-	// Compile the regex
-	re := regexp.MustCompile(regex)
-
-	// Check if the email matches the regex
-	if re.MatchString(email) {
-		return nil
+	re, err := regexp.Compile(`^[a-zA-Z0-9._]{3,}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+	if err != nil {
+		return err
 	}
-	return errors.New("faild email")
+	match := re.MatchString(email)
+	if !match {
+		return errors.New("email is not corect ")
+	}
+	return nil
 }
 
 func Login_Validat(email, password string) error {
 	err := EmailValidator(email)
-	if utils.IsErrors(err) {
+	if err != nil {
 		return err
 	}
 	err = PasswordValidator(password)
-	if utils.IsErrors(err) {
+	if err != nil {
 		return err
 	}
 	return nil

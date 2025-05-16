@@ -1,27 +1,22 @@
 package utils
 
 import (
-	"crypto/rand"
-	"encoding/base64"
-	"errors"
-	"fmt"
 	"net/http"
 	"time"
 
 	"forum/internal/data/modles"
 	"forum/internal/data/queries"
+
+	"github.com/google/uuid"
 )
 
 // / generate session token
 func GenerateSessionToken() (string, error) {
-	tokne := make([]byte, 32)
-	_, err := rand.Read(tokne)
+	token, err := uuid.NewRandom()
 	if err != nil {
-		return "", errors.New("creation sissiontoken")
+		return "", err
 	}
-
-	tokn := base64.URLEncoding.EncodeToString(tokne)
-	return tokn, nil
+	return token.String(), nil
 }
 
 // manage session token in database is it available or not
@@ -38,7 +33,6 @@ func ManageSessionToken(email string, r *http.Request) (string, time.Time, error
 		if exit {
 			er := queries.Removesesionid("", email)
 			if er != nil {
-				fmt.Println(er)
 				return "", time.Time{}, er
 			}
 		}
@@ -63,6 +57,7 @@ func ManageSessionToken(email string, r *http.Request) (string, time.Time, error
 
 	return sessionToken, expryTime, nil
 }
+
 func CheckUserSession(r *http.Request) error { ////hna kayna xi zyada dyal error
 	modles.UserStatus = false
 	te, err := r.Cookie("SessionToken")

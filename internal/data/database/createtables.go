@@ -43,14 +43,21 @@ func CreateTables(db *sql.DB) error {
         )`,
 		`CREATE TABLE IF NOT EXISTS likes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            post_id INTEGER NOT NULL,
+            post_id INTEGER ,
+            comment_id INTEGER ,
             user_id INTEGER NOT NULL,
             reaction TEXT NOT NULL,
+			type text not null check(type in ('post' , 'comment')),
+			check (
+			(post_id is not null and comment_id is null) or
+			(post_id is null and comment_id is not null) 
+			),
+			unique(user_id , post_id)
+			unique(user_id , comment_id)
             FOREIGN KEY (post_id) REFERENCES posts(id)
             FOREIGN KEY ( user_id ) REFERENCES users(id)
-			UNIQUE(user_id, post_id)  
-
-        )`,
+			FOREIGN KEY ( comment_id) references comments(id)
+		);`,
 	}
 	for _, v := range UsersTable {
 		_, err := db.Exec(v)

@@ -5,17 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Error Page</title>
   <style>
-    /* General Styles */
-    /* body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      background: linear-gradient(135deg, #89CFF0, #6A5ACD);
-      font-family: 'Poppins', sans-serif;
-    } */
-
     .error-container {
       margin: 50px;
       position: relative;
@@ -41,27 +30,7 @@
       animation: gradientMove 3s linear infinite;
     }
 
-    /* Gradient Animation */
-    @keyframes gradientMove {
-      0% {
-        background-position: 0%;
-      }
-      100% {
-        background-position: 100%;
-      }
-    }
 
-    /* Slide In Animation */
-    @keyframes slideIn {
-      from {
-        transform: translateY(50px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
     body {
       display: flex;
       justify-content: center;
@@ -69,8 +38,6 @@
       min-height: 100vh;
       margin: 0;
       position: relative;
- 
-      /* font-family: 'Poppins', sans-serif; */
     }
 
     .error-code {
@@ -136,7 +103,7 @@
     }
   </style>
 </head>
-<body>
+<body style="background: #fff;">
   <div class="error-container">
     <div class="error-code">{{.ErrorCode}}</div>
     <div class="error-message">{{.ErrorMessage}}</div>

@@ -9,6 +9,8 @@ import (
 var Db *sql.DB
 
 type Post struct {
+	State  int // state of likes and dislikes
+	Number []int // number of likes and dislikes
 	Post_id int
 	User_id    string
 	Username   string

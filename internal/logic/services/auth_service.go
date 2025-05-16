@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"net/http"
+	"strings"
 	"time"
 
 	"forum/internal/data/queries"
@@ -13,7 +14,7 @@ import (
 // service register
 func Register_Service(w http.ResponseWriter, r *http.Request) error {
 	username := r.FormValue("username")
-	email := r.FormValue("email")
+	email := strings.ToLower(r.FormValue("email"))
 	password := r.FormValue("password")
 	// tier 2 logic
 	err := validators.User_Validator(username, email, password)
@@ -26,7 +27,7 @@ func Register_Service(w http.ResponseWriter, r *http.Request) error {
 	}
 	// tier 3 data
 	if queries.IsUserExist(username, email) {
-		return errors.New("invalid credentiels")
+		return errors.New("email or username already taken")
 	}
 	err = queries.InserUser(username, email, hashedpass)
 	if err != nil {
@@ -38,7 +39,7 @@ func Register_Service(w http.ResponseWriter, r *http.Request) error {
 
 // service login
 func Login_Service(w http.ResponseWriter, r *http.Request) error {
-	email := r.FormValue("email")
+	email := strings.ToLower(r.FormValue("email"))
 	password := r.FormValue("password")
 
 	// tier 2 logic

@@ -2,10 +2,7 @@ package templates
 
 import (
 	"html/template"
-
-	"forum/internal/logic/utils"
 )
-
 var (
 	HomeTemplate  *template.Template
 	LoginTemplate *template.Template
@@ -16,8 +13,14 @@ var (
 
 func ParseFiles() error {
 	var err error
-	templates, err := template.ParseFiles(
-		"../internal/presentation/templates/layouts/index.html",
+
+	// Parse all template files, including index.html
+	templates, err := template.New("").Funcs(template.FuncMap{
+		"add":     add,
+		"sub":     sub,
+		"iterate": iterate,
+	}).ParseFiles(
+		"../internal/presentation/templates/layouts/index.html", 
 		"../internal/presentation/templates/layouts/nav_bar.html",
 		"../internal/presentation/templates/layouts/side_bar.html",
 		"../internal/presentation/templates/auth/login.html",
@@ -25,9 +28,11 @@ func ParseFiles() error {
 		"../internal/presentation/templates/errors/error.html",
 		"../internal/presentation/templates/post/mypost.html",
 	)
-	if utils.IsErrors(err) {
+	if err != nil {
 		return err
 	}
+
+	// Assign the parsed templates to the variables
 	HomeTemplate = templates.Lookup("index.html")
 	LoginTemplate = templates.Lookup("login.html")
 	Create_post = templates.Lookup("create_post.html")
@@ -35,3 +40,20 @@ func ParseFiles() error {
 	MyPossts = templates.Lookup("mypost.html")
 	return nil
 }
+
+func add(a, b int) int {
+	return a + b
+}
+
+func sub(a, b int) int {
+	return a - b
+}
+
+func iterate(start, end int) []int {
+	var result []int
+	for i := start; i <= end; i++ {
+		result = append(result, i)
+	}
+	return result
+}
+

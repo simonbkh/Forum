@@ -57,7 +57,6 @@ function handleFormSubmit(formdata) {
        
                 window.location.href = formdata.redirect;
             } else {
-            
                 displayErrorMessage(formdata.form, result.message+" please try again");
             }
         })

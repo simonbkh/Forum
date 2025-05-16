@@ -15,6 +15,10 @@
     {{else}}
     {{template "nav"}}
     {{end}}
+
+
+
+
     <div class="main-content">
         <!-- Sidebar with Categories -->
         <div class="side-bar">
@@ -30,16 +34,13 @@
                 <li><a href="/category/Job-Listings">Job Listings</a></li>
                 <li><a href="/category/Hobbies-&-Interests">Hobbies & Interests</a></li>
                 <li><a href="/category/Announcements">Announcements</a></li>
-
             </ul>
         </div>
 
-
         <!-- Posts Container -->
-
         <div class="posts-container">
-            {{range .Posts}}
-            <div class="post" id="{{.Post_id}}-container-for-post">
+            {{range $index, $post := .Posts}}
+            <div class="post" id="{{$post.Post_id}}-container-for-post" data-page="{{$index}}">
                 <div id="post-{{.Post_id}}">
                     <h3>{{.Title}}</h3>
                     <p>{{.Content}}</p>
@@ -53,31 +54,32 @@
                         <img src="../../static/images/profile.png" class="profile-img">
                         <i>Posted by <b>{{.Username}}</b> on {{.Date}}</i>
                     </p>
-                    <div class="likes-section" id="{{.Post_id}}">
-                        <span id="chat" data-id="{{.Post_id}}" class="material-icons">
-                            chat
-                        </span>
-                 
-                        <div class="reaction">
-                            <span class="material-icons post-reaction">thumb_up</span>
-                            <span class="reaction-count">0</span>
-                        </div>
-                        <div class="reaction">
-                            <span class="material-icons post-reaction">thumb_down</span>
-                            <span class="reaction-count">0</span>
-                            <div class="chat">
-                                <span id="chat" data-id="{{.Post_id}}" class="material-icons">
-                                    chat
-                                </span>
+                    <div class="likes-section" data-id="{{.Post_id}}">
+                        <div class="liks">                         
+                            
+                            <div id="lik" class="reaction">
+                                <!-- style="cursor: pointer;" -->
+                                <span class="material-icons post-reaction reacted"  {{if eq .State 1}} style="color: #2196F3"   
+                                    {{end}} >thumb_up</span>
+                                <span class="reaction-count">{{ index .Number 0 }}</span>
+                            </div>
+                            <div id="dislik" class="reaction">
+                                <span class="material-icons post-reaction reacted" {{if eq .State 2}} style="color:#2196F3"
+                                    {{end}} >thumb_down</span>
+                                <span class="reaction-count">{{ index .Number 1 }}</span>
                             </div>
                         </div>
-
+                        <div class="chat">
+                            <i class="len" id="{{.Post_id}}-len"></i>
+                            <span id="chat" data-id="{{.Post_id}}" class="material-icons">
+                                chat
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <hr>
 
                 <div id="comments-container-for-{{.Post_id}}" style="display: none;">
-
                     <div id="{{.Post_id}}">
                         <span id="cansel-for-{{.Post_id}}" class="material-icons" title="cancel">
                             cancel
@@ -85,16 +87,17 @@
                         <label for="commant" class="com">Commant :</label>
                         <div class="commant">
                             <textarea name="commant" class="comment" id="commantair-for-{{.Post_id}}"
-                                placeholder="write a commente" required maxlength="1000"></textarea>
+                                placeholder="write a comment" required></textarea>
                             <button type="submit" class="bot">
                                 <span id="send-Comment-for-{{.Post_id}}" data-post="{{.Post_id}}"
                                     data-user="{{.User_id}}" class="material-icons">
                                     send
                                 </span>
                             </button>
+                           
                         </div>
+                        <p class="error" id="error-for-{{.Post_id}}" style="color: red; display: none;"></p>
                     </div>
-
                 </div>
 
             </div>
@@ -102,13 +105,50 @@
         </div>
     </div>
     <script src="../../static/js/comment.js"></script>
-    <script src="/static/js/main.js"></script>
+    <script src="/static/js/main.js?v=1"></script>
 
+    <div class="pagination">
+        {{if gt .CurrentPage 1}}
+        <a href="?page={{sub .CurrentPage 1}}" class="pagination-link">Previous</a>
+        {{end}}
+    
+        {{range $i := iterate 1 .TotalPages}}
+        <a href="?page={{$i}}" class="pagination-link {{if eq $i $.CurrentPage}}active{{end}}">{{$i}}</a>
+        {{end}}
+    
+        {{if lt .CurrentPage .TotalPages}}
+        <a href="?page={{add .CurrentPage 1}}" class="pagination-link">Next</a>
+        {{end}}
     </div>
+
+
+
+    
+
+
     <footer>
         <p>© 2024 Forum. All rights reserved.</p>
         <p><a href="/terms">Terms of Service</a> | <a href="/privacy">Privacy Policy</a></p>
     </footer>
+
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = themeToggleBtn.querySelector('.material-icons');
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            document.body.classList.toggle('dark-theme');
+
+            // Update icon based on the theme
+            if (document.body.classList.contains('light-theme')) {
+                themeIcon.textContent = 'dark_mode'; // Switch to dark icon
+            } else {
+                themeIcon.textContent = 'light_mode'; // Switch to light icon
+            }
+        });
+
+    </script>
+
 </body>
 
 </html>

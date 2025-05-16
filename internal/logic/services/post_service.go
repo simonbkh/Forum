@@ -14,23 +14,32 @@ type POST = database.Post
 
 var Posts []database.Post
 
-// Post management logic
-
 func Post_Service(w http.ResponseWriter, r *http.Request) error {
 	title := r.FormValue("title")
 	content := r.FormValue("content")
 	categories := r.Form["categories"]
-	// user_id := 0
 
+	// if len(categories) == 0 {
+	// 	categories = append(categories, "All")
+	// }
 	err := validators.TitleValidator(title)
 	if err != nil {
 		return err
 	}
+	err = validators.ValidContent(content)
+	if err != nil {
+		return err
+	}
+
 	err = validators.CategoriesValidator(categories)
 	if err != nil {
 		return err
 	}
-	user_id, err := validators.Allowed(w, r)
+	cook , err := r.Cookie("SessionToken")
+	if err != nil {
+		return err
+	}
+	user_id, err := queries.GetId(cook.Value)
 	if err != nil {
 		return err
 	}
@@ -39,9 +48,8 @@ func Post_Service(w http.ResponseWriter, r *http.Request) error {
 		Content:    content,
 		Categories: categories,
 		Date:       time.Now().Format("2006-01-02 15:04:05"),
-		// Username:     string(user_id),
 	}
-	// Posts = append(Posts, NewPost)
+
 	post_id, err := queries.InsertPost(NewPost, user_id)
 	if err != nil {
 		return err
@@ -63,24 +71,23 @@ func UserPosts(id string) []database.Post {
 	return NewPosts
 }
 
-func GetPosts(mok *[]database.Post) error {
+func GetPosts(posts *[]database.Post, token string) error {
 	var err error
-	*mok, err = queries.GetPosts()
-	// fmt.Println(*mok)
+	*posts, err = queries.GetPosts(token)
 	if err != nil {
 		return err
 	}
-	// *mok,err = queries.GetCategories()
-	// fmt.Println("[[[[[[[[[[]]]]]]]]]]",mok)
 	return nil
 }
 
-func TimeDifference(newPosts, oldPosts []database.Post) []database.Post {
-	newPosts = nil
+func TimeDifference( oldPosts []database.Post) []database.Post {
+	newPosts := []database.Post{}
 	for _, post := range oldPosts {
 		mainDate := post.Date
 		duration := timeAgo(mainDate)
 		NewPost := database.Post{
+			State:      post.State,
+			Number:     post.Number,
 			User_id:    post.User_id,
 			Post_id:    post.Post_id,
 			Username:   post.Username,
@@ -103,7 +110,6 @@ func timeAgo(t string) string {
 
 	duration := time.Since(parsedTime)
 	duration += time.Hour
-	// fmt.Println(">>>>>>>",duration)
 	switch {
 	case duration < time.Minute:
 		return fmt.Sprintf("%d Seconds ago", int(duration.Seconds()))
@@ -119,7 +125,3 @@ func timeAgo(t string) string {
 		return fmt.Sprintf("%d Years ago", int(duration.Hours()/(24*365)))
 	}
 }
-
-// func GetmyPosts(w http.ResponseWriter, r *http.Request) []database.Post {
-
-// }

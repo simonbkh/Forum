@@ -2,10 +2,13 @@
 
 <header>
     <!-- <div class="header-buttons"> -->
-    <a href="/" style="text-decoration: none; color: white;">
-        <!-- <h1>Forum</h1> -->
-        <img src="../../static/images/logo.png" alt="Forum" class="logo">
-    </a>
+        <a href="/" class="logo-link">
+            <img src="../../static/images/logo.png" alt="Forum" class="logo">
+        </a>
+            <!-- Theme Toggle Button -->
+    <button id="theme-toggle" class="theme-toggle-btn">
+        <span class="material-icons">light_mode</span>
+    </button>
     <!-- </div> -->
 
     <div class="header-buttons">
@@ -20,9 +23,13 @@
 
 {{define "login"}}
 <header>
-    <a href="/" style="text-decoration: none; color: white;">
+    <a href="/" class="logo-link">
         <img src="../../static/images/logo.png" alt="Forum" class="logo">
     </a>
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" class="theme-toggle-btn">
+            <span class="material-icons">light_mode</span>
+        </button>
     <div class="header-buttons">
         <a href="/post">
             <img src="../../static/images/post.png" alt="">
